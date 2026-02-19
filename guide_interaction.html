@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Title - UGV Navigation Project</title>
+    <title>Guide Interaction - UGV Navigation Project</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
@@ -117,14 +117,12 @@
         }
 
         header h1 {
-            max-width: 1000px;
-            margin: 0 auto;
-            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin: 0;
             background: var(--gradient-vibrant);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            line-height: 1.3;
         }
 
         .container {
@@ -140,32 +138,32 @@
             border: 1px solid var(--border-glass);
             box-shadow: var(--shadow-soft);
             line-height: 1.8;
+            text-align: center;
         }
 
-        h2 {
-            color: var(--accent-1);
-            margin-top: 40px;
-            border-bottom: 1px solid var(--border-glass);
-            padding-bottom: 10px;
-        }
-
-        p {
-            margin-bottom: 20px;
-            font-size: 1.1rem;
-        }
-
-        .breakdown-item {
-            margin: 20px 0;
-            padding: 20px;
-            background: rgba(107, 91, 149, 0.05);
-            border-radius: 15px;
-        }
-
-        .breakdown-item strong {
+        .guide-title {
             color: var(--accent-2);
             font-size: 1.2rem;
-            display: block;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             margin-bottom: 10px;
+            display: block;
+        }
+
+        .guide-name {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--accent-1);
+            font-weight: 800;
+            margin-bottom: 30px;
+        }
+
+        .interaction-placeholder {
+            border: 2px dashed var(--border-glass);
+            padding: 40px;
+            border-radius: 20px;
+            color: var(--text-muted);
+            font-style: italic;
         }
     </style>
 </head>
@@ -174,42 +172,22 @@
     <nav class="nav-bar">
         <a href="index.html" class="nav-link">Home</a>
         <a href="theme.html" class="nav-link">Theme</a>
-        <a href="title.html" class="nav-link active">Title</a>
+        <a href="title.html" class="nav-link">Title</a>
         <a href="literature.html" class="nav-link">Literature Survey</a>
-        <a href="guide_interaction.html" class="nav-link">Guide Interaction</a>
+        <a href="guide_interaction.html" class="nav-link active">Guide Interaction</a>
     </nav>
 
     <header>
-        <h1>Development and Performance Validation of an Outdoor Autonomous Navigation Framework for Unmanned Ground
-            Vehicles</h1>
+        <h1>Guide Interaction</h1>
     </header>
 
     <div class="container">
         <div class="content-card">
-            <h2>Title Breakdown</h2>
+            <span class="guide-title">Project Guide</span>
+            <div class="guide-name">Dr. Rakesh P Tapaskar</div>
 
-            <div class="breakdown-item">
-                <strong>Autonomous Navigation</strong>
-                <p>The core objective: enabling vehicles to move from point A to point B in complex outdoor environments
-                    without human intervention.</p>
-            </div>
-
-            <div class="breakdown-item">
-                <strong>Unmanned Ground Vehicles (UGV)</strong>
-                <p>Robotic platforms designed for terrestrial operations, ranging from agricultural delivery bots to
-                    precision surveillance units.</p>
-            </div>
-
-            <div class="breakdown-item">
-                <strong>Framework Development</strong>
-                <p>Creating a structured software stack—integrating SLAM (Simultaneous Localization and Mapping),
-                    Obstacle Avoidance, and Path Planning.</p>
-            </div>
-
-            <div class="breakdown-item">
-                <strong>Performance Validation</strong>
-                <p>Measuring the framework's reliability through rigorous outdoor testing against established industry
-                    benchmarks.</p>
+            <div class="interaction-placeholder">
+                Review sessions and project guidance notes will be updated here.
             </div>
         </div>
     </div>
