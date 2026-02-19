@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            /* ===== INDUSTRIAL ROBOTICS THEME ===== */
+            --bg-page: #0f172a;
+            /* Midnight Navy - Tech foundations */
+            --bg-card: rgba(30, 41, 59, 0.85);
+            /* Slate Blue - Glassmorphism */
+
+            --accent-1: #38bdf8;
+            /* Sky Blue - Sensors/Navigation */
+            --accent-2: #fbbf24;
+            /* Industrial Amber - Ground Vehicle/Machine */
+            --accent-3: #1e293b;
+
+            --text-main: #f8fafc;
+            /* Crisp White text */
+            --text-muted: #94a3b8;
+            /* Muted Slate text */
+
+            --border-glass: rgba(56, 189, 248, 0.2);
+            --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.4);
+            --shadow-vibrant: 0 0 40px rgba(56, 189, 248, 0.25);
+
+            --gradient-vibrant: linear-gradient(135deg, #38bdf8 0%, #fbbf24 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-page);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Subtle Background Accents */
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            filter: blur(150px);
+            z-index: -1;
+            opacity: 0.15;
+            animation: floatBlob 20s infinite alternate ease-in-out;
+        }
+
+        body::before {
+            background: var(--accent-1);
+            top: -200px;
+            left: -200px;
+        }
+
+        body::after {
+            background: var(--accent-2);
+            bottom: -200px;
+            right: -200px;
+        }
+
+        @keyframes floatBlob {
+            0% {
+                transform: translateY(0px) scale(1);
+            }
+
+            100% {
+                transform: translateY(40px) scale(1.1);
+            }
+        }
+
+        header {
+            padding: 140px 20px 100px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glass);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin: 0;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -1px;
+            line-height: 1.2;
+            background: var(--gradient-vibrant);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header .portfolio-name {
+            margin-top: 20px;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-1);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+        }
+
+        section {
+            padding: 100px 10%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            text-align: center;
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 70px;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -1px;
+        }
+
+        /* About Me Section */
+        .about-me {
+            background: var(--bg-card);
+            padding: 80px 60px;
+            border-radius: 30px;
+            border: 1px solid var(--border-glass);
+            box-shadow: var(--shadow-soft);
+            max-width: 950px;
+            margin: 0 auto 120px auto;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .about-me:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-vibrant);
+            border-color: var(--accent-2);
+        }
+
+        .about-me h2 {
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            color: var(--accent-1);
+        }
+
+        .about-me p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            margin: 0;
+            font-weight: 400;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .about-me strong {
+            color: var(--accent-1);
+        }
+
+        /* ===== 3D FLIP CARD SYSTEM ===== */
+        .profile-perspective {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 45px;
+            padding: 60px 0;
+            width: 100%;
+            justify-items: center;
+        }
+
+        .flip-card {
+            perspective: 1200px;
+            height: 560px;
+            width: 100%;
+            max-width: 420px;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(60px) rotateX(15deg);
+            animation: cardEntrance 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+        }
+
+        .flip-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .flip-card:nth-child(2) {
+            animation-delay: 0.25s;
+        }
+
+        .flip-card:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .flip-card:nth-child(4) {
+            animation-delay: 0.55s;
+        }
+
+        @keyframes cardEntrance {
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner,
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            border-radius: 28px;
+            overflow: hidden;
+        }
+
+        /* ---- FRONT FACE ---- */
+        .flip-card-front {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 30px;
+            gap: 20px;
+            box-shadow: var(--shadow-soft);
+            transition: box-shadow 0.4s ease, border-color 0.4s ease;
+        }
+
+        .flip-card:hover .flip-card-front {
+            box-shadow: 0 0 35px rgba(107, 91, 149, 0.35), 0 0 80px rgba(159, 144, 206, 0.2);
+            border-color: #6B5B95;
+        }
+
+        /* Animated tech glow border */
+        .flip-card-front::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 30px;
+            background: conic-gradient(from var(--glow-angle, 0deg), transparent 60%, var(--accent-1) 78%, var(--accent-2) 90%, transparent 100%);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            animation: rotateGlow 3s linear infinite;
+        }
+
+        @property --glow-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes rotateGlow {
+            to {
+                --glow-angle: 360deg;
+            }
+        }
+
+        .flip-card:hover .flip-card-front::before {
+            opacity: 1;
+        }
+
+        .profile-img-container {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--border-glass);
+            box-shadow: 0 8px 30px rgba(107, 91, 149, 0.2);
+            flex-shrink: 0;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+        }
+
+        .flip-card:hover .profile-img-container {
+            border-color: var(--accent-2);
+            transform: scale(1.08);
+            box-shadow: 0 0 25px rgba(107, 91, 149, 0.35);
+        }
+
+        .profile-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .flip-card:hover .profile-img-container img {
+            transform: scale(1.1);
+        }
+
+        .front-info h3 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .front-info .subtitle {
+            color: var(--accent-2);
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: 6px;
+            display: block;
+        }
+
+        .front-info .tags {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .tag {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-1);
+            padding: 6px 16px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .tag:nth-child(even) {
+            background: rgba(251, 191, 36, 0.1);
+            color: var(--accent-2);
+            border-color: rgba(251, 191, 36, 0.2);
+        }
+
+
+
+        /* ---- BACK FACE ---- */
+        .flip-card-back {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 35px;
+            gap: 18px;
+            box-shadow: var(--shadow-soft);
+            transition: box-shadow 0.4s ease, border-color 0.4s ease;
+            position: relative;
+        }
+
+        .flip-card:hover .flip-card-back,
+        .flip-card.flipped .flip-card-back {
+            box-shadow: 0 0 25px rgba(107, 91, 149, 0.25);
+            border-color: #6B5B95;
+        }
+
+        .back-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .back-header .mini-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--accent-1);
+            flex-shrink: 0;
+        }
+
+        .back-header .mini-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .back-header-text h3 {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        .back-header-text .usn {
+            font-size: 0.82rem;
+            color: var(--accent-2);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .back-bio {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.75;
+            flex: 1;
+        }
+
+        .back-skills {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .back-skills .skill-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        .skill-row .skill-icon {
+            font-size: 1.1rem;
+            width: 28px;
+            text-align: center;
+        }
+
+        .skill-row strong {
+            color: var(--accent-1);
+        }
+
+        /* Social Links on Back Face */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-top: auto;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-glass);
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-glass);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Ephraim Sangma Style: Sliding background */
+        .social-links a::before {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 0;
+        }
+
+        .social-links a:hover::before {
+            top: 0;
+        }
+
+        .social-links a svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--text-muted);
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .social-links a:hover svg {
+            fill: #fff !important;
+            transform: rotateY(360deg);
+        }
+
+        .social-links a.wa::before {
+            background: #25d366;
+        }
+
+        .social-links a.li::before {
+            background: #0a66c2;
+        }
+
+        .social-links a.ml::before {
+            background: #ea4335;
+        }
+
+        .social-links a:hover {
+            border-color: transparent;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-card);
+            text-align: center;
+            padding: 80px 20px;
+            font-size: 1rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-glass);
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        footer strong {
+            color: var(--accent-1);
+            font-weight: 600;
+        }
+
+        /* Reveal Animations */
+        [data-animate] {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        [data-animate].active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== NAVIGATION BAR ===== */
+        .nav-bar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(15px);
+            padding: 12px 30px;
+            border-radius: 50px;
+            border: 1px solid var(--border-glass);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            gap: 25px;
+            transition: all 0.4s ease;
+        }
+
+        .nav-bar:hover {
+            box-shadow: var(--shadow-vibrant);
+            border-color: var(--accent-1);
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent-1);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-1);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            section {
+                padding: 80px 8%;
+            }
+
+            .profile-perspective {
+                grid-template-columns: 1fr;
+            }
+
+            .flip-card {
+                height: 440px;
+            }
+
+            .front-info .tags {
+                justify-content: center;
+            }
+
+            .profile-img-container {
+                width: 130px;
+                height: 130px;
+            }
+
+            header h1 {
+                font-size: 2.5rem;
+            }
+
+            .flip-card-front,
+            .flip-card-back {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <a href="home.html" class="nav-link">Home</a>
+        <a href="theme.html" class="nav-link">Theme</a>
+        <a href="title.html" class="nav-link">Title</a>
+        <a href="literature.html" class="nav-link">Literature Survey</a>
+    </nav>
+
+    <header>
+        <h1 data-animate>Development and Performance Validation of an Outdoor Autonomous Navigation Framework for
+            Unmanned Ground Vehicles</h1>
+        <div class="portfolio-name" data-animate>Team 12 • Intelligent Robot Systems</div>
+    </header>
+
+    <!-- About Team -->
+    <section id="about-team">
+        <div class="about-me" data-animate>
+            <h2>Project Mission</h2>
+            <p>
+                Building the future of <strong>Autonomous Navigation</strong>. We are developing a robust framework for
+                UGVs designed to navigate complex outdoor terrains with precision validation. Our system integrates
+                advanced perception, path-planning, and performance benchmarks to redefine unmanned mobility.
+            </p>
+        </div>
+    </section>
+
+    <!-- Profile Section -->
+    <section id="profile">
+        <h2 data-animate>The Innovators</h2>
+        <div class="profile-perspective" data-animate>
+
+            <!-- Member 1: Shrigovinda -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="profile-img-container">
+                            <img src="https://i.ibb.co/r29v6Cwy/Cropped-Image-1.png" alt="Shrigovinda">
+                        </div>
+                        <div class="front-info">
+                            <h3>Shrigovinda T Kulkarni</h3>
+                            <span class="subtitle">Programmer • Robotics Specialist</span>
+                            <div class="tags">
+                                <span class="tag">Team Lead</span>
+                                <span class="tag">AI Integration</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="back-header">
+                            <div class="mini-img"><img src="https://i.ibb.co/r29v6Cwy/Cropped-Image-1.png"
+                                    alt="Shrigovinda"></div>
+                            <div class="back-header-text">
+                                <h3>Shrigovinda T Kulkarni</h3>
+                                <div class="usn">USN: 01FE23BAR047</div>
+                            </div>
+                        </div>
+                        <p class="back-bio">Aspiring Automation & Robotics engineer with a passion for innovation.
+                            Skilled in C, C++, Python, and Arduino — designing and building practical solutions that
+                            merge AI with mechanical systems.</p>
+                        <div class="back-skills">
+                            <div class="skill-row"><span class="skill-icon">🎯</span> <strong>Role:</strong> Programming
+                                & System Logic</div>
+                            <div class="skill-row"><span class="skill-icon">🚀</span> <strong>Focus:</strong> AI &
+                                Embedded Systems</div>
+                            <div class="skill-row"><span class="skill-icon">🛠️</span> <strong>Tools:</strong> C++,
+                                Python, ROS2</div>
+                        </div>
+                        <div class="social-links">
+                            <a class="wa" href="https://wa.me/918618104226" target="_blank" title="WhatsApp"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                                </svg></a>
+                            <a class="li" href="https://www.linkedin.com/in/shrigovinda-kulkarni-299399284/"
+                                target="_blank" title="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                                </svg></a>
+                            <a class="ml" href="mailto:shrigovindak@gmail.com" title="Email"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
+                                </svg></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 2: Tanmay -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="profile-img-container">
+                            <img src="https://i.ibb.co/GfYm1d1F/IMG-20241130-120146.jpg" alt="IMG 20241130 120146"
+                                border="0">
+                        </div>
+                        <div class="front-info">
+                            <h3>Tanmay Hiremath</h3>
+                            <span class="subtitle">Electronics Specialist</span>
+                            <div class="tags">
+                                <span class="tag">Circuit Design</span>
+                                <span class="tag">Hardware</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="back-header">
+                            <div class="mini-img"><img src="https://i.ibb.co/GfYm1d1F/IMG-20241130-120146.jpg"
+                                    alt="Tanmay"></div>
+                            <div class="back-header-text">
+                                <h3>Tanmay Hiremath</h3>
+                                <div class="usn">Electronics Specialist</div>
+                            </div>
+                        </div>
+                        <p class="back-bio">Dedicated to crafting robust electronic architectures. Expert in circuit
+                            design, embedded systems, and hardware prototyping with a keen eye for reliable engineering
+                            solutions.</p>
+                        <div class="back-skills">
+                            <div class="skill-row"><span class="skill-icon">🎯</span> <strong>Role:</strong> Electronics
+                                & Hardware</div>
+                            <div class="skill-row"><span class="skill-icon">🚀</span> <strong>Focus:</strong> Embedded
+                                Systems</div>
+                            <div class="skill-row"><span class="skill-icon">🛠️</span> <strong>Tools:</strong> Arduino,
+                                PCB Design</div>
+                        </div>
+                        <div class="social-links">
+                            <a class="wa" href="https://wa.me/919353467761" target="_blank" title="WhatsApp"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                                </svg></a>
+                            <a class="li" href="https://www.linkedin.com/in/tanmay-hiremath-02933b2b1/" target="_blank"
+                                title="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                                </svg></a>
+                            <a class="ml" href="mailto:" title="Email"><svg xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24">
+                                    <path
+                                        d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
+                                </svg></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 3: Nisar -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="profile-img-container">
+                            <img src="https://i.ibb.co/8LcCnbnG/Whats-App-Image-2026-02-19-at-2-14-55-PM.jpg"
+                                alt="Whats App Image 2026 02 19 at 2 14 55 PM" border="0">
+                        </div>
+                        <div class="front-info">
+                            <h3>Nisar Ahmed</h3>
+                            <span class="subtitle">Fabrication Lead</span>
+                            <div class="tags">
+                                <span class="tag">Mechanical</span>
+                                <span class="tag">Prototyping</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="back-header">
+                            <div class="mini-img"><img
+                                    src="https://i.ibb.co/TDHppvcv/Gemini-Generated-Image-gestbjgestbjgest.png"
+                                    alt="Gemini Generated Image gestbjgestbjgest" border="0"></div>
+                            <div class="back-header-text">
+                                <h3>Nisar Ahmed</h3>
+                                <div class="usn">Fabrication Lead</div>
+                            </div>
+                        </div>
+                        <p class="back-bio">Expert in translating digital designs into physical prototypes. Focuses on
+                            structural integrity and precision engineering to bring concepts to reality with hands-on
+                            fabrication skills.</p>
+                        <div class="back-skills">
+                            <div class="skill-row"><span class="skill-icon">🎯</span> <strong>Role:</strong> Fabrication
+                                & Assembly</div>
+                            <div class="skill-row"><span class="skill-icon">🚀</span> <strong>Focus:</strong> Structural
+                                Integrity</div>
+                            <div class="skill-row"><span class="skill-icon">🛠️</span> <strong>Tools:</strong>
+                                Welding, Assembly</div>
+                        </div>
+                        <div class="social-links">
+                            <a class="wa" href="https://wa.me/919916262550" target="_blank" title="WhatsApp"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                                </svg></a>
+                            <a class="li" href="https://linkedin.com/in/YOUR_LINKEDIN" target="_blank"
+                                title="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                                </svg></a>
+                            <a class="ml" href="mailto:p.nisar6154@gmail.com" title="Email"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
+                                </svg></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 4: Bhoomika -->
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="profile-img-container">
+                            <img src="https://i.ibb.co/SD13wSfS/Cropped-Image-5.png" alt="Bhoomika">
+                        </div>
+                        <div class="front-info">
+                            <h3>Bhoomika Hotagi</h3>
+                            <span class="subtitle">Design Specialist</span>
+                            <div class="tags">
+                                <span class="tag">UI/UX</span>
+                                <span class="tag">3D Modeling</span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="flip-card-back">
+                        <div class="back-header">
+                            <div class="mini-img"><img src="https://i.ibb.co/SD13wSfS/Cropped-Image-5.png"
+                                    alt="Bhoomika"></div>
+                            <div class="back-header-text">
+                                <h3>Bhoomika Hotagi</h3>
+                                <div class="usn">Design Specialist</div>
+                            </div>
+                        </div>
+                        <p class="back-bio">Focusing on aesthetics and user-centric robotics design. Friendly, curious,
+                            and responsible — always open to exploring new opportunities and balancing creativity with
+                            technical precision.</p>
+                        <div class="back-skills">
+                            <div class="skill-row"><span class="skill-icon">🎯</span> <strong>Role:</strong> Designing &
+                                Aesthetics</div>
+                            <div class="skill-row"><span class="skill-icon">🚀</span> <strong>Focus:</strong> Ergonomics
+                                & UX</div>
+                            <div class="skill-row"><span class="skill-icon">🛠️</span> <strong>Tools:</strong>
+                                SolidWorks, Figma</div>
+                        </div>
+                        <div class="social-links">
+                            <a class="wa" href="https://wa.me/918050498973" target="_blank" title="WhatsApp"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                                </svg></a>
+                            <a class="li" href="https://www.linkedin.com/in/bhoomika-hotagi-87597029b/" target="_blank"
+                                title="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                                </svg></a>
+                            <a class="ml" href="mailto:bhoomikahotagi061@gmail.com" title="Email"><svg
+                                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path
+                                        d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" />
+                                </svg></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <footer>
+        <p>Handcrafted with precision by <strong>Shrigovinda T Kulkarni</strong> &copy; 2026</p>
+    </footer>
+
+    <script>
+        // Reveal Observer
+        const elements = document.querySelectorAll("[data-animate]");
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("active");
+                }
+            });
+        }, { threshold: 0.15 });
+        elements.forEach(el => observer.observe(el));
+
+        // Flip card click support for mobile / touch devices
+        document.querySelectorAll('.flip-card').forEach(card => {
+            card.addEventListener('click', (e) => {
+                // Don't flip if clicking a social link
+                if (e.target.closest('.social-links')) return;
+                // Only toggle on narrow screens (touch devices)
+                if (window.innerWidth <= 900) {
+                    card.classList.toggle('flipped');
+                }
+            });
+        });
+
+        // Ensure social links work without flipping the card
+        document.querySelectorAll('.social-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+        });
+    </script>
+
+</body>
+
+</html>
