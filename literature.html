@@ -264,6 +264,77 @@
             color: var(--text-muted);
             text-align: center;
         }
+
+        /* ===== MOBILE RESPONSIVENESS ===== */
+        @media (max-width: 768px) {
+            .nav-bar {
+                width: 90%;
+                padding: 10px 15px;
+                gap: 15px;
+                border-radius: 25px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-link {
+                font-size: 0.75rem;
+            }
+
+            header {
+                padding: 180px 20px 40px;
+            }
+
+            .container {
+                padding: 40px 15px 80px;
+                gap: 25px;
+            }
+
+            .survey-card {
+                padding: 25px;
+                border-radius: 20px;
+            }
+
+            .survey-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .insight-section {
+                padding: 20px;
+            }
+
+            .insight-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sl-no {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+
+            .source {
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .nav-bar {
+                top: 10px;
+            }
+
+            .survey-card {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 

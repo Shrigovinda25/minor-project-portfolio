@@ -167,6 +167,53 @@
             display: block;
             margin-bottom: 10px;
         }
+
+        /* ===== MOBILE RESPONSIVENESS ===== */
+        @media (max-width: 768px) {
+            .nav-bar {
+                width: 90%;
+                padding: 10px 15px;
+                gap: 15px;
+                border-radius: 25px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-link {
+                font-size: 0.75rem;
+            }
+
+            header {
+                padding: 180px 20px 40px;
+            }
+
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 40px 15px 80px;
+            }
+
+            .content-card {
+                padding: 30px 20px;
+                border-radius: 20px;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            .breakdown-item {
+                padding: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-bar {
+                top: 10px;
+            }
+        }
     </style>
 </head>
 

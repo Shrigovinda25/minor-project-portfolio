@@ -234,6 +234,71 @@
             line-height: 1.6;
             font-style: italic;
         }
+
+        /* ===== MOBILE RESPONSIVENESS ===== */
+        @media (max-width: 768px) {
+            .nav-bar {
+                width: 90%;
+                padding: 10px 15px;
+                gap: 15px;
+                border-radius: 25px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-link {
+                font-size: 0.75rem;
+            }
+
+            header {
+                padding: 180px 20px 40px;
+            }
+
+            .container {
+                padding: 40px 15px 80px;
+            }
+
+            .content-card {
+                padding: 30px 20px;
+                border-radius: 20px;
+            }
+
+            .guide-name {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+
+            .research-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .research-card {
+                padding: 25px;
+            }
+
+            .research-card h3 {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .nav-bar {
+                top: 10px;
+            }
+
+            .research-card {
+                padding: 20px;
+            }
+
+            .tech-item {
+                font-size: 0.85rem;
+            }
+        }
     </style>
 </head>
 
