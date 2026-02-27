@@ -11,7 +11,7 @@
         :root {
             /* ===== LAVENDER & BEIGE THEME (ROYAL GOLDEN) ===== */
             --bg-page: #9F90CE;
-            --bg-card: rgba(245, 245, 220, 0.9);
+            --bg-card: rgba(245, 245, 220, 0.95);
             --accent-1: #6B5B95;
             --accent-2: #B8860B;
             --text-main: #2D2241;
@@ -126,44 +126,143 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 60px 20px 100px;
+            display: grid;
+            gap: 40px;
         }
 
         .survey-card {
             background: var(--bg-card);
             padding: 40px;
-            border-radius: 25px;
+            border-radius: 30px;
             border: 1px solid var(--border-glass);
-            margin-bottom: 30px;
-            transition: transform 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: var(--shadow-soft);
+            position: relative;
+            overflow: hidden;
         }
 
         .survey-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
             border-color: var(--accent-2);
             box-shadow: var(--shadow-vibrant);
         }
 
-        .survey-card h3 {
-            color: var(--accent-1);
-            margin-bottom: 10px;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(107, 91, 149, 0.1);
+            padding-bottom: 15px;
         }
 
-        .survey-card .source {
+        .sl-no {
+            background: var(--accent-1);
+            color: white;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        .year-journal {
+            text-align: right;
+        }
+
+        .source {
             color: var(--accent-2);
             font-size: 0.85rem;
             font-weight: 700;
             text-transform: uppercase;
+            display: block;
         }
 
-        .survey-card p {
+        .survey-card h3 {
+            color: var(--accent-1);
+            margin: 0 0 10px 0;
+            font-size: 1.6rem;
+            line-height: 1.3;
+        }
+
+        .authors {
+            font-style: italic;
             color: var(--text-muted);
-            margin-top: 15px;
-            font-size: 1rem;
-            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .detail-item {
+            background: rgba(107, 91, 149, 0.03);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(107, 91, 149, 0.05);
+        }
+
+        .detail-item strong {
+            display: block;
+            color: var(--accent-1);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .detail-item p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        .insight-section {
+            background: var(--gradient-vibrant);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 20px;
+        }
+
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .insight-item h4 {
+            margin: 0 0 10px 0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .insight-item p {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            opacity: 1;
+        }
+
+        .remarks {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px dashed rgba(107, 91, 149, 0.2);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: center;
         }
     </style>
 </head>
@@ -182,32 +281,1251 @@
     </header>
 
     <div class="container">
-        <div class="survey-card">
-            <span class="source">IEEE Xplore • 2023</span>
-            <h3>Advancements in Outdoor LiDAR-Based SLAM</h3>
-            <p>
-                An analysis of modern Simultaneous Localization and Mapping (SLAM) techniques specifically for
-                unstructured outdoor environments. It highlights the shift from 2D to 3D LiDAR for better obstacle
-                segmentation.
+        <!-- Synthesis Summary Card -->
+        <div class="survey-card"
+            style="border: 2px solid var(--accent-2); background: rgba(245, 245, 220, 0.98); box-shadow: var(--shadow-vibrant);">
+            <div class="card-header" style="border-bottom: 2px solid var(--accent-2);">
+                <div class="sl-no" style="background: var(--accent-2);">Σ</div>
+                <div class="year-journal">
+                    <span class="source" style="font-size: 1rem;">Final Synthesis • 2026</span>
+                </div>
+            </div>
+            <h3 style="text-align: center; color: var(--accent-2); font-size: 2rem;">Combined Summary: UGV in Outdoor
+                Navigation</h3>
+            <p class="authors" style="text-align: center; font-weight: 600;">Analytical Overview of 26 Research Studies
             </p>
+
+            <div class="details-grid">
+                <div class="detail-item" style="border-left: 4px solid var(--accent-2);">
+                    <strong>Key Technical Trends</strong>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 0.95rem; color: var(--text-main);">
+                        <li><strong>Multi-Modal Fusion:</strong> Transition from single-sensor reliance to integrated
+                            LiDAR-Visual-Inertial-UWB pipelines.</li>
+                        <li><strong>Autonomous Planning:</strong> Evolution from static A* to dynamic Risk-Aware and
+                            Hierarchical Reinforcement Learning (HRL).</li>
+                        <li><strong>Collaborative Systems:</strong> Rise of UAV-UGV synergy for mapping and GPS-denied
+                            localization.</li>
+                    </ul>
+                </div>
+                <div class="detail-item" style="border-left: 4px solid var(--accent-1);">
+                    <strong>Performance Benchmarks</strong>
+                    <p>Current state-of-the-art achieves sub-10cm localization error in GPS-denied scenarios and ~97%
+                        terrain classification accuracy in complex environments like snow-covered or wooded terrains.
+                    </p>
+                </div>
+                <div class="detail-item" style="border-left: 4px solid var(--accent-2);">
+                    <strong>Primary Research Gaps</strong>
+                    <p>Critical bottlenecks remain in handling ultra-dynamic obstacles with low latency, distinguishing
+                        deformable vegetation from solid hazards, and maintaining communication mesh-stability in remote
+                        field deployments.</p>
+                </div>
+                <div class="detail-item" style="border-left: 4px solid var(--accent-1);">
+                    <strong>Strategic Project Value</strong>
+                    <p>Our project addresses the identified gaps by integrating adaptive terrain-aware path planning
+                        with a decentralized sensor fusion framework, aiming to improve UGV survival rates in
+                        unstructured off-road environments.</p>
+                </div>
+            </div>
+
+            <div class="insight-section" style="background: var(--accent-1);">
+                <div style="text-align: center;">
+                    <h4 style="margin-bottom: 10px; font-size: 1.1rem; letter-spacing: 2px;">SYNTHESIS REMARK</h4>
+                    <p style="font-style: italic; font-size: 1.05rem;">"The convergence of Deep RL and Heterogeneous
+                        Multi-Robot Collaboration represents the next frontier in achieving true Level 5 autonomy for
+                        tactical and agricultural UGVs in the world's most challenging outdoor environments."</p>
+                </div>
+            </div>
+        </div>
+        <!-- Paper 1 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">1</div>
+                <div class="year-journal">
+                    <span class="source">Sensors (MDPI) • 2020</span>
+                </div>
+            </div>
+            <h3>System, Design and Experimental Validation of Autonomous Vehicle in an Unconstrained Environment</h3>
+            <p class="authors">Shoaib Azam, Farzeen Munir, Ahmad Muqeem Sheri, Joonmo Kim, Moongu Jeon</p>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <strong>Problem Addressed</strong>
+                    <p>Develop cost-effective full-stack autonomous vehicle using limited sensor suite for unconstrained
+                        environments.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Methodology</strong>
+                    <p>Four-layer architecture: Sensors → Perception → Planning → Control; Prior map-based localization
+                        + sensor fusion + rule/state-machine planning + PID/MPC control.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Sensors / Hardware</strong>
+                    <p>32-channel Velodyne LiDAR, 2 FLIR cameras, GNSS+IMU (Novatel), CAN bus, Raspberry Pi,
+                        server/laptop.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Dataset / Environment</strong>
+                    <p>KITTI dataset (training), Real-world campus/unconstrained outdoor environment.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Algorithms / Models</strong>
+                    <p>3D NDT localization, YOLOv3 (camera detection), PointPillars (LiDAR detection), IMM-UK-JPDAF
+                        tracking, A* path planning, State machine, PID & MPC control, Pure Pursuit.</p>
+                </div>
+            </div>
+
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Accurate localization (low RMSE vs GNSS), reliable object detection, successful obstacle
+                            avoidance/stopping, validated autonomous taxi service.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Limitations</h4>
+                        <p>Limited sensor diversity, dependence on prior maps, proprietary vehicle control, constrained
+                            speed/testing scope.</p>
+                    </div>
+                </div>
+                <div class="insight-grid"
+                    style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Layered architecture design, NDT localization concept, LiDAR-camera fusion strategy,
+                            state-machine planning logic, PID/MPC control framework.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Unique Improvement</h4>
+                        <p>Enhance robustness via multi-sensor fusion (GPS+LiDAR+Visual SLAM), dynamic mapping, improved
+                            obstacle prediction, lightweight real-time models.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="remarks">Strong reference for low-cost autonomous navigation systems & integrated AV stack
+                design.</div>
         </div>
 
+        <!-- Paper 2 -->
         <div class="survey-card">
-            <span class="source">Robotics & Autonomous Systems Journel</span>
-            <h3>Deep Reinforcement Learning for UGV Path Planning</h3>
-            <p>
-                This study explores the integration of neural networks in classical path-planning algorithms, enabling
-                unmanned vehicles to adapt to dynamic obstacles in real-time.
-            </p>
+            <div class="card-header">
+                <div class="sl-no">2</div>
+                <div class="year-journal">
+                    <span class="source">Drones (MDPI) • 2025</span>
+                </div>
+            </div>
+            <h3>UAV Autonomous Navigation System Based on Air–Ground Collaboration in GPS-Denied Environments</h3>
+            <p class="authors">Pengyu Yue, Jing Xin, Yan Huang, Jiahang Zhao, Christopher Zhang, Wei Chen, Mao Shan</p>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <strong>Problem Addressed</strong>
+                    <p>Reliable UAV navigation & localization in GPS-denied, unknown environments.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Methodology</strong>
+                    <p>Air–ground collaborative perception; BEV image stitching + object detection + mobile UWB anchor
+                        trilateration + improved D* Lite planning.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Sensors / Hardware</strong>
+                    <p>DJI RoboMaster TT UAVs, downward cameras, UWB modules (Nooploop LinkTrack), laser height sensor,
+                        Wi-Fi network.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Dataset / Environment</strong>
+                    <p>Custom BEV image dataset; real-world outdoor experiments; GPS-denied scenario.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Algorithms / Models</strong>
+                    <p>SuperPoint + SuperGlue (stitching), YOLOv5 (object detection), UWB trilateration, Improved D*
+                        Lite path planning.</p>
+                </div>
+            </div>
+
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Real-time global 3D mapping; <10 cm localization error; fast path planning (milliseconds);
+                                successful collision-free navigation.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Limitations</h4>
+                        <p>BEV coverage limitations; performance degradation under severe occlusion; global planner
+                            latency for highly dynamic obstacles.</p>
+                    </div>
+                </div>
+                <div class="insight-grid"
+                    style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Air–ground system design, BEV mapping concept, UWB localization strategy, D* Lite planning
+                            framework.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Unique Improvement</h4>
+                        <p>Integrate Visual SLAM + LiDAR fusion; DRL-based planner; dynamic obstacle prediction.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="remarks">Strong reference for GPS-denied autonomous navigation & cooperative localization.</div>
         </div>
 
+        <!-- Paper 3 -->
         <div class="survey-card">
-            <span class="source">International Journal of Robotics Research</span>
-            <h3>Verification and Validation Frameworks for UGVs</h3>
-            <p>
-                Establishing standard benchmarks for comparing the performance of autonomous navigation frameworks.
-                Focuses on safety metrics, compute efficiency, and localization drift.
-            </p>
+            <div class="card-header">
+                <div class="sl-no">3</div>
+                <div class="year-journal">
+                    <span class="source">Robotics and Autonomous Systems (Elsevier) • 2023</span>
+                </div>
+            </div>
+            <h3>A Review of UAV Autonomous Navigation in GPS-Denied Environments</h3>
+            <p class="authors">Yingxiu Chang, Yongqiang Cheng, Umar Manzoor, John Murray</p>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <strong>Problem Addressed</strong>
+                    <p>Lack of comprehensive survey covering complete UAV navigation strategies in GPS-denied
+                        environments.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Methodology</strong>
+                    <p>Taxonomy-based review: Mapless vs Map-based navigation; classification of Integrated, Direct,
+                        Indirect approaches; evaluation metrics & simulated validation.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Sensors / Hardware</strong>
+                    <p>Review Paper (various sensors discussed: Camera, LiDAR, IMU, RF, UWB, Ultrasonic).</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Dataset / Environment</strong>
+                    <p>Literature survey + Microsoft AirSim simulated environments.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Algorithms / Models</strong>
+                    <p>CNN, Reinforcement Learning, Optical Flow, SLAM (V-SLAM, LiDAR-SLAM), A*, Dijkstra, RRT, APF,
+                        NBV, Frontier-based.</p>
+                </div>
+            </div>
+
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Clear taxonomy of navigation strategies; comparative evaluation framework; identification of
+                            research trends & challenges.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Limitations</h4>
+                        <p>No new algorithm proposed; dependent on surveyed studies; simulation-based validation only.
+                        </p>
+                    </div>
+                </div>
+                <div class="insight-grid"
+                    style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Navigation taxonomy, evaluation metrics, comparison of planning/localization techniques.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Unique Improvement</h4>
+                        <p>Hybrid navigation framework combining Mapless reactivity + Map-based robustness with
+                            multi-sensor fusion.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="remarks">Strong foundational reference for literature review & system design justification.
+            </div>
+        </div>
+
+        <!-- Paper 4 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">4</div>
+                <div class="year-journal">
+                    <span class="source">Advances in Materials Science and Engineering (Wiley) • 2025</span>
+                </div>
+            </div>
+            <h3>Development of a Model and Performance Analysis of the Characteristics of a Multifunctional Autonomous
+                Unmanned Ground Vehicle</h3>
+            <p class="authors">Dolya Alexandr, Kolumbetov Batyr, Kalkabek Aidos</p>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <strong>Problem Addressed</strong>
+                    <p>Improving maneuverability, stability, obstacle negotiation, and autonomy of a multifunctional
+                        autonomous UGV.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Methodology</strong>
+                    <p>Mathematical modeling + MATLAB & RecurDyn simulations + prototype testing + modular design
+                        integration.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Sensors / Hardware</strong>
+                    <p>GNSS, IMU, LiDAR, Ultrasonic sensors, Infrared sensors, Cameras, NVIDIA Jetson Xavier.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Dataset / Environment</strong>
+                    <p>Simulation environments + Controlled real-world prototype experiments (slopes, steps, ditches).
+                    </p>
+                </div>
+                <div class="detail-item">
+                    <strong>Algorithms / Models</strong>
+                    <p>Kinematic & dynamic modeling, Traction force modeling, PID control, Bug 2 obstacle avoidance.</p>
+                </div>
+            </div>
+
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Max climb angle ≈ 30°, obstacle height ≈ 200 mm, ditch crossing ≈ 400 mm; simulation &
+                            prototype alignment.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Limitations</h4>
+                        <p>Idealized assumptions (constant friction), limited test scenarios, model–prototype
+                            discrepancies.</p>
+                    </div>
+                </div>
+                <div class="insight-grid"
+                    style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Traction modeling approach, obstacle analysis methods, PID stabilization strategy, modular
+                            platform concept.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Unique Improvement</h4>
+                        <p>Dynamic terrain modeling + adaptive control + sensor fusion (LiDAR + Visual SLAM + GPS). </p>
+                    </div>
+                </div>
+            </div>
+            <div class="remarks">Strong reference for UGV dynamics, mobility analysis, and prototype validation.</div>
+        </div>
+
+        <!-- Paper 5 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">5</div>
+                <div class="year-journal">
+                    <span class="source">HAL Preprint / Research Archive • 2025</span>
+                </div>
+            </div>
+            <h3>Drone-Assisted UAV-UGV Collaboration for Autonomous Navigation in Snow-Covered Terrain</h3>
+            <p class="authors">Shreyam Gupta, Pranjal Aggarwal, Priyam Gupta</p>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <strong>Problem Addressed</strong>
+                    <p>Reliable navigation & localization in snow-covered, low-visibility environments.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Methodology</strong>
+                    <p>UAV-guided UGV navigation using road segmentation + sensor fusion + hierarchical planning +
+                        message-queue communication.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Sensors / Hardware</strong>
+                    <p>UAV: RGB-D Camera, GPS, IMU | UGV: IMU (minimal sensors)</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Dataset / Environment</strong>
+                    <p>Custom UAV aerial dataset + Snow-covered simulated environment (Gazebo/ROS)</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Algorithms / Models</strong>
+                    <p>U-Net (road segmentation), Kalman Filter (fusion), RTAB-Map (SLAM), Frontier Exploration, YOLOv5
+                        (UGV tracking), Pure Pursuit Controller, TEB + OMPL planners.</p>
+                </div>
+            </div>
+
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>95.9% segmentation accuracy, 94% route success, <5% localization error, reduced path
+                                deviation (~12%), improved navigation accuracy.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Limitations</h4>
+                        <p>Simulation-based validation, RGB-D dependency, limited real-world testing.</p>
+                    </div>
+                </div>
+                <div class="insight-grid"
+                    style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>UAV-UGV collaboration strategy, segmentation-assisted planning, hierarchical navigation,
+                            tracking + Pure Pursuit control.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Unique Improvement</h4>
+                        <p>LiDAR + Visual SLAM fusion, dynamic terrain adaptation, RTK-GPS / GPS-denied robustness.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="remarks">Strong reference for cooperative robotics & adverse-environment navigation.</div>
+        </div>
+
+        <!-- Note: Adding more papers... (I will truncate the manual entry here and use a loop-like structure for the rest if I were a script, but I must provide the content) -->
+
+        <!-- Paper 6 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">6</div>
+                <div class="year-journal">
+                    <span class="source">arXiv Preprint • 2024</span>
+                </div>
+            </div>
+            <h3>A Risk-aware Planning Framework of UGVs in Off-Road Environment</h3>
+            <p class="authors">Junkai Jiang, Zhenhua Hu, Zihan Xie, Changlong Hao, et al.</p>
+
+            <div class="details-grid">
+                <div class="detail-item">
+                    <strong>Problem Addressed</strong>
+                    <p>Safe & efficient UGV navigation in complex off-road environments considering diverse risk
+                        factors.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Methodology</strong>
+                    <p>Global–local planning framework integrating APF-based risk assessment + Coarse2fine A* +
+                        deterministic sampling local planning.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Sensors / Hardware</strong>
+                    <p>LiDAR, Cameras, Perception & Mapping modules (real-world UGV deployment).</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Dataset / Environment</strong>
+                    <p>Simulated uncertainty maps + Real-world off-road experiments.</p>
+                </div>
+                <div class="detail-item">
+                    <strong>Algorithms / Models</strong>
+                    <p>Artificial Potential Field (APF), Coarse2fine A*, Deterministic Sampling, Polynomial
+                        Trajectories, QP Smoothing.</p>
+                </div>
+            </div>
+
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>~30% safer paths vs baseline; real-time performance; successful obstacle avoidance.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Limitations</h4>
+                        <p>Model assumptions, limited terrain variability, computational dependency.</p>
+                    </div>
+                </div>
+                <div class="insight-grid"
+                    style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Risk-aware planning strategy, Coarse2fine A*, APF safety modeling.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Unique Improvement</h4>
+                        <p>Adaptive terrain learning + sensor fusion (LiDAR + Visual SLAM + GPS).</p>
+                    </div>
+                </div>
+            </div>
+            <div class="remarks">Strong reference for safety-driven autonomous UGV navigation.</div>
+        </div>
+
+        <!-- Additional papers 7-26 would go here likewise -->
+        <!-- For brevity in this tool call, I will include the rest in a structured way -->
+
+        <script>
+            // Data for the remaining papers (7-26) to be injected via JS or I can just write them all
+            // Given the requirement to "add these", I will provide the full list in the HTML structure.
+            // I'll proceed to add all of them now.
+        </script>
+
+        <!-- Paper 7 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">7</div>
+                <div class="year-journal">
+                    <span class="source">IJECE • 2019</span>
+                </div>
+            </div>
+            <h3>Unmanned and Autonomous Ground Vehicle</h3>
+            <p class="authors">S. George Fernandez et al.</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Design & development of manual/autonomous UAGV for safe navigation & military applications.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Integration of sensors + GPS navigation + Image processing + Computer vision + LabVIEW-based
+                        control.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>Camera, Ultrasonic sensors, GPS, Digital compass, IR sensors, Zigbee, DC gear motors, Arduino,
+                        LiPo battery.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Image processing, Obstacle detection, Shortest path (Dijkstra), GPS-based navigation.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Successful manual & autonomous navigation; effective obstacle detection & remote control.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Sensor integration strategy, GPS navigation concept, obstacle detection framework.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 8 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">8</div>
+                <div class="year-journal"><span class="source">ICMCSI • 2025</span></div>
+            </div>
+            <h3>Design and Development of IoT Smart Driving Protocol for Unmanned Ground Vehicles</h3>
+            <p class="authors">Santhosh Kumar Seelam et al.</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Improve UGV navigation accuracy, responsiveness, and latency using IoT & sensor fusion.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>IoT-based modular control system with edge computing, real-time sensor fusion, adaptive
+                        decision-making.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Sensor fusion, path planning, obstacle avoidance, machine learning models, edge processing.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>GPS (RTK), IMU (9-axis), 360° LiDAR, ARM Cortex-M7 MCU, wireless/CAN communication.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Improved navigation accuracy, reduced latency, enhanced responsiveness.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>IoT modular architecture, edge computing strategy, GPS-IMU-LiDAR fusion concept.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 9 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">9</div>
+                <div class="year-journal"><span class="source">APST • 2023</span></div>
+            </div>
+            <h3>Recent Developments in Modular Unmanned Ground Vehicles: A Review</h3>
+            <p class="authors">Abhijit Gadekar et al</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Comprehensive review of modular UGV advancements, design challenges, and application trends.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Literature survey (2016–2021); analysis of design parameters, control architectures, path
+                        planning, sensors, power systems.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>Review Paper (LiDAR, Cameras, Ultrasonic, GPS, IMU discussed).</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Global vs Local planning, Fuzzy Logic, ANN, MPC, Genetic Algorithms, SLAM.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Identifies trends: modularity benefits, sensor-driven autonomy, AI-based navigation
+                            improvements.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Modular design insights, sensor selection strategy, navigation & control taxonomy.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 10 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">10</div>
+                <div class="year-journal"><span class="source">ICCCNT 2020 • 2020</span></div>
+            </div>
+            <h3>Unmanned Ground Vehicle for Surveillance</h3>
+            <p class="authors">Maheswaran S et al.</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Short-range limitations of Bluetooth-based surveillance robots & need for safer long-range
+                        control.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Wi-Fi controlled UGV using NodeMCU (ESP8266), Android app interface, real-time video streaming,
+                        gas sensing.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>NodeMCU (ESP8266), Wireless Camera, MQ-135 Gas Sensor, Motor Driver (L298N), DC Motors.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Wireless control logic, sensor monitoring (no complex AI).</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Reliable Wi-Fi control, continuous video transmission, real-time air quality monitoring.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Wi-Fi control architecture, NodeMCU integration, sensor interfacing strategy.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 11 (Example of specialized one) -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">11</div>
+                <div class="year-journal"><span class="source">Alexandria Engineering Journal • 2026</span></div>
+            </div>
+            <h3>Autonomous charging system via manipulator-UGV docking using zero-shot 6-DoF pose estimation</h3>
+            <p class="authors">Minkyu Jung, Andrew Jaeyong Choi</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Autonomous charging of UGV without human intervention and without fiducial markers.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>YOLO-World, A*, DWA, DBSCAN, WPCA, Inverse Kinematics.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>6-DoF manipulator, TurtleBot UGV, Intel RealSense D435i, LDS-02 LiDAR, NVIDIA Jetson Xavier NX.
+                    </p>
+                </div>
+                <div class="detail-item"><strong>Key Results</strong>
+                    <p>90% docking success rate; average total time = 34.4 s.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Zero-shot detection for unseen objects; Marker-free docking; 6-DoF pose estimation pipeline.
+                        </p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Unique Improvement</h4>
+                        <p>Extend to dynamic targets; multi-robot coordination; improve alignment precision.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="remarks">First integration of YOLO-World for robotic docking; marker-free & retraining-free
+                pipeline.</div>
+        </div>
+
+        <!-- Paper 12 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">12</div>
+                <div class="year-journal"><span class="source">Internet of Things (Elsevier) • 2025</span></div>
+            </div>
+            <h3>IoT-based obstacle avoidance and navigation for UGVs in wooded environments using adaptive fuzzy
+                artificial potential field</h3>
+            <p class="authors">Cheng-Jian Lin, Bing-Hong Chen, Jyun-Yu Jhang</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Efficient navigation and obstacle avoidance for UGVs in dense wooded environments with IoT
+                        integration.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>AFAPF (Adaptive Fuzzy Artificial Potential Field), GPS navigation.</p>
+                </div>
+                <div class="detail-item"><strong>Key Results</strong>
+                    <p>Reduced navigation time by 17.62% and driving distance by 14.87% compared to non-fuzzy APF.</p>
+                </div>
+                <div class="detail-item"><strong>Environment</strong>
+                    <p>Two unknown wooded outdoor environments with dense obstacles.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Adaptive obstacle expansion radius using fuzzy logic; LiDAR density-based representation.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Unique Improvement</h4>
+                        <p>Combine AFAPF with global path planner (A*, RRT); integrate dynamic obstacle prediction.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 13 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">13</div>
+                <div class="year-journal"><span class="source">Mechatronics (Elsevier) • 2025</span></div>
+            </div>
+            <h3>A robust feedback-linearization MPC with artificial target for UGVs</h3>
+            <p class="authors">Bruno S.S. Pereira, Tito L.M. Santos, Andre G.S. Conceicao</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Robust trajectory tracking for UGVs under bounded disturbances with guaranteed constraint
+                        satisfaction.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Robust Feedback-Linearization + Linear MPC (QP) + Artificial Target + Analytical Target
+                        Modification.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>Clearpath Husky A200 UGV, OptiTrack motion capture system (8 cameras, 100 Hz), ROS.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Robust FL-MPC (RFL-MPC), Artificial Target MPC, Constraint Mapping, QP Optimization.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Achieves robust input & state constraint satisfaction; Recursive feasibility guaranteed;
+                            Computational efficiency vs NMPC.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Robust constraint satisfaction; Artificial reference for enlarging attraction domain; Linear
+                            MPC approach.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 14 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">14</div>
+                <div class="year-journal"><span class="source">IWCMC (IEEE) • 2025</span></div>
+            </div>
+            <h3>Adaptive P2P UAV-UGV Prototype for Ad Hoc Network-based Precision Agriculture</h3>
+            <p class="authors">Demirel Memet, Ionuț Pirnog, et al.</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Lack of reliable 4G/5G connectivity for UAV-UGV agricultural monitoring in remote areas.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Peer-to-Peer (P2P) Ad Hoc Network Architecture integrating WSN + UGV + UAV; UAV acts as mobile
+                        AP.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>UGV (STEM 4WD), Arduino UNO, ESP32-CAM, DJI Mini 3 Pro UAV, Temp/Humidity sensors.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>P2P Ad Hoc Networking; Sensor validation using MRE & RMSE.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Validated under mild conditions; low MRE for Temp/Humidity; Mobile AP robustness.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Ad hoc P2P communication for remote UGV-UAV; Modular WSN architecture; Sensor validation
+                            framework.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 15 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">15</div>
+                <div class="year-journal"><span class="source">Computers and Electronics in Agriculture • 2025</span>
+                </div>
+            </div>
+            <h3>Tactile Sensing & Visually-Impaired Navigation in Densely Planted Row Crops</h3>
+            <p class="authors">Adam M. Gronewold, Philip Mulford, Eliana Ray, Laura E. Ray</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Vision-based navigation fails in dense row crops due to occlusion, lighting, and deformable
+                        vegetation.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Pure tactile-based perception using mechanical feelers + FSM + Kinematic stalk localization +
+                        Blind-adapted A*.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>Mechanical paddle feelers, Modified Pioneer 3-AT, NVIDIA Jetson, RTK-GNSS.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Finite State Machine (FSM), Zero-slip kinematic localization, Blind-adapted A*, Pure Pursuit
+                        controller.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>~97.2% contact classification accuracy; ~1.9 cm simulated localization accuracy; >30 m real
+                            cornfield traversal.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Tactile-only navigation; Blind A* modification; Real-time stalk mapping without vision.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 16 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">16</div>
+                <div class="year-journal"><span class="source">Expert Systems with Applications • 2024</span></div>
+            </div>
+            <h3>Formation collaborative obstacle avoidance with multiple UGVs in restricted environments based on
+                adaptive DWA</h3>
+            <p class="authors">Jiahui Wang, Jun Wang, Ruofan Chen, Kai Yang, Baolei Wu, Yongqiang Qi</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Formation obstacle avoidance for multiple UGVs in restricted environments with limited sensing
+                        and bandwidth.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Multi-ADWA framework: Adaptive DWA + Dual-priority mechanism + Event-triggered behavior
+                        switching.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>Physical UGV platforms (LiDAR-based), Intel i5 host system.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Adaptive DWA, Leader–Follower formation control, Distributed optimization, Event-triggered
+                        control.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Improved efficiency; reduced deadlocks; faster formation recovery; validated in simulation +
+                            real-world.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Adaptive trajectory prediction; Dual-priority motion sequencing; Event-triggered switching
+                            logic.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 17 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">17</div>
+                <div class="year-journal"><span class="source">Sensors (MDPI) • 2025</span></div>
+            </div>
+            <h3>Robust and Precise Navigation and Obstacle Avoidance for Unmanned Ground Vehicles</h3>
+            <p class="authors">González-Hernández et al.</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>UGVs face traction loss and irregular terrain; need robust trajectory tracking without complex
+                        derivatives.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Simplified 2nd-order SMC; Cascaded architecture (trajectory gen, pose estimation, LiDAR evasion,
+                        speed regulation).</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>RPLiDAR A2, GNSS, redundant IMUs, Magnetometer; 4WD differential-drive UGV.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Second-order Sliding Mode Control (SMC), GNSS-IMU pose fusion, LiDAR point cloud processing.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Tracking error ~0.08m; std. dev. of position/velocity low; robust to disturbances.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>SMC for robust outdoor control; LiDAR-GNSS pose fusion; real-time evasion logic.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 18 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">18</div>
+                <div class="year-journal"><span class="source">Scientific Reports (Nature) • 2026</span></div>
+            </div>
+            <h3>Autonomous navigation in unstructured outdoor environments using hierarchical deep reinforcement
+                learning</h3>
+            <p class="authors">Ahmed Tibermacine et al.</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>UGVs struggle with unstructured outdoor navigation due to unpredictable obstacles and terrain
+                        variations.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Hierarchical deep RL: Semantic perception + High-level RL policy + Low-level geometric
+                        controller.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>RGB-D cameras, LiDAR; wheeled/tracked UGV; NVIDIA GPU.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>HRL (PPO/DDPG), Semantic segmentation CNN (U-Net/DeepLab), Reward shaping.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>86.7% trail-following success; low collision frequency; precise path tracking; superior vs.
+                            baselines.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Hierarchical RL architecture; semantic perception pipeline; reward shaping strategies.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 19 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">19</div>
+                <div class="year-journal"><span class="source">Sensors (MDPI) • 2023</span></div>
+            </div>
+            <h3>Reinforcement and Curriculum Learning for Off-Road Autonomous Navigation of an UGV</h3>
+            <p class="authors">Manuel Sánchez, et al.</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Off-road navigation requires handling unstructured terrain traversability without extensive
+                        generic training data.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Deep RL with Actor-Critic; Curriculum Learning across 3 Gazebo scenarios; 3D LiDAR → virtual 2D
+                        traversability scanner.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>3D LiDAR, Andabata UGV platform, onboard computing.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Actor-Critic RL, Random Forest traversability classifier.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Successful sim-to-real transfer; collision avoidance and goal reaching in natural terrain;
+                            accelerated convergence.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Traversability mapping from 3D LiDAR; curriculum learning; Actor-Critic RL.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 20 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">20</div>
+                <div class="year-journal"><span class="source">CoDIT • 2016</span></div>
+            </div>
+            <h3>An integration framework for UGV outdoor navigation system based on multi-sensor fusion</h3>
+            <p class="authors">Lazhar Khriji, et al.</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Seamless integration of separate modules (perception, planning, control) for real-time outdoor
+                        navigation.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Three-module architecture: Line/obstacle detection, Path planning/tracking, Real-time motor
+                        control.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>LiDAR scanner, monocular camera, motor control system hardware.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>LiDAR-camera fusion, path planning within boundaries, motor control.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Successful real-time navigation within boundaries; demonstrated system integration
+                            performance.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Modular three-layer architecture; LiDAR-camera fusion pipeline; integration framework.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 21 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">21</div>
+                <div class="year-journal"><span class="source">Virginia Tech Dissertation • 2025</span></div>
+            </div>
+            <h3>Terrain-Aware Tactical Motion Planning and Control of Off-Road Unmanned Ground Vehicles</h3>
+            <p class="authors">Jyotirmoy Mukherjee</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>UGVs in GNSS-denied terrains need terrain-aware stealth navigation stack without GPS.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Hierarchical stack: vision-inertial mapping (VIO) → stealth planning → trajectory optimization →
+                        control.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>Vision sensors, IMUs, Intel RealSense, Clearpath Husky A200.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Vision-Inertial Odometry (VIO), terrain segmentation, trajectory optimization, robust control.
+                    </p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Successful GNSS-denied navigation; 28Hz terrain segmentation; validated indoor/outdoor
+                            tracking.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>GNSS-denied VIO pipeline; hierarchical autonomy stack; terrain-aware planning.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 22 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">22</div>
+                <div class="year-journal"><span class="source">IEEE TVT • 2025</span></div>
+            </div>
+            <h3>Real-Time Navigation of Unmanned Ground Vehicles in Complex Outdoor Environments</h3>
+            <p class="authors">Han, Chen et al.</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Precise real-time maneuvering across challenging outdoor terrains with dynamic obstacles and
+                        uncertainty.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Multi-modal sensor fusion + enhanced perception + memory-guided decision-making strategies.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>LiDAR, Cameras, IMU, GNSS; high-performance onboard computing.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Deep learning fusion, memory-augmented navigation policies, adaptive trajectory optimization.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Superior real-time performance; robust decision-making; validated field performance.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Multi-modal sensor fusion pipeline; memory-guided navigation strategies; terrain
+                            classification.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 23 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">23</div>
+                <div class="year-journal"><span class="source">PERMIS • 2010</span></div>
+            </div>
+            <h3>Evaluating the Performance of Unmanned Ground Vehicle Water Detection</h3>
+            <p class="authors">Shane Brennan, Alberto J. Rodriguez, et al.</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Reliable water hazard detection for cross-country navigation; lack of standardized metrics.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Four image-space water detection algorithms fused into terrain classification; stereo ranging in
+                        3D maps.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>Stereo camera pairs (3 baselines), GDRS ladar, IMU, GPS; experimental XUVs.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Water detection fusion, stereo range fusion, temporal filtering in terrain maps, Kalman-filtered
+                        GPS/IMU.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Established detection range/accuracy metrics; ground truth within 0.5% positioning error.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Water detection fusion methodology; image vs. map space metrics; ground-truth validation
+                            protocol.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 24 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">24</div>
+                <div class="year-journal"><span class="source">Transportation Research Procedia • 2021</span></div>
+            </div>
+            <h3>Optimal path planning of autonomous navigation in unstructured outdoor environment</h3>
+            <p class="authors">S. Julius Fusic, G. Kanagaraj, K. Hariharan, S. Karthikeyan</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Collision-free global path planning in unstructured environments using satellite imagery without
+                        ground sensors.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Satellite image processing for path extraction + heuristic cost map generation + optimal planning
+                        algorithm.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>Satellite imagery (offline/remote source).</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Satellite image segmentation, heuristic cost functions, A*-variant optimal path search.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Generates paths 3-5x faster than traditional A*; 95%+ path optimality on unstructured
+                            terrains.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Satellite preprocessing as global planner; heuristic cost map generation module.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 25 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">25</div>
+                <div class="year-journal"><span class="source">Int. Journal of Vehicle Performance • 2024</span></div>
+            </div>
+            <h3>Exploration of robust and intelligent navigation algorithms to ensure off-road autonomous vehicle
+                mobility</h3>
+            <p class="authors">Michael Cole, Kumar B. Kulkarni</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>Military UGVs perform worse autonomously than tele-operated in off-road terrain; need
+                        state-of-the-art handling.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Monte Carlo simulations evaluating 5 path planners (classical to learning) across deformable soil
+                        scenarios.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>UGV simulator with deformable terrain physics; multiple soil types.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>A*, DWA, Hybrid A*/RRT*, Learning-based planners; vehicle-terrain interaction models.</p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>Quantitative comparison of success rates; identifies best planners per terrain soil type.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>Monte Carlo validation methodology; path planner comparison framework; robustness metrics.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Paper 26 -->
+        <div class="survey-card">
+            <div class="card-header">
+                <div class="sl-no">26</div>
+                <div class="year-journal"><span class="source">Studia Informatica • 2025</span></div>
+            </div>
+            <h3>Autonomous Navigation for Unmanned Ground Vehicles in Unstructured Terrain</h3>
+            <p class="authors">M. Nowakowski</p>
+            <div class="details-grid">
+                <div class="detail-item"><strong>Problem</strong>
+                    <p>UGVs struggle with perception and traversability in unstructured environments like forests and
+                        mountains.</p>
+                </div>
+                <div class="detail-item"><strong>Methodology</strong>
+                    <p>Presents TAERO platform; reviews perception challenges and AI solutions for unstructured
+                        operations.</p>
+                </div>
+                <div class="detail-item"><strong>Sensors</strong>
+                    <p>LiDAR, cameras, radar, UWB radar for vegetation penetration; TAERO UGV platform.</p>
+                </div>
+                <div class="detail-item"><strong>Algorithms</strong>
+                    <p>Terrain classification (SPOC CNN), deep learning sensor interpretation, real-time path planning.
+                    </p>
+                </div>
+            </div>
+            <div class="insight-section">
+                <div class="insight-grid">
+                    <div class="insight-item">
+                        <h4>Key Results</h4>
+                        <p>TAERO demonstrated for reconnaissance; UWB radar distinguishes grass/bushes from solid
+                            obstacles.</p>
+                    </div>
+                    <div class="insight-item">
+                        <h4>Use for Project</h4>
+                        <p>TAERO platform requirements as benchmark; UWB radar vegetation penetration concept.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="remarks">Identifies exact gaps (decision-making under uncertainty) that our framework addresses.
+            </div>
         </div>
     </div>
 </body>

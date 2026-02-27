@@ -141,28 +141,97 @@
             text-align: center;
         }
 
-        .guide-title {
-            color: var(--accent-2);
-            font-size: 1.2rem;
+        .research-section {
+            margin-top: 60px;
+        }
+
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+            text-align: left;
+        }
+
+        .research-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            padding: 35px;
+            border-radius: 25px;
+            border: 1px solid var(--border-glass);
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .research-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-2);
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: var(--shadow-vibrant);
+        }
+
+        .card-badge {
+            display: inline-block;
+            background: var(--accent-1);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.750rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            display: block;
+            letter-spacing: 1px;
+            width: fit-content;
         }
 
-        .guide-name {
-            font-size: clamp(2rem, 4vw, 3rem);
+        .research-card h3 {
             color: var(--accent-1);
+            margin: 0;
+            font-size: 1.5rem;
             font-weight: 800;
-            margin-bottom: 30px;
         }
 
-        .interaction-placeholder {
-            border: 2px dashed var(--border-glass);
-            padding: 40px;
-            border-radius: 20px;
+        .specs {
             color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        .tech-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tech-item {
+            font-size: 0.9rem;
+            color: var(--text-main);
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .tech-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-2);
+            font-weight: bold;
+        }
+
+        .analysis-box {
+            margin-top: auto;
+            background: var(--gradient-vibrant);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            line-height: 1.6;
             font-style: italic;
         }
     </style>
@@ -186,8 +255,57 @@
             <span class="guide-title">Project Guide</span>
             <div class="guide-name">Dr. Rakesh P Tapaskar</div>
 
-            <div class="interaction-placeholder">
-                Review sessions and project guidance notes will be updated here.
+            <div class="research-section">
+                <h2
+                    style="color: var(--accent-1); text-align: center; margin-bottom: 20px; font-weight: 800; font-size: 2rem;">
+                    Hardware Component Research</h2>
+                <div class="research-grid">
+                    <!-- Yahboom IMU Card -->
+                    <div class="research-card">
+                        <div class="card-badge">Precision Motion</div>
+                        <h3>Yahboom 10-Axis IMU</h3>
+                        <p class="specs">High-precision motion tracking and attitude measurement module for robotics.
+                        </p>
+                        <div class="tech-list">
+                            <div class="tech-item"><strong>Configuration:</strong> 10-Axis (Gyro + Accel + Mag + Baro)
+                            </div>
+                            <div class="tech-item"><strong>Fusion:</strong> Built-in Kalman Filtering Engine</div>
+                            <div class="tech-item"><strong>Accuracy:</strong> 0.05° Static / 0.1° Dynamic Attitude
+                                precision</div>
+                            <div class="tech-item"><strong>Rate:</strong> Up to 200Hz Data Return / 921600 Baud Rate
+                            </div>
+                            <div class="tech-item"><strong>System:</strong> Native ROS/ROS2 Support (Jetson & Raspberry
+                                Pi)</div>
+                        </div>
+                        <div class="analysis-box">
+                            "Critical for maintaining UGV stability in unstructured outdoor terrain where visual SLAM
+                            might be compromised by lighting or vibration."
+                        </div>
+                    </div>
+
+                    <!-- RTK GPS Card -->
+                    <div class="research-card">
+                        <div class="card-badge">Centimeter Positioning</div>
+                        <h3>RTK GNSS System</h3>
+                        <p class="specs">Real-Time Kinematic positioning for extreme localization accuracy.</p>
+                        <div class="tech-list">
+                            <div class="tech-item"><strong>Precision:</strong> 1-2 cm Relative Accuracy (vs 2-5m
+                                standard)</div>
+                            <div class="tech-item"><strong>Architecture:</strong> Base Station + Rover (Mobile Node)
+                                configuration</div>
+                            <div class="tech-item"><strong>Coverage:</strong> Multi-Constellation (GPS, GLONASS,
+                                Galileo, BeiDou)</div>
+                            <div class="tech-item"><strong>Efficiency:</strong> Near-zero post-processing for real-time
+                                tracking</div>
+                            <div class="tech-item"><strong>Safety:</strong> Essential for precise lane-following and
+                                waypoint navigation</div>
+                        </div>
+                        <div class="analysis-box">
+                            "Solves the GPS drift problem in agricultural and tactical scenarios, allowing for
+                            sub-decimeter path following and object avoidance."
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
