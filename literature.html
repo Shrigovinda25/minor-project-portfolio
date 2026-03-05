@@ -191,6 +191,17 @@
             line-height: 1.3;
         }
 
+        .survey-card h3 a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .survey-card h3 a:hover {
+            color: var(--accent-2);
+            text-decoration: underline;
+        }
+
         .authors {
             font-style: italic;
             color: var(--text-muted);
@@ -486,7 +497,8 @@
                     <span class="source">Drones (MDPI) • 2025</span>
                 </div>
             </div>
-            <h3><a href="Research Papers/02.pdf" target="_blank">UAV Autonomous Navigation System Based on Air–Ground Collaboration in GPS-Denied Environments</a></h3>
+            <h3><a href="Research Papers/02.pdf" target="_blank">UAV Autonomous Navigation System Based on Air–Ground
+                    Collaboration in GPS-Denied Environments</a></h3>
             <p class="authors">Pengyu Yue, Jing Xin, Yan Huang, Jiahang Zhao, Christopher Zhang, Wei Chen, Mao Shan</p>
 
             <div class="details-grid">
@@ -549,35 +561,33 @@
             <div class="card-header">
                 <div class="sl-no">3</div>
                 <div class="year-journal">
-                    <span class="source">Robotics and Autonomous Systems (Elsevier) • 2023</span>
+                    <span class="source">Machines (MDPI Journal) • 2018</span>
                 </div>
             </div>
-            <h3><a href="Research Papers/03.pdf" target="_blank">A Review of UAV Autonomous Navigation in GPS-Denied Environments</a></h3>
-            <p class="authors">Yingxiu Chang, Yongqiang Cheng, Umar Manzoor, John Murray</p>
+            <h3><a href="Research Papers/03.pdf" target="_blank">Obstacle Avoidance System for Unmanned Ground Vehicles
+                    by Using Ultrasonic Sensors</a></h3>
+            <p class="authors">Marco Claudio De Simone, Zandra Betzabe Rivera, Domenico Guida</p>
 
             <div class="details-grid">
                 <div class="detail-item">
                     <strong>Problem Addressed</strong>
-                    <p>Lack of comprehensive survey covering complete UAV navigation strategies in GPS-denied
-                        environments.</p>
+                    <p>Reliable obstacle detection and object recognition for UGV navigation using low-cost sensors.</p>
                 </div>
                 <div class="detail-item">
                     <strong>Methodology</strong>
-                    <p>Taxonomy-based review: Mapless vs Map-based navigation; classification of Integrated, Direct,
-                        Indirect approaches; evaluation metrics & simulated validation.</p>
+                    <p>Neural-network-based object recognition using ultrasonic sensor data and MATLAB training.</p>
                 </div>
                 <div class="detail-item">
                     <strong>Sensors / Hardware</strong>
-                    <p>Review Paper (various sensors discussed: Camera, LiDAR, IMU, RF, UWB, Ultrasonic).</p>
+                    <p>5× SRF05 Ultrasonic Sensors, Arduino-Galileo controller, IMU sensors, DC gear motors.</p>
                 </div>
                 <div class="detail-item">
                     <strong>Dataset / Environment</strong>
-                    <p>Literature survey + Microsoft AirSim simulated environments.</p>
+                    <p>Experimental test-rig + autonomous rover tests; ~3300 sensor samples collected.</p>
                 </div>
                 <div class="detail-item">
                     <strong>Algorithms / Models</strong>
-                    <p>CNN, Reinforcement Learning, Optical Flow, SLAM (V-SLAM, LiDAR-SLAM), A*, Dijkstra, RRT, APF,
-                        NBV, Frontier-based.</p>
+                    <p>Feed-forward Artificial Neural Network (MATLAB Neural Network Toolbox).</p>
                 </div>
             </div>
 
@@ -585,30 +595,27 @@
                 <div class="insight-grid">
                     <div class="insight-item">
                         <h4>Key Results</h4>
-                        <p>Clear taxonomy of navigation strategies; comparative evaluation framework; identification of
-                            research trends & challenges.</p>
+                        <p>Object recognition accuracy ≈77% in preliminary tests; ~99% accuracy in real rover
+                            experiments.</p>
                     </div>
                     <div class="insight-item">
                         <h4>Limitations</h4>
-                        <p>No new algorithm proposed; dependent on surveyed studies; simulation-based validation only.
-                        </p>
+                        <p>Sensor interference, limited object types, small experimental environment.</p>
                     </div>
                 </div>
                 <div class="insight-grid"
                     style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
                     <div class="insight-item">
                         <h4>Use for Project</h4>
-                        <p>Navigation taxonomy, evaluation metrics, comparison of planning/localization techniques.</p>
+                        <p>Ultrasonic-based obstacle detection, neural network object classification approach.</p>
                     </div>
                     <div class="insight-item">
                         <h4>Unique Improvement</h4>
-                        <p>Hybrid navigation framework combining Mapless reactivity + Map-based robustness with
-                            multi-sensor fusion.</p>
+                        <p>Add LiDAR + camera-based perception with SLAM and advanced path planning.</p>
                     </div>
                 </div>
             </div>
-            <div class="remarks">Strong foundational reference for literature review & system design justification.
-            </div>
+            <div class="remarks">Useful reference for low-cost sensor-based autonomous navigation systems.</div>
         </div>
 
         <!-- Paper 4 -->
@@ -619,8 +626,9 @@
                     <span class="source">Advances in Materials Science and Engineering (Wiley) • 2025</span>
                 </div>
             </div>
-            <h3><a href="Research Papers/04.pdf" target="_blank">Development of a Model and Performance Analysis of the Characteristics of a Multifunctional Autonomous
-                Unmanned Ground Vehicle</a></h3>
+            <h3><a href="Research Papers/04.pdf" target="_blank">Development of a Model and Performance Analysis of the
+                    Characteristics of a Multifunctional Autonomous
+                    Unmanned Ground Vehicle</a></h3>
             <p class="authors">Dolya Alexandr, Kolumbetov Batyr, Kalkabek Aidos</p>
 
             <div class="details-grid">
@@ -686,7 +694,8 @@
                     <span class="source">HAL Preprint / Research Archive • 2025</span>
                 </div>
             </div>
-            <h3><a href="Research Papers/05.pdf" target="_blank">Drone-Assisted UAV-UGV Collaboration for Autonomous Navigation in Snow-Covered Terrain</a></h3>
+            <h3><a href="Research Papers/05.pdf" target="_blank">Drone-Assisted UAV-UGV Collaboration for Autonomous
+                    Navigation in Snow-Covered Terrain</a></h3>
             <p class="authors">Shreyam Gupta, Pranjal Aggarwal, Priyam Gupta</p>
 
             <div class="details-grid">
@@ -752,7 +761,8 @@
                     <span class="source">arXiv Preprint • 2024</span>
                 </div>
             </div>
-            <h3><a href="Research Papers/06.pdf" target="_blank">A Risk-aware Planning Framework of UGVs in Off-Road Environment</a></h3>
+            <h3><a href="Research Papers/06.pdf" target="_blank">A Risk-aware Planning Framework of UGVs in Off-Road
+                    Environment</a></h3>
             <p class="authors">Junkai Jiang, Zhenhua Hu, Zihan Xie, Changlong Hao, et al.</p>
 
             <div class="details-grid">
@@ -862,7 +872,8 @@
                 <div class="sl-no">8</div>
                 <div class="year-journal"><span class="source">ICMCSI • 2025</span></div>
             </div>
-            <h3><a href="Research Papers/08.pdf" target="_blank">Design and Development of IoT Smart Driving Protocol for Unmanned Ground Vehicles</a></h3>
+            <h3><a href="Research Papers/08.pdf" target="_blank">Design and Development of IoT Smart Driving Protocol
+                    for Unmanned Ground Vehicles</a></h3>
             <p class="authors">Santhosh Kumar Seelam et al.</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -899,7 +910,8 @@
                 <div class="sl-no">9</div>
                 <div class="year-journal"><span class="source">APST • 2023</span></div>
             </div>
-            <h3><a href="Research Papers/09.pdf" target="_blank">Recent Developments in Modular Unmanned Ground Vehicles: A Review</a></h3>
+            <h3><a href="Research Papers/09.pdf" target="_blank">Recent Developments in Modular Unmanned Ground
+                    Vehicles: A Review</a></h3>
             <p class="authors">Abhijit Gadekar et al</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -975,7 +987,8 @@
                 <div class="sl-no">11</div>
                 <div class="year-journal"><span class="source">Alexandria Engineering Journal • 2026</span></div>
             </div>
-            <h3><a href="Research Papers/11.pdf" target="_blank">Autonomous charging system via manipulator-UGV docking using zero-shot 6-DoF pose estimation</a></h3>
+            <h3><a href="Research Papers/11.pdf" target="_blank">Autonomous charging system via manipulator-UGV docking
+                    using zero-shot 6-DoF pose estimation</a></h3>
             <p class="authors">Minkyu Jung, Andrew Jaeyong Choi</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1015,8 +1028,9 @@
                 <div class="sl-no">12</div>
                 <div class="year-journal"><span class="source">Journal of Building Engineering • 2024</span></div>
             </div>
-            <h3><a href="Research Papers/12.pdf" target="_blank">Unmanned Ground Vehicles (UGVs)-based mobile sensing for Indoor Environmental Quality (IEQ) monitoring:
-                Current challenges and future directions</a></h3>
+            <h3><a href="Research Papers/12.pdf" target="_blank">Unmanned Ground Vehicles (UGVs)-based mobile sensing
+                    for Indoor Environmental Quality (IEQ) monitoring:
+                    Current challenges and future directions</a></h3>
             <p class="authors">Ebrahim Alinezhad, Victor Gan, Victor W-C Chang, Jin Zhou</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1078,7 +1092,8 @@
                 <div class="sl-no">13</div>
                 <div class="year-journal"><span class="source">IFAC PapersOnLine • 2025</span></div>
             </div>
-            <h3><a href="Research Papers/13.pdf" target="_blank">Developing a Communication Node Deployment System for UGVs</a></h3>
+            <h3><a href="Research Papers/13.pdf" target="_blank">Developing a Communication Node Deployment System for
+                    UGVs</a></h3>
             <p class="authors">C. Fisher, M.J. McDermott</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1138,7 +1153,8 @@
                 <div class="sl-no">14</div>
                 <div class="year-journal"><span class="source">IEEE IWCMC • 2025</span></div>
             </div>
-            <h3><a href="Research Papers/14.pdf" target="_blank">Adaptive P2P UAV-UGV Prototype for Ad Hoc Network-based Precision Agriculture</a></h3>
+            <h3><a href="Research Papers/14.pdf" target="_blank">Adaptive P2P UAV-UGV Prototype for Ad Hoc Network-based
+                    Precision Agriculture</a></h3>
             <p class="authors">Demirel Memet, Ionuț Pirnog, et al.</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1196,7 +1212,8 @@
                 <div class="year-journal"><span class="source">Computers and Electronics in Agriculture • 2025</span>
                 </div>
             </div>
-            <h3><a href="Research Papers/15.pdf" target="_blank">Tactile Sensing & Visually-Impaired Navigation in Densely Planted Row Crops</a></h3>
+            <h3><a href="Research Papers/15.pdf" target="_blank">Tactile Sensing & Visually-Impaired Navigation in
+                    Densely Planted Row Crops</a></h3>
             <p class="authors">Adam M. Gronewold, Philip Mulford, Eliana Ray, Laura E. Ray</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1254,7 +1271,8 @@
                 <div class="sl-no">16</div>
                 <div class="year-journal"><span class="source">HardwareX (Elsevier) • 2021</span></div>
             </div>
-            <h3><a href="Research Papers/16.pdf" target="_blank">Cable Deployment System for Unmanned Ground Vehicle (UGV) Mobile Microgrids</a></h3>
+            <h3><a href="Research Papers/16.pdf" target="_blank">Cable Deployment System for Unmanned Ground Vehicle
+                    (UGV) Mobile Microgrids</a></h3>
             <p class="authors">John E. Naglak, Caleb Kase, Max McGinty, Casey D. Majhor, Carl Greene, Jeremy Bos, Wayne
                 Weaver</p>
             <div class="details-grid">
@@ -1313,7 +1331,8 @@
                 <div class="sl-no">17</div>
                 <div class="year-journal"><span class="source">Sensors (MDPI) • 2025</span></div>
             </div>
-            <h3><a href="Research Papers/17.pdf" target="_blank">Robust and Precise Navigation and Obstacle Avoidance for Unmanned Ground Vehicles</a></h3>
+            <h3><a href="Research Papers/17.pdf" target="_blank">Robust and Precise Navigation and Obstacle Avoidance
+                    for Unmanned Ground Vehicles</a></h3>
             <p class="authors">González-Hernández et al.</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1351,8 +1370,9 @@
                 <div class="sl-no">18</div>
                 <div class="year-journal"><span class="source">Scientific Reports (Nature) • 2026</span></div>
             </div>
-            <h3><a href="Research Papers/18.pdf" target="_blank">Autonomous navigation in unstructured outdoor environments using hierarchical deep reinforcement
-                learning</a></h3>
+            <h3><a href="Research Papers/18.pdf" target="_blank">Autonomous navigation in unstructured outdoor
+                    environments using hierarchical deep reinforcement
+                    learning</a></h3>
             <p class="authors">Ahmed Tibermacine et al.</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1391,7 +1411,8 @@
                 <div class="sl-no">19</div>
                 <div class="year-journal"><span class="source">Sensors (MDPI) • 2023</span></div>
             </div>
-            <h3><a href="Research Papers/19.pdf" target="_blank">Reinforcement and Curriculum Learning for Off-Road Autonomous Navigation of an UGV</a></h3>
+            <h3><a href="Research Papers/19.pdf" target="_blank">Reinforcement and Curriculum Learning for Off-Road
+                    Autonomous Navigation of an UGV</a></h3>
             <p class="authors">Manuel Sánchez, et al.</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1430,7 +1451,8 @@
                 <div class="sl-no">20</div>
                 <div class="year-journal"><span class="source">CoDIT • 2016</span></div>
             </div>
-            <h3><a href="Research Papers/20.pdf" target="_blank">An integration framework for UGV outdoor navigation system based on multi-sensor fusion</a></h3>
+            <h3><a href="Research Papers/20.pdf" target="_blank">An integration framework for UGV outdoor navigation
+                    system based on multi-sensor fusion</a></h3>
             <p class="authors">Lazhar Khriji, et al.</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1469,7 +1491,8 @@
                 <div class="sl-no">21</div>
                 <div class="year-journal"><span class="source">Virginia Tech Dissertation • 2025</span></div>
             </div>
-            <h3><a href="Research Papers/21.pdf" target="_blank">Terrain-Aware Tactical Motion Planning and Control of Off-Road Unmanned Ground Vehicles</a></h3>
+            <h3><a href="Research Papers/21.pdf" target="_blank">Terrain-Aware Tactical Motion Planning and Control of
+                    Off-Road Unmanned Ground Vehicles</a></h3>
             <p class="authors">Jyotirmoy Mukherjee</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1508,7 +1531,8 @@
                 <div class="sl-no">22</div>
                 <div class="year-journal"><span class="source">IEEE TVT • 2025</span></div>
             </div>
-            <h3><a href="Research Papers/22.pdf" target="_blank">Real-Time Navigation of Unmanned Ground Vehicles in Complex Outdoor Environments</a></h3>
+            <h3><a href="Research Papers/22.pdf" target="_blank">Real-Time Navigation of Unmanned Ground Vehicles in
+                    Complex Outdoor Environments</a></h3>
             <p class="authors">Han, Chen et al.</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1546,7 +1570,8 @@
                 <div class="sl-no">23</div>
                 <div class="year-journal"><span class="source">PERMIS • 2010</span></div>
             </div>
-            <h3><a href="Research Papers/23.pdf" target="_blank">Evaluating the Performance of Unmanned Ground Vehicle Water Detection</a></h3>
+            <h3><a href="Research Papers/23.pdf" target="_blank">Evaluating the Performance of Unmanned Ground Vehicle
+                    Water Detection</a></h3>
             <p class="authors">Shane Brennan, Alberto J. Rodriguez, et al.</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1585,7 +1610,8 @@
                 <div class="sl-no">24</div>
                 <div class="year-journal"><span class="source">Transportation Research Procedia • 2021</span></div>
             </div>
-            <h3><a href="Research Papers/24.pdf" target="_blank">Optimal path planning of autonomous navigation in unstructured outdoor environment</a></h3>
+            <h3><a href="Research Papers/24.pdf" target="_blank">Optimal path planning of autonomous navigation in
+                    unstructured outdoor environment</a></h3>
             <p class="authors">S. Julius Fusic, G. Kanagaraj, K. Hariharan, S. Karthikeyan</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1624,7 +1650,8 @@
                 <div class="sl-no">25</div>
                 <div class="year-journal"><span class="source">Smart Agricultural Technology • 2025</span></div>
             </div>
-            <h3><a href="Research Papers/25.pdf" target="_blank">Development of a Stereo Vision-Based UGV Guidance System for Bareroot Forest Nurseries</a></h3>
+            <h3><a href="Research Papers/25.pdf" target="_blank">Development of a Stereo Vision-Based UGV Guidance
+                    System for Bareroot Forest Nurseries</a></h3>
             <p class="authors">Sharif Shabani, Ashish R. Mulaka, Thomas A. Stokes, Tanzeel U. Rehman, Yin Bao</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1683,7 +1710,8 @@
                 <div class="sl-no">26</div>
                 <div class="year-journal"><span class="source">Studia Informatica • 2025</span></div>
             </div>
-            <h3><a href="Research Papers/26.pdf" target="_blank">Autonomous Navigation for Unmanned Ground Vehicles in Unstructured Terrain</a></h3>
+            <h3><a href="Research Papers/26.pdf" target="_blank">Autonomous Navigation for Unmanned Ground Vehicles in
+                    Unstructured Terrain</a></h3>
             <p class="authors">M. Nowakowski</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
@@ -1724,7 +1752,8 @@
                 <div class="sl-no">27</div>
                 <div class="year-journal"><span class="source">Results in Engineering (Elsevier) • 2025</span></div>
             </div>
-            <h3><a href="Research Papers/27.pdf" target="_blank">OS-RFODG: Open-source ROS2 framework for outdoor UAV dataset generation</a></h3>
+            <h3><a href="Research Papers/27.pdf" target="_blank">OS-RFODG: Open-source ROS2 framework for outdoor UAV
+                    dataset generation</a></h3>
             <p class="authors">Imen Jarraya, Mohamed Abdelkader, Khaled Gabr, Muhammad Bilal Kadri, Fatimah Alahmed,
                 Wadii Boulila, Anis Koubaa</p>
             <div class="details-grid">
@@ -1783,16 +1812,21 @@
         <div class="survey-card">
             <div class="card-header">
                 <div class="sl-no">28</div>
-                <div class="year-journal"><span class="source">Robotics and Autonomous Systems (Elsevier) â€¢ 2024</span></div>
+                <div class="year-journal"><span class="source">Robotics and Autonomous Systems (Elsevier) â€¢
+                        2024</span></div>
             </div>
-            <h3><a href="Research Papers/28.pdf" target="_blank">3D Traversability Analysis and Path Planning Based on Mechanical Effort for UGVs in Forest Environments</a></h3>
+            <h3><a href="Research Papers/28.pdf" target="_blank">3D Traversability Analysis and Path Planning Based on
+                    Mechanical Effort for UGVs in Forest Environments</a></h3>
             <p class="authors">Afonso E. Carvalho, JoÃ£o Filipe Ferreira, David Portugal</p>
             <div class="details-grid">
                 <div class="detail-item"><strong>Problem</strong>
-                    <p>Autonomous navigation in rough forest terrains is difficult because robots must avoid obstacles, steep slopes, and unsafe paths while minimizing energy consumption.</p>
+                    <p>Autonomous navigation in rough forest terrains is difficult because robots must avoid obstacles,
+                        steep slopes, and unsafe paths while minimizing energy consumption.</p>
                 </div>
                 <div class="detail-item"><strong>Methodology</strong>
-                    <p>Proposed Mechanical Effort Based Traversability (MEBT) framework that analyzes 3D point cloud terrain maps, computes terrain gradient and mechanical effort, and generates an optimal path on a traversability costmap.</p>
+                    <p>Proposed Mechanical Effort Based Traversability (MEBT) framework that analyzes 3D point cloud
+                        terrain maps, computes terrain gradient and mechanical effort, and generates an optimal path on
+                        a traversability costmap.</p>
                 </div>
                 <div class="detail-item"><strong>Sensors / Hardware</strong>
                     <p>UGV robot platform (Clearpath Husky), Velodyne LiDAR, IMU, wheel encoders.</p>
@@ -1801,34 +1835,40 @@
                     <p>Gazebo simulation scenarios and real forest dataset (Montmorency Forest, Canada).</p>
                 </div>
                 <div class="detail-item"><strong>Algorithms</strong>
-                    <p>Gradient computation, traversability analysis, mechanical effort estimation, A* global planning with ROS move_base.</p>
+                    <p>Gradient computation, traversability analysis, mechanical effort estimation, A* global planning
+                        with ROS move_base.</p>
                 </div>
             </div>
             <div class="insight-section">
                 <div class="insight-grid">
                     <div class="insight-item">
                         <h4>Key Results</h4>
-                        <p>Generated safer paths with lower mechanical effort and lower pitch risk; significantly improved map processing speed compared to previous mechanical-effort approaches.</p>
+                        <p>Generated safer paths with lower mechanical effort and lower pitch risk; significantly
+                            improved map processing speed compared to previous mechanical-effort approaches.</p>
                     </div>
                     <div class="insight-item">
                         <h4>Limitations</h4>
-                        <p>System relies on pre-mapped point cloud environment; limited handling of dynamic obstacles; planning mainly focuses on global planning rather than full autonomy.</p>
+                        <p>System relies on pre-mapped point cloud environment; limited handling of dynamic obstacles;
+                            planning mainly focuses on global planning rather than full autonomy.</p>
                     </div>
                 </div>
                 <div class="insight-grid"
                     style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px;">
                     <div class="insight-item">
                         <h4>Use for Project</h4>
-                        <p>Traversability map generation, gradient-based terrain evaluation, mechanical-effort path planning concepts.</p>
+                        <p>Traversability map generation, gradient-based terrain evaluation, mechanical-effort path
+                            planning concepts.</p>
                     </div>
                     <div class="insight-item">
                         <h4>Unique Improvement</h4>
-                        <p>Add real-time perception + deep learning terrain classification + adaptive path planning using reinforcement learning or MPC.</p>
+                        <p>Add real-time perception + deep learning terrain classification + adaptive path planning
+                            using reinforcement learning or MPC.</p>
                     </div>
                 </div>
             </div>
             <div class="remarks">Useful for UGV navigation in forests, agriculture, or rough terrain robotics.</div>
-        </div>    </div>
+        </div>
+    </div>
 </body>
 
 </html>
