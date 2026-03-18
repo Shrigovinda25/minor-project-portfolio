@@ -173,7 +173,8 @@
             color: #ffffff;
         }
 
-        th, td {
+        th,
+        td {
             text-align: left;
             padding: 16px 20px;
             border-bottom: 1px solid var(--border-glass);
@@ -189,7 +190,7 @@
             width: 10%;
             text-align: center;
         }
-        
+
         td:first-child {
             text-align: center;
             font-weight: 600;
@@ -220,11 +221,15 @@
                 overflow-x: auto;
                 white-space: nowrap;
             }
-            td, th {
+
+            td,
+            th {
                 white-space: normal;
                 min-width: 200px;
             }
-            th:first-child, td:first-child {
+
+            th:first-child,
+            td:first-child {
                 min-width: 80px;
             }
         }
@@ -285,7 +290,7 @@
 
     <div class="container">
         <div class="content-card">
-            
+
             <h2>Functional Requirements</h2>
             <table>
                 <thead>
@@ -295,16 +300,49 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>1</td><td>The UGV shall provide mobility in forward, reverse, left, and right directions using four hub motors.</td></tr>
-                    <tr><td>2</td><td>The UGV shall support autonomous navigation between predefined waypoints.</td></tr>
-                    <tr><td>3</td><td>The system shall detect obstacles using LiDAR sensor during navigation.</td></tr>
-                    <tr><td>4</td><td>The system shall perform obstacle avoidance during autonomous operation.</td></tr>
-                    <tr><td>5</td><td>The UGV shall provide position information using GPS.</td></tr>
-                    <tr><td>6</td><td>The UGV shall provide orientation and acceleration data using IMU.</td></tr>
-                    <tr><td>7</td><td>The UGV shall provide live video streaming using onboard camera.</td></tr>
-                    <tr><td>8</td><td>The system shall allow remote monitoring from a ground control station.</td></tr>
-                    <tr><td>9</td><td>The system shall regulate power to motors and electronic components using battery and converters.</td></tr>
-                    <tr><td>10</td><td>The UGV shall operate on outdoor terrain including grass, gravel, and inclined surfaces.</td></tr>
+                    <tr>
+                        <td>1</td>
+                        <td>The UGV shall provide mobility in forward, reverse, left, and right directions using four
+                            hub motors.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The UGV shall support autonomous navigation between predefined waypoints.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>The system shall detect obstacles using LiDAR sensor during navigation.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The system shall perform obstacle avoidance during autonomous operation.</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>The UGV shall provide position information using GPS.</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>The UGV shall provide orientation and acceleration data using IMU.</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>The UGV shall provide live video streaming using onboard camera.</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>The system shall allow remote monitoring from a ground control station.</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>The system shall regulate power to motors and electronic components using battery and
+                            converters.</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>The UGV shall operate on outdoor terrain including grass, gravel, and inclined surfaces.
+                        </td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -317,20 +355,52 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>1</td><td>The overall dimensions of the UGV shall not exceed 70 cm × 50 cm × 40 cm.</td></tr>
-                    <tr><td>2</td><td>The UGV shall operate at speeds between 0.5 m/s and 1.5 m/s on flat terrain.</td></tr>
-                    <tr><td>3</td><td>The motor drive system shall operate within input voltage range of 31–36 V.</td></tr>
-                    <tr><td>4</td><td>The system shall operate using a battery capable of minimum 30 minutes continuous operation.</td></tr>
-                    <tr><td>5</td><td>The boost converter shall provide 36 V output within ±5% tolerance.</td></tr>
-                    <tr><td>6</td><td>The logic power supply shall provide regulated 5 V output for controller and sensors.</td></tr>
-                    <tr><td>7</td><td>The LiDAR sensor shall detect obstacles within a range of 0.2 m to 10 m.</td></tr>
-                    <tr><td>8</td><td>The vision system shall provide minimum 720p resolution at 15 FPS.</td></tr>
-                    <tr><td>9</td><td>The navigation system shall maintain position accuracy within ±2 m under normal GPS conditions.</td></tr>
-                    <tr><td>10</td><td>The UGV shall operate on slopes up to 15° without loss of stability.</td></tr>
+                    <tr>
+                        <td>1</td>
+                        <td>The overall dimensions of the UGV shall not exceed 70 cm × 50 cm × 40 cm.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The UGV shall operate at speeds between 0.5 m/s and 1.5 m/s on flat terrain.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>The motor drive system shall operate within input voltage range of 31–36 V.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The system shall operate using a battery capable of minimum 30 minutes continuous operation.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>The boost converter shall provide 36 V output within ±5% tolerance.</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>The logic power supply shall provide regulated 5 V output for controller and sensors.</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>The LiDAR sensor shall detect obstacles within a range of 0.2 m to 10 m.</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>The vision system shall provide minimum 720p resolution at 15 FPS.</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>The navigation system shall maintain position accuracy within ±2 m under normal GPS
+                            conditions.</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>The UGV shall operate on slopes up to 15° without loss of stability.</td>
+                    </tr>
                 </tbody>
             </table>
 
-            <h2>System Specifications (Final)</h2>
+            <h2>System Specifications</h2>
             <table>
                 <thead>
                     <tr>
@@ -339,21 +409,83 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>1</td><td>The UGV shall have maximum dimensions of 70 cm × 50 cm × 40 cm (L × W × H), measured including chassis, wheels, sensors, and all mounted components during final assembly.</td></tr>
-                    <tr><td>2</td><td>The UGV shall use four BLDC hub motors rated at 350 W each, capable of moving the vehicle at a minimum speed of 1.5 m/s on flat outdoor terrain.</td></tr>
-                    <tr><td>3</td><td>The motor drive system shall use RKI 9206 motor drivers operating within an input voltage range of 31–36 V, capable of delivering at least 16 A per motor under peak load conditions.</td></tr>
-                    <tr><td>4</td><td>The system shall operate on a 24 V battery supply and provide a minimum operating time of 30 minutes, measured during continuous autonomous navigation with motors and sensors active.</td></tr>
-                    <tr><td>5</td><td>The power conversion unit shall provide 36 V output using boost converters, maintaining voltage within ±5% tolerance during operation.</td></tr>
-                    <tr><td>6</td><td>The logic power supply shall provide regulated 5 V output, measured while powering controller, LiDAR, GPS, IMU, and communication modules simultaneously.</td></tr>
-                    <tr><td>7</td><td>The LiDAR sensor shall detect obstacles within a range of 0.2 m to 10 m, measured in outdoor conditions with stationary obstacles.</td></tr>
-                    <tr><td>8</td><td>The vision system shall provide live video streaming at minimum 720p resolution and 15 FPS, measured during real-time monitoring.</td></tr>
-                    <tr><td>9</td><td>The navigation system shall provide position accuracy within ±2 meters, measured during outdoor waypoint navigation under normal GPS signal conditions.</td></tr>
-                    <tr><td>10</td><td>The IMU sensor shall provide orientation and acceleration data with an update rate of at least 50 Hz, measured during vehicle motion.</td></tr>
-                    <tr><td>11</td><td>The UGV shall support navigation speed between 0.5 m/s and 1.5 m/s, measured on flat ground during autonomous operation.</td></tr>
-                    <tr><td>12</td><td>The UGV shall operate on grass, gravel, and slopes up to 15°, measured without loss of stability or control.</td></tr>
-                    <tr><td>13</td><td>The obstacle detection system shall achieve at least 50% detection success rate, measured over multiple obstacle avoidance trials during outdoor testing.</td></tr>
-                    <tr><td>14</td><td>The system shall support real-time monitoring with latency less than 5 seconds, measured between the UGV and control station during normal operation.</td></tr>
-                    <tr><td>15</td><td>The navigation system shall maintain stable localization despite GPS noise, measured by keeping position error within ±2 m during motion.</td></tr>
+                    <tr>
+                        <td>1</td>
+                        <td>The UGV shall have maximum dimensions of 70 cm × 50 cm × 40 cm (L × W × H), measured
+                            including chassis, wheels, sensors, and all mounted components during final assembly.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The UGV shall use four BLDC hub motors rated at 350 W each, capable of moving the vehicle at
+                            a minimum speed of 1.5 m/s on flat outdoor terrain.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>The motor drive system shall use RKI 9206 motor drivers operating within an input voltage
+                            range of 31–36 V, capable of delivering at least 16 A per motor under peak load conditions.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The system shall operate on a 24 V battery supply and provide a minimum operating time of 30
+                            minutes, measured during continuous autonomous navigation with motors and sensors active.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>The power conversion unit shall provide 36 V output using boost converters, maintaining
+                            voltage within ±5% tolerance during operation.</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>The logic power supply shall provide regulated 5 V output, measured while powering
+                            controller, LiDAR, GPS, IMU, and communication modules simultaneously.</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>The LiDAR sensor shall detect obstacles within a range of 0.2 m to 10 m, measured in outdoor
+                            conditions with stationary obstacles.</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>The vision system shall provide live video streaming at minimum 720p resolution and 15 FPS,
+                            measured during real-time monitoring.</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>The navigation system shall provide position accuracy within ±2 meters, measured during
+                            outdoor waypoint navigation under normal GPS signal conditions.</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>The IMU sensor shall provide orientation and acceleration data with an update rate of at
+                            least 50 Hz, measured during vehicle motion.</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>The UGV shall support navigation speed between 0.5 m/s and 1.5 m/s, measured on flat ground
+                            during autonomous operation.</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>The UGV shall operate on grass, gravel, and slopes up to 15°, measured without loss of
+                            stability or control.</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>The obstacle detection system shall achieve at least 50% detection success rate, measured
+                            over multiple obstacle avoidance trials during outdoor testing.</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>The system shall support real-time monitoring with latency less than 5 seconds, measured
+                            between the UGV and control station during normal operation.</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>The navigation system shall maintain stable localization despite GPS noise, measured by
+                            keeping position error within ±2 m during motion.</td>
+                    </tr>
                 </tbody>
             </table>
 
