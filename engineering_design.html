@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Design - UGV Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        :root {
+            --bg-page: #9F90CE;
+            --bg-card: rgba(245, 245, 220, 0.9);
+            --accent-1: #6B5B95;
+            --accent-2: #B8860B;
+            --text-main: #2D2241;
+            --text-muted: #5A4E6E;
+            --border-glass: rgba(107, 91, 149, 0.2);
+            --shadow-soft: 0 10px 40px rgba(107, 91, 149, 0.15);
+            --shadow-vibrant: 0 20px 60px rgba(159, 144, 206, 0.35);
+            --gradient-vibrant: linear-gradient(135deg, #6B5B95 0%, #B8860B 100%);
+        }
+        body {font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-page); color: var(--text-main); margin:0; overflow-x:hidden; min-height:100vh;}
+        body::before, body::after { content:""; position:fixed; width:800px; height:800px; border-radius:50%; filter:blur(150px); z-index:-1; opacity:0.15; animation:floatBlob 20s infinite alternate ease-in-out; }
+        body::before { background:var(--accent-1); top:-200px; left:-200px; }
+        body::after { background:var(--accent-2); bottom:-200px; right:-200px; }
+        @keyframes floatBlob { 0% { transform:translateY(0px) scale(1); } 100% { transform:translateY(40px) scale(1.1); } }
+        .nav-bar {position:fixed; top:20px; left:50%; transform:translateX(-50%); background:rgba(245,245,220,0.85); backdrop-filter:blur(15px); padding:18px 50px; border-radius:50px; border:1px solid var(--border-glass); display:flex; gap:25px; box-shadow:var(--shadow-soft); z-index:1000;}
+        .nav-link {text-decoration:none; color:var(--text-muted); font-weight:700; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; transition:color .3s; white-space:nowrap;}
+        .nav-link:hover, .nav-link.active {color:var(--accent-1);}
+        header {text-align:center; padding:140px 20px 60px; background:rgba(245,245,220,0.92); border-bottom:1px solid var(--border-glass);}
+        header h1 {font-size:clamp(2.2rem,4vw,3.2rem); background:var(--gradient-vibrant); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;}
+        .container {max-width:1300px; margin:auto; padding:60px 20px 100px;}
+        .tab-nav {display:flex; gap:16px; justify-content:center; margin-bottom:30px; flex-wrap:wrap;}
+        .tab-btn {padding:12px 24px; border:2px solid var(--accent-1); background:transparent; color:var(--accent-1); border-radius:30px; cursor:pointer; transition:.3s; font-family:'Plus Jakarta Sans',sans-serif; font-weight:700;}
+        .tab-btn.active, .tab-btn:hover {background:var(--gradient-vibrant); color:white; border-color:transparent; box-shadow:0 4px 20px rgba(107,91,149,0.3);}
+        .tab-panel {display:none;}
+        .tab-panel.active {display:block; animation:fadeIn 0.4s ease-out;}
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+        /* ===== TABLES ===== */
+        h2 { color:var(--accent-1); margin:40px 0 20px; border-bottom:2px solid var(--border-glass); padding-bottom:10px; font-size:1.8rem; }
+        h2:first-of-type { margin-top:0; }
+        .table-wrap { overflow-x:auto; border-radius:16px; margin-bottom:30px; }
+        table { width:100%; border-collapse:separate; border-spacing:0; margin-bottom:0; border-radius:15px; overflow:hidden; border:1px solid var(--border-glass); box-shadow:0 5px 15px rgba(107,91,149,0.05); min-width:500px; font-size:0.95rem; }
+        thead { background:var(--gradient-vibrant); color:#fff; }
+        th,td { text-align:left; padding:16px 20px; border-bottom:1px solid var(--border-glass); }
+        th { font-weight:700; font-size:1rem; letter-spacing:0.5px; }
+        th:first-child { width:10%; text-align:center; }
+        td:first-child { text-align:center; font-weight:600; color:var(--accent-1); }
+        tbody tr { background:rgba(255,255,255,0.4); transition:background-color 0.3s; }
+        tbody tr:nth-child(even) { background:rgba(245,245,220,0.6); }
+        tbody tr:hover { background:rgba(107,91,149,0.1); }
+        tbody tr:last-child td { border-bottom:none; }
+        /* ===== SECTION CARDS ===== */
+        .section-card { background:var(--bg-card); border:1px solid var(--border-glass); border-radius:28px; padding:40px; box-shadow:var(--shadow-soft); margin-bottom:40px; transition:box-shadow .3s; }
+        .section-card:hover { box-shadow:var(--shadow-vibrant); }
+        .section-title { font-size:1.5rem; font-weight:800; color:var(--accent-1); margin-bottom:24px; display:flex; align-items:center; gap:10px; }
+        .content-card { background:var(--bg-card); padding:50px; border-radius:30px; border:1px solid var(--border-glass); box-shadow:var(--shadow-soft); line-height:1.8; }
+        /* ===== MORPHOLOGICAL CHART images ===== */
+        .opt-img { display:block; width:60px; height:60px; object-fit:contain; border-radius:8px; margin:0 auto 8px; background:white; padding:4px; border:1px solid var(--border-glass); }
+        .selected-cell { font-weight:800 !important; color:var(--accent-1) !important; background:rgba(107,91,149,0.08); border-radius:8px; }
+        /* ===== PUGH CHART ===== */
+        .sign-plus { color:#2E8B57; font-weight:900; font-size:1.1rem; }
+        .sign-minus { color:#D32F2F; font-weight:900; font-size:1.1rem; }
+        .sign-zero { color:var(--text-muted); font-weight:900; font-size:1.1rem; }
+        .highlight-row td { color:var(--accent-1); font-weight:700; background:rgba(107,91,149,0.06); }
+        /* ===== CONCEPTUAL DESIGN ===== */
+        .design-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:30px; margin-top:40px; text-align:center; }
+        .design-card { background:rgba(255,255,255,0.4); backdrop-filter:blur(10px); padding:20px; border-radius:25px; border:1px solid var(--border-glass); transition:all 0.3s; display:flex; flex-direction:column; align-items:center; gap:15px; }
+        .design-card:hover { transform:translateY(-8px); border-color:var(--accent-2); background:rgba(255,255,255,0.6); box-shadow:var(--shadow-vibrant); }
+        .design-card h3 { color:var(--accent-1); margin:0; font-size:1.5rem; font-weight:800; }
+        .design-card img { width:100%; height:auto; border-radius:15px; border:2px solid var(--border-glass); box-shadow:var(--shadow-soft); }
+        .design-section { margin-top:40px; }
+        .selected-design .design-card { max-width:800px; margin:0 auto; }
+        @media (max-width:900px) { .nav-bar { width:95%; overflow-x:auto; justify-content:flex-start; } }
+        @media (max-width:768px) { .content-card,.section-card { padding:24px 18px; } .design-grid { grid-template-columns:1fr; } }
+    </style>
+</head>
+<body>
+<nav class="nav-bar">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="theme.html" class="nav-link">Theme</a>
+    <a href="title.html" class="nav-link">Title</a>
+    <a href="problem_identification.html" class="nav-link">Problem Identification</a>
+    <a href="engineering_design.html" class="nav-link active">Engineering Design</a>
+    <a href="system_architecture.html" class="nav-link">System Architecture</a>
+    <a href="detailed_design.html" class="nav-link">Detailed Design</a>
+</nav>
+<header>
+    <h1>Engineering Design</h1>
+</header>
+<div class="container">
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="showTab('functional', this)">Functional Requirements</button>
+        <button class="tab-btn" onclick="showTab('nonfunctional', this)">Non‑Functional Requirements</button>
+        <button class="tab-btn" onclick="showTab('specs', this)">Specifications</button>
+        <button class="tab-btn" onclick="showTab('morphology', this)">Morphological Chart</button>
+        <button class="tab-btn" onclick="showTab('conceptual', this)">Conceptual Design</button>
+        <button class="tab-btn" onclick="showTab('pugh', this)">Pugh Chart</button>
+        <button class="tab-btn" onclick="showTab('finalised', this)">Finalised Design</button>
+        <button class="tab-btn" onclick="showTab('components', this)">Component List</button>
+    </div>
+    <div id="functional" class="tab-panel active">
+        <div class="section-card">
+<h2>Functional Requirements</h2>
+<div class="table-wrap">
+<table>
+                <thead>
+                    <tr>
+                        <th>Sl No.</th>
+                        <th>Functional Requirement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>The UGV shall provide mobility in forward, reverse, left, and right directions using four
+                            hub motors.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The UGV shall support autonomous navigation between predefined waypoints.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>The system shall detect obstacles using LiDAR sensor during navigation.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The system shall perform obstacle avoidance during autonomous operation.</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>The UGV shall provide position information using GPS.</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>The UGV shall provide orientation and acceleration data using IMU.</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>The UGV shall provide live video streaming using onboard camera.</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>The system shall allow remote monitoring from a ground control station.</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>The system shall regulate power to motors and electronic components using battery and
+                            converters.</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>The UGV shall operate on outdoor terrain including grass, gravel, and inclined surfaces.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+</div>
+        </div>
+</div>
+    <div id="nonfunctional" class="tab-panel">
+        <div class="section-card">
+<h2>Non-Functional Requirements</h2>
+<div class="table-wrap">
+<table>
+                <thead>
+                    <tr>
+                        <th>Sl No.</th>
+                        <th>Non-Functional Requirement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>The overall dimensions of the UGV shall not exceed 70 cm × 50 cm × 40 cm.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The UGV shall operate at speeds between 0.5 m/s and 1.5 m/s on flat terrain.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>The motor drive system shall operate within input voltage range of 31–36 V.</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The system shall operate using a battery capable of minimum 30 minutes continuous operation.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>The boost converter shall provide 36 V output within ±5% tolerance.</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>The logic power supply shall provide regulated 5 V output for controller and sensors.</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>The LiDAR sensor shall detect obstacles within a range of 0.2 m to 10 m.</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>The vision system shall provide minimum 720p resolution at 15 FPS.</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>The navigation system shall maintain position accuracy within ±2 m under normal GPS
+                            conditions.</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>The UGV shall operate on slopes up to 15° without loss of stability.</td>
+                    </tr>
+                </tbody>
+            </table>
+</div>
+        </div>
+</div>
+    <div id="specs" class="tab-panel">
+        <div class="section-card">
+<h2>System Specifications</h2>
+<div class="table-wrap">
+<table>
+                <thead>
+                    <tr>
+                        <th>Sl No.</th>
+                        <th>System Specification</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>The UGV shall have maximum dimensions of 70 cm × 50 cm × 40 cm (L × W × H), measured
+                            including chassis, wheels, sensors, and all mounted components during final assembly.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>The UGV shall use four BLDC hub motors rated at 350 W each, capable of moving the vehicle at
+                            a minimum speed of 1.5 m/s on flat outdoor terrain.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>The motor drive system shall use RKI 9206 motor drivers operating within an input voltage
+                            range of 31–36 V, capable of delivering at least 16 A per motor under peak load conditions.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>The system shall operate on a 24 V battery supply and provide a minimum operating time of 30
+                            minutes, measured during continuous autonomous navigation with motors and sensors active.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>The power conversion unit shall provide 36 V output using boost converters, maintaining
+                            voltage within ±5% tolerance during operation.</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>The logic power supply shall provide regulated 5 V output, measured while powering
+                            controller, LiDAR, GPS, IMU, and communication modules simultaneously.</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td>The LiDAR sensor shall detect obstacles within a range of 0.2 m to 10 m, measured in outdoor
+                            conditions with stationary obstacles.</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td>The vision system shall provide live video streaming at minimum 720p resolution and 15 FPS,
+                            measured during real-time monitoring.</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>The navigation system shall provide position accuracy within ±2 meters, measured during
+                            outdoor waypoint navigation under normal GPS signal conditions.</td>
+                    </tr>
+                    <tr>
+                        <td>10</td>
+                        <td>The IMU sensor shall provide orientation and acceleration data with an update rate of at
+                            least 50 Hz, measured during vehicle motion.</td>
+                    </tr>
+                    <tr>
+                        <td>11</td>
+                        <td>The UGV shall support navigation speed between 0.5 m/s and 1.5 m/s, measured on flat ground
+                            during autonomous operation.</td>
+                    </tr>
+                    <tr>
+                        <td>12</td>
+                        <td>The UGV shall operate on grass, gravel, and slopes up to 15°, measured without loss of
+                            stability or control.</td>
+                    </tr>
+                    <tr>
+                        <td>13</td>
+                        <td>The obstacle detection system shall achieve at least 50% detection success rate, measured
+                            over multiple obstacle avoidance trials during outdoor testing.</td>
+                    </tr>
+                    <tr>
+                        <td>14</td>
+                        <td>The system shall support real-time monitoring with latency less than 5 seconds, measured
+                            between the UGV and control station during normal operation.</td>
+                    </tr>
+                    <tr>
+                        <td>15</td>
+                        <td>The navigation system shall maintain stable localization despite GPS noise, measured by
+                            keeping position error within ±2 m during motion.</td>
+                    </tr>
+                </tbody>
+            </table>
+</div>
+        </div>
+</div>
+    <div id="morphology" class="tab-panel">
+        <div class="section-card">
+            <div class="section-title">1. System Design Options</div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Function / Subsystem</th>
+                            <th>Option 1</th>
+                            <th>Option 2</th>
+                            <th>Option 3</th>
+                            <th>Option 4 (Added)</th>
+                            <th style="background: rgba(0,0,0,0.15);">Selected Option</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Chassis Material</strong></td>
+                            <td><img src="imgs/Mild Steel.jpg" class="opt-img" onerror="this.style.display='none'"><div>Mild Steel</div></td>
+                            <td><img src="imgs/Aluminium.jpg" class="opt-img" onerror="this.style.display='none'"><div>Aluminum</div></td>
+                            <td><img src="imgs/Acrylic Sheet.jpg" class="opt-img" onerror="this.style.display='none'"><div>Acrylic / Composite</div></td>
+                            <td><img src="imgs/Carbon fiber.jpg" class="opt-img" onerror="this.style.display='none'"><div>Carbon Fiber</div></td>
+                            <td class="selected-cell">Mild Steel</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Drive Configuration</strong></td>
+                            <td><img src="imgs/2-Wheel Drive.jpg" class="opt-img" onerror="this.style.display='none'"><div>2-Wheel Drive</div></td>
+                            <td><img src="imgs/4-Wheel Drive.jpg" class="opt-img" onerror="this.style.display='none'"><div>4-Wheel Drive</div></td>
+                            <td><img src="imgs/Tracked Drive.jpg" class="opt-img" onerror="this.style.display='none'"><div>Tracked Drive</div></td>
+                            <td><img src="imgs/Omni-Wheel Drive.jpg" class="opt-img" onerror="this.style.display='none'"><div>Omni-Wheel Drive</div></td>
+                            <td class="selected-cell">2-Wheel Drive</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Motor Type</strong></td>
+                            <td><img src="imgs/DC Geared Motor.jpg" class="opt-img" onerror="this.style.display='none'"><div>DC Geared Motor</div></td>
+                            <td><img src="imgs/BLDC Hub Motor.jpg" class="opt-img" onerror="this.style.display='none'"><div>BLDC Hub Motor</div></td>
+                            <td><img src="imgs/Servo Motor.jpg" class="opt-img" onerror="this.style.display='none'"><div>Servo Motor</div></td>
+                            <td><img src="imgs/Stepper Motor.jpg" class="opt-img" onerror="this.style.display='none'"><div>Stepper Motor</div></td>
+                            <td class="selected-cell">BLDC Hub Motor</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Control Unit</strong></td>
+                            <td><img src="imgs/Raspberry Pi 4.jpg" class="opt-img" onerror="this.style.display='none'"><div>Raspberry Pi 4</div></td>
+                            <td><img src="imgs/Raspberry Pi 5.jpg" class="opt-img" onerror="this.style.display='none'"><div>Raspberry Pi 5</div></td>
+                            <td><img src="imgs/Jetson Nano.jpg" class="opt-img" onerror="this.style.display='none'"><div>Jetson Nano</div></td>
+                            <td><img src="imgs/jetson orin.jpg" class="opt-img" onerror="this.style.display='none'"><div>Jetson Orin</div></td>
+                            <td class="selected-cell">Raspberry Pi 5</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Localization Method</strong></td>
+                            <td><img src="imgs/GPS module.jpg" class="opt-img" onerror="this.style.display='none'"><div>GPS Only</div></td>
+                            <td><img src="imgs/Encoder-Based.jpg" class="opt-img" onerror="this.style.display='none'"><div>Encoder-Based</div></td>
+                            <td><img src="imgs/GPS + IMU.jpg" class="opt-img" onerror="this.style.display='none'"><div>GPS + IMU</div></td>
+                            <td><img src="imgs/RTK GPS.jpg" class="opt-img" onerror="this.style.display='none'"><div>GPS + IMU + RTK GPS</div></td>
+                            <td class="selected-cell">GPS + IMU</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Obstacle Detection</strong></td>
+                            <td><img src="imgs/Ultrasonic Sensor.jpg" class="opt-img" onerror="this.style.display='none'"><div>Ultrasonic Sensor</div></td>
+                            <td><img src="imgs/IR Sensor.jpg" class="opt-img" onerror="this.style.display='none'"><div>IR Sensor</div></td>
+                            <td><img src="imgs/RP LiDAR.jpg" class="opt-img" onerror="this.style.display='none'"><div>LiDAR</div></td>
+                            <td><img src="imgs/Depth Camera.jpg" class="opt-img" onerror="this.style.display='none'"><div>Depth Camera</div></td>
+                            <td class="selected-cell">LiDAR</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Orientation Sensing</strong></td>
+                            <td><img src="imgs/Gyroscope.jpg" class="opt-img" onerror="this.style.display='none'"><div>Gyroscope</div></td>
+                            <td><img src="imgs/Accelerometer.jpg" class="opt-img" onerror="this.style.display='none'"><div>Accelerometer</div></td>
+                            <td><img src="imgs/IMU.jpg" class="opt-img" onerror="this.style.display='none'"><div>IMU</div></td>
+                            <td><img src="imgs/Magnetometer-based Fusion.jpg" class="opt-img" onerror="this.style.display='none'"><div>Magnetometer Fusion</div></td>
+                            <td class="selected-cell">IMU</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Camera / Monitoring</strong></td>
+                            <td><img src="imgs/Depth Camera.jpg" class="opt-img" onerror="this.style.display='none'"><div>Depth Camera</div></td>
+                            <td><img src="imgs/USB Webcam.jpg" class="opt-img" onerror="this.style.display='none'"><div>USB Webcam</div></td>
+                            <td><img src="imgs/Pi Camera.jpg" class="opt-img" onerror="this.style.display='none'"><div>Pi Camera</div></td>
+                            <td><img src="imgs/FPV Camera (Low Latency).jpg" class="opt-img" onerror="this.style.display='none'"><div>FPV Camera</div></td>
+                            <td class="selected-cell">Depth Camera</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Communication</strong></td>
+                            <td><img src="imgs/Bluetooth.png" class="opt-img" onerror="this.style.display='none'"><div>Bluetooth</div></td>
+                            <td><img src="imgs/Wi-Fi.png" class="opt-img" onerror="this.style.display='none'"><div>Wi-Fi</div></td>
+                            <td><img src="imgs/RF Module.jpg" class="opt-img" onerror="this.style.display='none'"><div>RF Module</div></td>
+                            <td><img src="imgs/LoRa (Long Range).jpg" class="opt-img" onerror="this.style.display='none'"><div>LoRa (Long Range)</div></td>
+                            <td class="selected-cell">Wi-Fi</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Motor Driver</strong></td>
+                            <td><img src="imgs/L298N.jpg" class="opt-img" onerror="this.style.display='none'"><div>L298N</div></td>
+                            <td><img src="imgs/BTS7960.jpg" class="opt-img" onerror="this.style.display='none'"><div>BTS7960</div></td>
+                            <td><img src="imgs/RKI 9206.jpg" class="opt-img" onerror="this.style.display='none'"><div>RKI 9206</div></td>
+                            <td><img src="imgs/VESC Controller.jpg" class="opt-img" onerror="this.style.display='none'"><div>VESC Controller</div></td>
+                            <td class="selected-cell">RKI 9206</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Main Power Source</strong></td>
+                            <td><img src="imgs/Lead Acid Battery.jpg" class="opt-img" onerror="this.style.display='none'"><div>Lead Acid Battery</div></td>
+                            <td><img src="imgs/Li-ion Battery.jpg" class="opt-img" onerror="this.style.display='none'"><div>Li-ion Battery</div></td>
+                            <td><img src="imgs/LiPo Battery.jpg" class="opt-img" onerror="this.style.display='none'"><div>LiPo Battery</div></td>
+                            <td><img src="imgs/Hybrid Battery + Supercapacitor.jpg" class="opt-img" onerror="this.style.display='none'"><div>Hybrid + Supercap</div></td>
+                            <td class="selected-cell">Li-ion Battery</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Logic Power Supply</strong></td>
+                            <td><img src="imgs/Linear Regulator.jpg" class="opt-img" onerror="this.style.display='none'"><div>Linear Regulator</div></td>
+                            <td><img src="imgs/Buck Converter.jpg" class="opt-img" onerror="this.style.display='none'"><div>Buck Converter</div></td>
+                            <td><img src="imgs/Adapter Supply.jpg" class="opt-img" onerror="this.style.display='none'"><div>Adapter Supply</div></td>
+                            <td><img src="imgs/Switching Regulator (SMPS).jpg" class="opt-img" onerror="this.style.display='none'"><div>Switching Regulator</div></td>
+                            <td class="selected-cell">Buck Converter</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Motor Voltage Supply</strong></td>
+                            <td><img src="imgs/Direct Battery.jpg" class="opt-img" onerror="this.style.display='none'"><div>Direct Battery</div></td>
+                            <td><img src="imgs/Boost Converter.jpg" class="opt-img" onerror="this.style.display='none'"><div>Boost Converter</div></td>
+                            <td><img src="imgs/Separate Motor Pack.jpg" class="opt-img" onerror="this.style.display='none'"><div>Separate Motor Pack</div></td>
+                            <td><img src="imgs/Buck-Boost Converter.jpg" class="opt-img" onerror="this.style.display='none'"><div>Buck-Boost Converter</div></td>
+                            <td class="selected-cell">Boost Converter</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="conceptual" class="tab-panel">
+<div class="design-section">
+                <h2
+                    style="color: var(--accent-1); text-align: center; margin-bottom: 20px; font-weight: 800; font-size: 2rem;">
+                    Initial Designs</h2>
+                <div class="design-grid">
+                    <div class="design-card">
+                        <h3>Design 01</h3>
+                        <img src="Design 01.jpeg" alt="Design 01">
+                    </div>
+                    <div class="design-card">
+                        <h3>Design 02</h3>
+                        <img src="design 02.jpg" alt="Design 02">
+                    </div>
+                    <div class="design-card">
+                        <h3>Design 03</h3>
+                        <img src="Design 03.jpg" alt="Design 03">
+                    </div>
+                    <div class="design-card">
+                        <h3>Design 04</h3>
+                        <img src="Design 04.jpeg" alt="Design 04">
+                    </div>
+                </div>
+            </div>
+</div>
+    <div id="pugh" class="tab-panel">
+<div class="design-section">
+                <h2 style="color: var(--accent-1); text-align: center; margin-bottom: 20px; font-weight: 800; font-size: 2rem;">Pugh Chart (Concept Selection)</h2>
+                
+                <div class="section-card">
+                    <div class="section-title">1. Evaluation Criteria & Comparison</div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Criteria</th>
+                                    <th style="text-align:center;">Weight</th>
+                                    <th style="text-align:center;">Concept 01</th>
+                                    <th style="text-align:center;">Concept 02</th>
+                                    <th style="text-align:center;">Concept 03</th>
+                                    <th style="text-align:center;">Concept 04</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Structural Stability</td><td>5</td><td class="sign-zero">0</td><td class="sign-zero">0</td><td class="sign-plus">+</td><td class="sign-plus">+</td></tr>
+                                <tr><td>Ease of Fabrication</td><td>4</td><td class="sign-plus">+</td><td class="sign-zero">0</td><td class="sign-zero">0</td><td class="sign-zero">0</td></tr>
+                                <tr><td>Component Mounting Space</td><td>5</td><td class="sign-minus">–</td><td class="sign-minus">–</td><td class="sign-plus">+</td><td class="sign-zero">0</td></tr>
+                                <tr><td>Sensor Placement Suitability</td><td>5</td><td class="sign-zero">0</td><td class="sign-plus">+</td><td class="sign-plus">+</td><td class="sign-zero">0</td></tr>
+                                <tr><td>Weight Distribution</td><td>4</td><td class="sign-minus">–</td><td class="sign-zero">0</td><td class="sign-plus">+</td><td class="sign-zero">0</td></tr>
+                                <tr><td>Outdoor Terrain Adaptability</td><td>5</td><td class="sign-minus">–</td><td class="sign-zero">0</td><td class="sign-plus">+</td><td class="sign-zero">0</td></tr>
+                                <tr><td>Ease of Maintenance</td><td>3</td><td class="sign-plus">+</td><td class="sign-zero">0</td><td class="sign-plus">+</td><td class="sign-zero">0</td></tr>
+                                <tr><td>Wiring / Integration Simplicity</td><td>4</td><td class="sign-zero">0</td><td class="sign-minus">–</td><td class="sign-plus">+</td><td class="sign-zero">0</td></tr>
+                                <tr><td>Expandability / Modularity</td><td>5</td><td class="sign-minus">–</td><td class="sign-zero">0</td><td class="sign-plus">+</td><td class="sign-zero">0</td></tr>
+                                <tr><td>Overall Feasibility</td><td>5</td><td class="sign-zero">0</td><td class="sign-zero">0</td><td class="sign-plus">+</td><td class="sign-zero">0</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="section-title" style="margin-top: 40px;">2. Final Score Summary</div>
+                    <div class="table-wrap" style="margin-bottom: 0;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Concept</th>
+                                    <th style="text-align:center;">Positive (+)</th>
+                                    <th style="text-align:center;">Same (0)</th>
+                                    <th style="text-align:center;">Negative (–)</th>
+                                    <th style="text-align:center;">Decision</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>Concept 01</td><td>2</td><td>4</td><td>4</td><td>❌ Not Selected</td></tr>
+                                <tr><td>Concept 02</td><td>3</td><td>5</td><td>2</td><td>❌ Not Selected</td></tr>
+                                <tr class="highlight-row"><td>Concept 03</td><td>8</td><td>2</td><td>0</td><td>✅ Selected</td></tr>
+                                <tr><td>Concept 04</td><td>1</td><td>9</td><td>0</td><td>❌ Not Selected</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+</div>
+    <div id="finalised" class="tab-panel">
+        <div class="section-card" style="text-align:center;">
+            <h2 style="margin-top:0;">✅ Finalised Design — Concept 03</h2>
+            <p style="font-size:1.1rem;color:var(--text-muted);margin-bottom:30px;">The selected design based on Pugh Chart evaluation. This concept scored highest with 8 plus points, 2 minus points, and 0 same — making it the optimal choice for our UGV platform.</p>
+            <img src="Design 03.jpg" alt="Finalised Design — Concept 03" style="width:100%;max-width:1000px;height:auto;border-radius:20px;border:2px solid var(--border-glass);box-shadow:var(--shadow-vibrant);transition:transform .3s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+        </div>
+    </div>
+    <div id="components" class="tab-panel">
+        <div class="section-card">
+            <div class="section-title">🔧 Final Component List</div>
+            <div class="table-wrap">
+                <table style="min-width: 600px;">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Sl No</th>
+                            <th>Component Name</th>
+                            <th>Specifications</th>
+                            <th style="text-align: center;">Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td><strong>GPS Module</strong></td><td>SmartElex u-blox GNSS MAX-M10S</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>2</td><td><strong>IMU Sensor</strong></td><td>Yahboom 10-Axis IMU</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>3</td><td><strong>Motors</strong></td><td>BLDC Hub Motors</td><td style="text-align: center; font-weight: bold;">4</td></tr>
+                        <tr><td>4</td><td><strong>Motor Drivers</strong></td><td>RKI 9206</td><td style="text-align: center; font-weight: bold;">4</td></tr>
+                        <tr><td>5</td><td><strong>Control Unit</strong></td><td>Raspberry Pi 5 (16 GB RAM)</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>6</td><td><strong>Battery</strong></td><td>TATTU 30000 mAh</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>7</td><td><strong>Relay Module</strong></td><td>4-Channel Relay</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>8</td><td><strong>LiDAR</strong></td><td>RP LiDAR</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>9</td><td><strong>Camera</strong></td><td>Webcam</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>10</td><td><strong>Battery Charger</strong></td><td>T240 & T400 AC/DC DUO</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>11</td><td><strong>Buck Converter</strong></td><td>DC-DC 5V 5A</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>12</td><td><strong>Acrylic Sheet</strong></td><td>400 mm × 600 mm × 5 mm</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>13</td><td><strong>Memory Card</strong></td><td>128 GB</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>14</td><td><strong>Boost Converters</strong></td><td>22V → 36V</td><td style="text-align: center; font-weight: bold;">4</td></tr>
+                        <tr><td>15</td><td><strong>UGV Chassis</strong></td><td>400 mm × 600 mm × 20 mm</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>16</td><td><strong>Nuts & Bolts</strong></td><td>M12 × 50 mm</td><td style="text-align: center; font-weight: bold;">40</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function showTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(name).classList.add('active');
+    btn.classList.add('active');
+}
+</script>
+</body>
+</html>

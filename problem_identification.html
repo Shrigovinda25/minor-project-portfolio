@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Literature Survey - UGV Navigation Project</title>
+    <title>Problem Identification - UGV Portfolio</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-
         :root {
-            /* ===== LAVENDER & BEIGE THEME (ROYAL GOLDEN) ===== */
             --bg-page: #9F90CE;
-            --bg-card: rgba(245, 245, 220, 0.95);
+            --bg-card: rgba(245, 245, 220, 0.9);
             --accent-1: #6B5B95;
             --accent-2: #B8860B;
             --text-main: #2D2241;
@@ -21,118 +18,60 @@
             --shadow-vibrant: 0 20px 60px rgba(159, 144, 206, 0.35);
             --gradient-vibrant: linear-gradient(135deg, #6B5B95 0%, #B8860B 100%);
         }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg-page);
-            color: var(--text-main);
-            margin: 0;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        /* Subtle Background Accents */
-        body::before,
-        body::after {
-            content: "";
-            position: fixed;
-            width: 800px;
-            height: 800px;
-            border-radius: 50%;
-            filter: blur(150px);
-            z-index: -1;
-            opacity: 0.15;
-            animation: floatBlob 20s infinite alternate ease-in-out;
-        }
-
-        body::before {
-            background: var(--accent-1);
-            top: -200px;
-            left: -200px;
-        }
-
-        body::after {
-            background: var(--accent-2);
-            bottom: -200px;
-            right: -200px;
-        }
-
-        @keyframes floatBlob {
-            0% {
-                transform: translateY(0px) scale(1);
-            }
-
-            100% {
-                transform: translateY(40px) scale(1.1);
-            }
-        }
-
-        .nav-bar {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            background: rgba(245, 245, 220, 0.85);
-            backdrop-filter: blur(15px);
-            padding: 12px 30px;
-            border-radius: 50px;
-            border: 1px solid var(--border-glass);
-            display: flex;
-            gap: 25px;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-weight: 700;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            color: var(--accent-1);
-        }
-
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--accent-1);
-        }
-
-        header {
-            padding: 140px 20px 60px;
-            text-align: center;
-            background: rgba(245, 245, 220, 0.92);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-glass);
-        }
-
-        header h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
-            margin: 0;
-            background: var(--gradient-vibrant);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 20px 100px;
-            display: grid;
-            gap: 40px;
-        }
-
+        * { box-sizing:border-box; margin:0; padding:0; -webkit-font-smoothing:antialiased; }
+        body {font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg-page);color:var(--text-main);min-height:100vh;overflow-x:hidden;}
+        body::before, body::after { content:""; position:fixed; width:800px; height:800px; border-radius:50%; filter:blur(150px); z-index:-1; opacity:0.15; animation:floatBlob 20s infinite alternate ease-in-out; }
+        body::before { background:var(--accent-1); top:-200px; left:-200px; }
+        body::after { background:var(--accent-2); bottom:-200px; right:-200px; }
+        @keyframes floatBlob { 0% { transform:translateY(0px) scale(1); } 100% { transform:translateY(40px) scale(1.1); } }
+        .nav-bar{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(245,245,220,.85);border:1px solid var(--border-glass);border-radius:50px;padding:18px 50px;display:flex;gap:25px;z-index:1000;box-shadow:var(--shadow-soft);}
+        .nav-link{text-decoration:none;color:var(--text-muted);font-weight:700;font-size:.9rem;letter-spacing:1px;transition:color .3s; white-space:nowrap;}
+        .nav-link.active,.nav-link:hover{color:var(--accent-1);}
+        header{padding:140px 20px 60px;text-align:center;background:rgba(245,245,220,.92);border-bottom:1px solid var(--border-glass);}
+        header h1{font-size:clamp(2.2rem,4vw,3.2rem);background:var(--gradient-vibrant);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+        .container{max-width:1300px;margin:0 auto;padding:60px 20px 100px;}
+        .tab-nav{display:flex;gap:16px;justify-content:center;margin-bottom:30px;flex-wrap:wrap;}
+        .tab-btn{padding:12px 32px;border:2px solid var(--accent-1);background:transparent;color:var(--accent-1);border-radius:30px;cursor:pointer;transition:.3s;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;}
+        .tab-btn.active,.tab-btn:hover{background:var(--gradient-vibrant);color:#fff;border-color:transparent;box-shadow:0 4px 20px rgba(107,91,149,.3);}
+        .tab-panel{display:none;}
+        .tab-panel.active{display:block;animation:fadeIn 0.4s ease-out;}
+        @keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+        /* ===== CARDS ===== */
+        .section-card{background:var(--bg-card);border:1px solid var(--border-glass);border-radius:28px;padding:40px;box-shadow:var(--shadow-soft);margin-bottom:40px;transition:box-shadow .3s;}
+        .section-card:hover{box-shadow:var(--shadow-vibrant);}
+        .content-card{background:var(--bg-card);padding:50px;border-radius:30px;border:1px solid var(--border-glass);box-shadow:var(--shadow-soft);line-height:1.8;}
+        .section-title{font-size:1.5rem;font-weight:800;color:var(--accent-1);margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+        /* ===== PROBLEM STATEMENT ===== */
+        .problem-list{display:flex;flex-direction:column;gap:24px;margin-top:20px;}
+        .problem-item{display:flex;align-items:flex-start;gap:20px;background:rgba(255,255,255,0.5);border:1px solid var(--border-glass);border-radius:20px;padding:24px;transition:all .3s;}
+        .problem-item:hover{background:rgba(255,255,255,0.75);box-shadow:var(--shadow-vibrant);transform:translateY(-3px);}
+        .bullet-icon{font-size:2rem;flex-shrink:0;}
+        .problem-text{font-size:1.1rem;line-height:1.8;color:var(--text-main);}
+        /* ===== LITERATURE SURVEY ===== */
+        .papers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:30px;margin-top:20px;}
+        .paper-card{background:rgba(255,255,255,0.5);border:1px solid var(--border-glass);border-radius:20px;padding:28px;transition:all .3s;display:flex;flex-direction:column;gap:12px;}
+        .paper-card:hover{box-shadow:var(--shadow-vibrant);transform:translateY(-5px);background:rgba(255,255,255,0.75);}
+        .paper-ref{font-size:0.8rem;font-weight:700;color:var(--accent-2);text-transform:uppercase;letter-spacing:1px;}
+        .paper-title{font-size:1.05rem;font-weight:700;color:var(--text-main);line-height:1.4;}
+        .paper-finding{font-size:0.95rem;color:var(--text-muted);line-height:1.6;}
+        .paper-relevance{font-size:0.85rem;color:var(--accent-1);font-weight:600;background:rgba(107,91,149,0.08);border-radius:10px;padding:8px 14px;display:inline-block;}
+        /* ===== MARKET & PATENT SURVEY ===== */
+        .table-wrap{overflow-x:auto;border-radius:16px;margin-bottom:30px;}
+        table{width:100%;border-collapse:separate;border-spacing:0;border-radius:15px;overflow:hidden;border:1px solid var(--border-glass);box-shadow:0 5px 15px rgba(107,91,149,.05);font-size:0.9rem;}
+        thead tr{background:var(--gradient-vibrant);color:white;}
+        thead th{padding:14px 16px;text-align:left;font-weight:700;letter-spacing:0.5px;}
+        tbody tr{border-bottom:1px solid var(--border-glass);transition:background .2s;}
+        tbody tr:hover{background:rgba(107,91,149,.07);}
+        tbody td{padding:13px 16px;color:var(--text-muted);vertical-align:top;line-height:1.5;}
+        tbody tr:last-child td{border-bottom:none;}
+        .highlight-row td{color:var(--accent-1);font-weight:700;background:rgba(107,91,149,.06);}
+        h2{color:var(--accent-1);margin:40px 0 20px;border-bottom:2px solid var(--border-glass);padding-bottom:10px;font-size:1.8rem;}
+        h3{color:var(--accent-2);margin:20px 0 12px;font-size:1.2rem;}
+        p{margin-bottom:14px;font-size:1rem;line-height:1.7;}
+        ul{margin:0 0 20px 20px;line-height:1.9;}
+        @media(max-width:900px){.nav-bar{width:95%;overflow-x:auto;justify-content:flex-start;}}
+        @media(max-width:768px){.papers-grid{grid-template-columns:1fr;}.content-card,.section-card{padding:24px 18px;}.survey-card{padding:24px 18px;}.details-grid{grid-template-columns:1fr;}}
+        /* ===== LITERATURE SURVEY CARDS ===== */
         .survey-card {
             background: var(--bg-card);
             padding: 40px;
@@ -142,14 +81,13 @@
             box-shadow: var(--shadow-soft);
             position: relative;
             overflow: hidden;
+            margin-bottom: 40px;
         }
-
         .survey-card:hover {
             transform: translateY(-10px);
             border-color: var(--accent-2);
             box-shadow: var(--shadow-vibrant);
         }
-
         .card-header {
             display: flex;
             justify-content: space-between;
@@ -158,7 +96,6 @@
             border-bottom: 1px solid rgba(107, 91, 149, 0.1);
             padding-bottom: 15px;
         }
-
         .sl-no {
             background: var(--accent-1);
             color: white;
@@ -171,11 +108,9 @@
             font-weight: 800;
             font-size: 0.9rem;
         }
-
         .year-journal {
             text-align: right;
         }
-
         .source {
             color: var(--accent-2);
             font-size: 0.85rem;
@@ -183,46 +118,39 @@
             text-transform: uppercase;
             display: block;
         }
-
         .survey-card h3 {
             color: var(--accent-1);
             margin: 0 0 10px 0;
             font-size: 1.6rem;
             line-height: 1.3;
         }
-
         .survey-card h3 a {
             color: inherit;
             text-decoration: none;
             transition: color 0.3s ease;
         }
-
         .survey-card h3 a:hover {
             color: var(--accent-2);
             text-decoration: underline;
         }
-
         .authors {
             font-style: italic;
             color: var(--text-muted);
             font-size: 0.95rem;
             margin-bottom: 25px;
         }
-
         .details-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
             margin-bottom: 30px;
         }
-
         .detail-item {
             background: rgba(107, 91, 149, 0.03);
             padding: 20px;
             border-radius: 15px;
             border: 1px solid rgba(107, 91, 149, 0.05);
         }
-
         .detail-item strong {
             display: block;
             color: var(--accent-1);
@@ -231,14 +159,12 @@
             letter-spacing: 1px;
             margin-bottom: 8px;
         }
-
         .detail-item p {
             margin: 0;
             font-size: 0.95rem;
             line-height: 1.5;
             color: var(--text-main);
         }
-
         .insight-section {
             background: var(--gradient-vibrant);
             color: white;
@@ -246,27 +172,23 @@
             border-radius: 20px;
             margin-top: 20px;
         }
-
         .insight-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
         }
-
         .insight-item h4 {
             margin: 0 0 10px 0;
             font-size: 0.85rem;
             text-transform: uppercase;
             opacity: 0.9;
         }
-
         .insight-item p {
             margin: 0;
             font-size: 0.95rem;
             line-height: 1.5;
             opacity: 1;
         }
-
         .remarks {
             margin-top: 25px;
             padding-top: 15px;
@@ -275,96 +197,64 @@
             color: var(--text-muted);
             text-align: center;
         }
-
-        /* ===== MOBILE RESPONSIVENESS ===== */
-        @media (max-width: 768px) {
-            .nav-bar {
-                width: 90%;
-                padding: 10px 15px;
-                gap: 15px;
-                border-radius: 25px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .nav-link {
-                font-size: 0.75rem;
-            }
-
-            header {
-                padding: 180px 20px 40px;
-            }
-
-            .container {
-                padding: 40px 15px 80px;
-                gap: 25px;
-            }
-
-            .survey-card {
-                padding: 25px;
-                border-radius: 20px;
-            }
-
-            .survey-card h3 {
-                font-size: 1.3rem;
-            }
-
-            .details-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .insight-section {
-                padding: 20px;
-            }
-
-            .insight-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .sl-no {
-                width: 30px;
-                height: 30px;
-                font-size: 0.8rem;
-            }
-
-            .source {
-                font-size: 0.75rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 2rem;
-            }
-
-            .nav-bar {
-                top: 10px;
-            }
-
-            .survey-card {
-                padding: 20px;
-            }
-        }
     </style>
 </head>
-
 <body>
-    <nav class="nav-bar">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="theme.html" class="nav-link">Theme</a>
-        <a href="title.html" class="nav-link">Title</a>
-        <a href="literature.html" class="nav-link active">Literature Survey</a>
-        <a href="guide_interaction.html" class="nav-link">Guide Interaction</a>
-        <a href="requirements.html" class="nav-link">Requirements & Specs</a>
-    </nav>
+<nav class="nav-bar">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="theme.html" class="nav-link">Theme</a>
+    <a href="title.html" class="nav-link">Title</a>
+    <a href="problem_identification.html" class="nav-link active">Problem Identification</a>
+    <a href="engineering_design.html" class="nav-link">Engineering Design</a>
+    <a href="system_architecture.html" class="nav-link">System Architecture</a>
+    <a href="detailed_design.html" class="nav-link">Detailed Design</a>
+</nav>
+<header><h1>Problem Identification</h1></header>
+<div class="container">
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="showTab('statement', this)">Problem Statement</button>
+        <button class="tab-btn" onclick="showTab('literature', this)">Literature Survey</button>
+        <button class="tab-btn" onclick="showTab('market', this)">Market Survey</button>
+        <button class="tab-btn" onclick="showTab('patent', this)">Patent Survey</button>
+    </div>
+    <div id="statement" class="tab-panel active">
+        <div class="section-card">
+            <h2>Problem Statement</h2>
+<div class="problem-list">
 
-    <header>
-        <h1>Literature Survey</h1>
-    </header>
+            <div class="problem-item">
+                <div class="bullet-icon">⚠️</div>
+                <p class="problem-text">
+                    Manual monitoring in hazardous environments is <strong>unsafe, time-consuming, and inefficient</strong>
+                </p>
+            </div>
 
-    <div class="container">
-        <!-- Synthesis Summary Card -->
+            <div class="problem-item">
+                <div class="bullet-icon">💸</div>
+                <p class="problem-text">
+                    Existing systems are <strong>expensive, fixed, and require continuous human control</strong>
+                </p>
+            </div>
+
+            <div class="problem-item">
+                <div class="bullet-icon">📡</div>
+                <p class="problem-text">
+                    There is a need for a <strong>mobile automated system for remote surveillance and data collection</strong>
+                </p>
+            </div>
+
+            <div class="problem-item">
+                <div class="bullet-icon">🤖</div>
+                <p class="problem-text">
+                    The project proposes a <strong>low-cost UGV with wireless control, sensor-based navigation, and real-time monitoring</strong>
+                </p>
+            </div>
+
+        </div>
+        </div>
+</div>
+    <div id="literature" class="tab-panel">
+<!-- Synthesis Summary Card -->
         <div class="survey-card"
             style="border: 2px solid var(--accent-2); background: rgba(245, 245, 220, 0.98); box-shadow: var(--shadow-vibrant);">
             <div class="card-header" style="border-bottom: 2px solid var(--accent-2);">
@@ -1868,7 +1758,177 @@
             </div>
             <div class="remarks">Useful for UGV navigation in forests, agriculture, or rough terrain robotics.</div>
         </div>
-    </div>
-</body>
+</div>
+    <div id="market" class="tab-panel active">
 
+        <!-- 1. Products Table -->
+        <div class="section-card">
+            <div class="section-title">1. Existing Products in Market</div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product</th><th>Company</th><th>Application</th>
+                            <th>Navigation / Sensing</th><th>Payload / Mobility</th>
+                            <th>Approx. Price</th><th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Husky A200 UGV</td><td>Clearpath Robotics</td><td>Outdoor R&D, inspection</td><td>ROS-ready, LiDAR/GPS/IMU</td><td>75 kg, all-terrain</td><td>₹16.8 lakh</td><td>Base price listed</td></tr>
+                        <tr><td>Husky A300 UGV</td><td>Clearpath Robotics</td><td>Autonomous robotics</td><td>ROS 2 compatible</td><td>100 kg, IP54</td><td>Not disclosed</td><td>Commercial quote</td></tr>
+                        <tr><td>RB-VOGUI</td><td>Robotnik</td><td>Inspection, logistics</td><td>Autonomous, sensor integration</td><td>Industrial base</td><td>Not disclosed</td><td>Vendor pricing</td></tr>
+                        <tr><td>RB-FIQUS</td><td>Robotnik</td><td>Heavy industrial use</td><td>Modular autonomous system</td><td>Heavy payload</td><td>Not disclosed</td><td>Enterprise model</td></tr>
+                        <tr><td>HK1000-V2</td><td>SuperDroid Robots</td><td>Autonomous robot dev</td><td>GPS + LiDAR support</td><td>Heavy-duty terrain</td><td>₹8–15+ lakh</td><td>Config-based</td></tr>
+                        <tr class="highlight-row"><td>Proposed UGV</td><td>Academic Prototype</td><td>Navigation & surveillance</td><td>GPS + IMU + LiDAR + ROS</td><td>Compact</td><td>₹85k – ₹1.15 lakh</td><td>Student model</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2. Key Observations -->
+        <div class="section-card">
+            <div class="section-title">2. Key Market Observations</div>
+            <div class="obs-grid">
+                <div class="obs-item">
+                    <strong>Most UGVs are designed for:</strong>
+                    <ul><li>Research</li><li>Industrial inspection</li><li>Outdoor autonomous operations</li></ul>
+                </div>
+                <div class="obs-item">
+                    <strong>Common Features:</strong>
+                    <ul><li>Autonomy-ready software</li><li>Sensor integration</li><li>Rugged mechanical design</li></ul>
+                </div>
+                <div class="obs-item">
+                    <strong>Major Limitations:</strong>
+                    <ul><li>High cost</li><li>Large size</li><li>Overkill for academic use</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Market Gap -->
+        <div class="section-card">
+            <div class="section-title">3. Market Gap Identified</div>
+            <div class="gap-box">
+                <ul>
+                    <li>Low-cost solutions</li>
+                    <li>Compact design</li>
+                    <li>Easy integration</li>
+                    <li>Affordable modularity</li>
+                    <li>Student-friendly deployment</li>
+                </ul>
+            </div>
+            <div class="gap-callout">
+                👉 Gap: A low-cost, compact, ROS-based outdoor UGV suitable for academic and research use.
+            </div>
+        </div>
+
+        <!-- 4. Proposed System -->
+        <div class="section-card">
+            <div class="section-title">4. Proposed System Positioning</div>
+            <ul class="tick-list">
+                <li>Low-cost solution</li>
+                <li>Outdoor + semi-structured operation</li>
+                <li>Real-time monitoring</li>
+                <li>Sensor fusion (GPS + IMU + LiDAR)</li>
+                <li>ROS-enabled scalability</li>
+            </ul>
+        </div>
+
+        <!-- 5. Competitive Advantage -->
+        <div class="section-card">
+            <div class="section-title">5. Competitive Advantage</div>
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Feature</th><th>Existing UGVs</th><th>Proposed UGV</th></tr></thead>
+                    <tbody>
+                        <tr><td>Cost</td><td>High</td><td>Low</td></tr>
+                        <tr><td>Platform</td><td>Industrial</td><td>Academic</td></tr>
+                        <tr><td>Outdoor Capability</td><td>Yes</td><td>Yes</td></tr>
+                        <tr><td>Modularity</td><td>Medium–High</td><td>High</td></tr>
+                        <tr><td>Replication</td><td>Difficult</td><td>Easy</td></tr>
+                        <tr><td>Student Use</td><td>Limited</td><td>Strong</td></tr>
+                        <tr><td>Sensor Fusion</td><td>Yes</td><td>Yes</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+    <div id="patent" class="tab-panel">
+
+        <!-- 1. Existing Patents -->
+        <div class="section-card">
+            <div class="section-title">1. Existing Patents</div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Patent No.</th><th>Title</th><th>Year</th><th>Core Idea</th><th>Technologies Used</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><a href="https://patents.google.com/patent/US12179737B2/en" target="_blank">US12179737B2</a></td><td>Unmanned Ground Vehicle and Method for Operating UGV</td><td>2024</td><td>Waypoint-based navigation with obstacle replanning</td><td>Waypoint Navigation, Obstacle Detection</td></tr>
+                        <tr><td><a href="https://patents.google.com/patent/US12269720B2/en" target="_blank">US12269720B2</a></td><td>Ground-Based Transport Vehicle</td><td>2025</td><td>Autonomous transport with minimal human input</td><td>Navigation Logic, Collision Avoidance</td></tr>
+                        <tr><td><a href="https://patents.google.com/patent/US10240930B2/en" target="_blank">US10240930B2</a></td><td>Sensor Fusion</td><td>2019</td><td>Combines multiple sensors for accurate localization</td><td>Sensor Fusion, Data Integration</td></tr>
+                        <tr><td><a href="https://patents.google.com/patent/US12019173B2/en" target="_blank">US12019173B2</a></td><td>Lane-Level Navigation using LiDAR &amp; Signals</td><td>2024</td><td>High-precision navigation using LiDAR + signals</td><td>LiDAR Navigation, Localization</td></tr>
+                        <tr><td><a href="https://patents.google.com/patent/US11573090B2/en" target="_blank">US11573090B2</a></td><td>LiDAR and Remote Localization</td><td>2023</td><td>LiDAR-based mapping and navigation</td><td>LiDAR Mapping, Obstacle Detection</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2. Key Observations -->
+        <div class="section-card">
+            <div class="section-title">2. Key Patent Observations</div>
+            <div class="obs-grid">
+                <div class="obs-item">
+                    <strong>Strong focus on:</strong>
+                    <ul><li>Autonomous navigation</li><li>LiDAR-based localization</li><li>Sensor fusion</li><li>Real-time obstacle handling</li></ul>
+                </div>
+                <div class="obs-item">
+                    <strong>Most systems designed for:</strong>
+                    <ul><li>Industrial-grade deployment</li><li>Commercial autonomous platforms</li></ul>
+                </div>
+                <div class="obs-item">
+                    <strong>Common Characteristics:</strong>
+                    <ul><li>High computational requirements</li><li>Expensive sensor stacks</li><li>Complex integration</li></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Patent Gap -->
+        <div class="section-card">
+            <div class="section-title">3. Patent Gap Identified</div>
+            <div class="gap-box">
+                <ul>
+                    <li>Low-cost implementation</li>
+                    <li>Student-scale deployment</li>
+                    <li>Simple ROS-based systems</li>
+                    <li>Affordable outdoor UGV architecture</li>
+                </ul>
+            </div>
+            <div class="gap-callout">
+                👉 Gap: Need for a cost-effective, simplified autonomous UGV system suitable for academic and small-scale applications.
+            </div>
+        </div>
+
+        <!-- 4. Proposed Improvements -->
+        <div class="section-card">
+            <div class="section-title">4. Proposed Improvements</div>
+            <ul class="tick-list">
+                <li>Efficient GPS + IMU + LiDAR fusion</li>
+                <li>Lightweight and scalable architecture</li>
+                <li>Real-world outdoor usability</li>
+                <li>Low-cost implementation</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+<script>
+function showTab(name, btn){
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById(name).classList.add('active');
+    btn.classList.add('active');
+}
+</script>
+</body>
 </html>
