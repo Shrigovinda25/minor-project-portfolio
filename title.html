@@ -67,20 +67,28 @@
             }
         }
 
+        /* ===== NAVIGATION BAR ===== */
         .nav-bar {
             position: fixed;
             top: 20px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            background: rgba(245, 245, 220, 0.85);
+            background: rgba(245, 245, 220, 0.8);
             backdrop-filter: blur(15px);
             padding: 18px 50px;
             border-radius: 50px;
             border: 1px solid var(--border-glass);
+            box-shadow: var(--shadow-soft);
             display: flex;
             gap: 25px;
-            box-shadow: var(--shadow-soft);
+            transition: all 0.4s ease;
+        }
+
+        .nav-bar:hover {
+            box-shadow: var(--shadow-vibrant);
+            border-color: var(--accent-1);
+            background: rgba(245, 245, 220, 0.95);
         }
 
         .nav-link {
@@ -90,7 +98,9 @@
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            transition: all 0.3s ease;
             position: relative;
+            white-space: nowrap;
         }
 
         .nav-link:hover,
@@ -98,14 +108,20 @@
             color: var(--accent-1);
         }
 
-        .nav-link.active::after {
+        .nav-link::after {
             content: '';
             position: absolute;
             bottom: -5px;
             left: 0;
-            width: 100%;
+            width: 0;
             height: 2px;
             background: var(--accent-1);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
         }
 
         header {
@@ -169,7 +185,7 @@
         }
 
         /* ===== MOBILE RESPONSIVENESS ===== */
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .nav-bar {
                 width: 90%;
                 padding: 10px 15px;
@@ -177,6 +193,7 @@
                 border-radius: 25px;
                 flex-wrap: wrap;
                 justify-content: center;
+                top: 15px;
             }
 
             .nav-link {
