@@ -63,15 +63,15 @@
         .sign-zero { color:var(--text-muted); font-weight:900; font-size:1.1rem; }
         .highlight-row td { color:var(--accent-1); font-weight:700; background:rgba(107,91,149,0.06); }
         /* ===== CONCEPTUAL DESIGN ===== */
-        .design-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:30px; margin-top:40px; text-align:center; }
-        .design-card { background:rgba(255,255,255,0.4); backdrop-filter:blur(10px); padding:20px; border-radius:25px; border:1px solid var(--border-glass); transition:all 0.3s; display:flex; flex-direction:column; align-items:center; gap:15px; }
-        .design-card:hover { transform:translateY(-8px); border-color:var(--accent-2); background:rgba(255,255,255,0.6); box-shadow:var(--shadow-vibrant); }
-        .design-card h3 { color:var(--accent-1); margin:0; font-size:1.5rem; font-weight:800; }
-        .design-card img { width:100%; height:auto; border-radius:15px; border:2px solid var(--border-glass); box-shadow:var(--shadow-soft); }
+        .design-grid { display:grid; grid-template-columns:1fr; gap:50px; margin-top:40px; text-align:center; }
+        .design-card { background:rgba(255,255,255,0.4); backdrop-filter:blur(10px); padding:40px 40px 36px; border-radius:28px; border:1px solid var(--border-glass); transition:all 0.35s; display:flex; flex-direction:column; align-items:center; gap:24px; }
+        .design-card:hover { transform:translateY(-10px); border-color:var(--accent-2); background:rgba(255,255,255,0.65); box-shadow:var(--shadow-vibrant); }
+        .design-card h3 { color:var(--accent-1); margin:0; font-size:2.2rem; font-weight:800; letter-spacing:0.5px; }
+        .design-card img { width:100%; height:650px; object-fit:contain; border-radius:18px; border:2px solid var(--border-glass); box-shadow:var(--shadow-soft); background:rgba(255,255,255,0.6); }
         .design-section { margin-top:40px; }
         .selected-design .design-card { max-width:800px; margin:0 auto; }
         @media (max-width:900px) { .nav-bar { width:95%; overflow-x:auto; justify-content:flex-start; } }
-        @media (max-width:768px) { .content-card,.section-card { padding:24px 18px; } .design-grid { grid-template-columns:1fr; } }
+        @media (max-width:768px) { .content-card,.section-card { padding:24px 18px; } .design-card img { height:380px; } .design-card h3 { font-size:1.6rem; } }
     </style>
 </head>
 <body>
@@ -538,15 +538,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>1</td><td><strong>GPS Module</strong></td><td>SmartElex u-blox GNSS MAX-M10S</td><td style="text-align: center;">1</td></tr>
-                        <tr><td>2</td><td><strong>IMU Sensor</strong></td><td>Yahboom 10-Axis IMU</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>1</td><td><strong>GPS Module</strong></td><td>GPS L76X</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>2</td><td><strong>IMU Sensor</strong></td><td>MPU6050</td><td style="text-align: center;">1</td></tr>
                         <tr><td>3</td><td><strong>Motors</strong></td><td>BLDC Hub Motors</td><td style="text-align: center; font-weight: bold;">4</td></tr>
                         <tr><td>4</td><td><strong>Motor Drivers</strong></td><td>RKI 9206</td><td style="text-align: center; font-weight: bold;">4</td></tr>
                         <tr><td>5</td><td><strong>Control Unit</strong></td><td>Raspberry Pi 5 (16 GB RAM)</td><td style="text-align: center;">1</td></tr>
                         <tr><td>6</td><td><strong>Battery</strong></td><td>TATTU 30000 mAh</td><td style="text-align: center;">1</td></tr>
                         <tr><td>7</td><td><strong>Relay Module</strong></td><td>4-Channel Relay</td><td style="text-align: center;">1</td></tr>
                         <tr><td>8</td><td><strong>LiDAR</strong></td><td>RP LiDAR</td><td style="text-align: center;">1</td></tr>
-                        <tr><td>9</td><td><strong>Camera</strong></td><td>Webcam</td><td style="text-align: center;">1</td></tr>
+                        <tr><td>9</td><td><strong>Camera</strong></td><td>Depth Camera D435i</td><td style="text-align: center;">1</td></tr>
                         <tr><td>10</td><td><strong>Battery Charger</strong></td><td>T240 & T400 AC/DC DUO</td><td style="text-align: center;">1</td></tr>
                         <tr><td>11</td><td><strong>Buck Converter</strong></td><td>DC-DC 5V 5A</td><td style="text-align: center;">1</td></tr>
                         <tr><td>12</td><td><strong>Acrylic Sheet</strong></td><td>400 mm × 600 mm × 5 mm</td><td style="text-align: center;">1</td></tr>

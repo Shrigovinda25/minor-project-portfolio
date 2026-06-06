@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autonomous UGV Control Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+        :root {
+            /* ===== LAVENDER, BEIGE & TECH DARK THEME ===== */
+            --bg-page: #0d0914; /* Dark Slate Plum */
+            --bg-card: rgba(26, 20, 36, 0.75); /* Dark Glassmorphism Purple */
+            --accent-purple: #9F90CE; /* Soft lavender */
+            --accent-deep: #6B5B95; /* Deep purple */
+            --accent-gold: #B8860B; /* Goldenrod */
+            --accent-neon-green: #10B981; /* Active Neon Green */
+            --accent-neon-red: #EF4444; /* Alert Neon Red */
+            --accent-cyan: #06B6D4; /* Path / Vector Cyan */
+            --text-main: #F3F4F6; /* Off white */
+            --text-muted: #9CA3AF; /* Muted gray */
+            --border-glass: rgba(159, 144, 206, 0.2);
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 20px rgba(159, 144, 206, 0.35);
+            --font-tech: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        body {
+            background: var(--bg-page);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Subtle glowing blobs */
+        body::before, body::after {
+            content: "";
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        body::before { background: var(--accent-purple); top: -100px; left: -100px; }
+        body::after { background: var(--accent-gold); bottom: -100px; right: -100px; }
+
+        header {
+            padding: 40px 20px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: clamp(1.8rem, 3.5vw, 2.5rem);
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .dashboard-container {
+            max-width: 1500px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+            flex-grow: 1;
+        }
+
+        /* Panel Common Styles */
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-title {
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent-purple);
+            border-bottom: 1px solid var(--border-glass);
+            padding-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* ===== LEFT PANEL (CONTROLS & CONFIG) ===== */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .connection-box {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+        }
+
+        .form-group input, .form-group select {
+            background: rgba(13, 9, 20, 0.8);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: var(--text-main);
+            font-family: var(--font-tech);
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 8px rgba(159, 144, 206, 0.3);
+        }
+
+        .btn {
+            background: var(--accent-deep);
+            color: var(--text-main);
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            background: var(--accent-purple);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(159, 144, 206, 0.1);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid var(--accent-neon-red);
+            color: var(--accent-neon-red);
+        }
+
+        .btn-danger:hover {
+            background: var(--accent-neon-red);
+            color: white;
+        }
+
+        /* Status Pills */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .status-badge.disconnected {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-neon-red);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-badge.connected {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--accent-neon-green);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-badge.simulated {
+            background: rgba(184, 134, 11, 0.15);
+            color: var(--accent-gold);
+            border: 1px solid rgba(184, 134, 11, 0.3);
+        }
+
+        /* Telemetry Readouts */
+        .telemetry-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .telemetry-item {
+            background: rgba(13, 9, 20, 0.4);
+            border: 1px solid rgba(159, 144, 206, 0.1);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .telemetry-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .telemetry-val {
+            font-family: var(--font-tech);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .alert-val {
+            color: var(--accent-neon-green);
+            animation: pulse-green 2s infinite alternate;
+        }
+
+        .alert-val.near {
+            color: var(--accent-neon-red);
+            animation: pulse-red 0.8s infinite alternate;
+        }
+
+        @keyframes pulse-red {
+            from { text-shadow: 0 0 2px rgba(239, 68, 68, 0.4); }
+            to { text-shadow: 0 0 10px rgba(239, 68, 68, 0.9); }
+        }
+
+        @keyframes pulse-green {
+            from { text-shadow: 0 0 2px rgba(16, 185, 129, 0.2); }
+            to { text-shadow: 0 0 6px rgba(16, 185, 129, 0.6); }
+        }
+
+        /* Manual Controller */
+        .control-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            max-width: 180px;
+            margin: 0 auto;
+        }
+
+        .control-key {
+            background: rgba(13, 9, 20, 0.6);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            aspect-ratio: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            color: var(--text-main);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .control-key:active, .control-key.active {
+            background: var(--accent-purple);
+            color: var(--bg-page);
+            box-shadow: var(--shadow-glow);
+        }
+
+        /* ===== RIGHT PANEL (VISUALIZERS) ===== */
+        .main-dashboard {
+            display: grid;
+            grid-template-rows: 1fr auto;
+            gap: 20px;
+        }
+
+        .grid-visualizers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .visualizer-card {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            background: #060309;
+            border: 1px solid rgba(159, 144, 206, 0.15);
+            border-radius: 12px;
+            aspect-ratio: 1.1;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .canvas-container canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Camera Feed layout */
+        .camera-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .camera-feed-card {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .camera-wrapper {
+            position: relative;
+            background: #020104;
+            border-radius: 12px;
+            border: 1px solid rgba(159, 144, 206, 0.15);
+            aspect-ratio: 1.6;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .camera-wrapper canvas {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .feed-overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-family: var(--font-tech);
+            color: var(--text-main);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rec-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-neon-red);
+            animation: pulse-rec 1s infinite alternate;
+        }
+
+        @keyframes pulse-rec {
+            from { opacity: 0.3; }
+            to { opacity: 1; }
+        }
+
+        .instruction-banner {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-align: center;
+            background: rgba(159, 144, 206, 0.05);
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px dashed var(--border-glass);
+        }
+
+        /* ===== RESPONSIVENESS ===== */
+        @media (max-width: 1100px) {
+            .dashboard-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                grid-template-columns: 1fr;
+            }
+            .grid-visualizers {
+                grid-template-columns: 1fr;
+            }
+            .camera-grid {
+                grid-template-columns: 1fr;
+            }
+            header {
+                padding-top: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Autonomous UGV Control Dashboard</h1>
+        <p>Real-time Telemetry, LiDAR Scan & Navigation Command Station</p>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Sidebar Controls -->
+        <div class="sidebar">
+            <!-- Connection & Configuration Panel -->
+            <div class="panel">
+                <div class="panel-title">
+                    <span>Connection Hub</span>
+                    <span id="conn-pill" class="status-badge simulated">Simulated Mode</span>
+                </div>
+                <div class="connection-box">
+                    <div class="form-group">
+                        <label for="mode-select">Control Mode</label>
+                        <select id="mode-select">
+                            <option value="sim">Virtual Simulation (No Hardware)</option>
+                            <option value="hardware">Live Hardware Connection (WebSockets)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="ws-url-group" style="display: none;">
+                        <label for="ws-url">WebSocket Server Link</label>
+                        <input type="text" id="ws-url" value="ws://localhost:8765" placeholder="wss://your-tunnel.ngrok-free.app">
+                        <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 4px;">
+                            * Use secure <strong>wss://</strong> for Vercel/Netlify HTTPS deployments.
+                        </div>
+                    </div>
+                    <button id="connect-btn" class="btn btn-secondary" style="display: none;">Connect to Hardware</button>
+                </div>
+            </div>
+
+            <!-- Telemetry Information Panel -->
+            <div class="panel">
+                <div class="panel-title">Telemetry Readout</div>
+                <div class="telemetry-grid">
+                    <div class="telemetry-item">
+                        <span class="telemetry-label">Position X</span>
+                        <span id="tel-x" class="telemetry-val">0.00 m</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="telemetry-label">Position Y</span>
+                        <span id="tel-y" class="telemetry-val">0.00 m</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="telemetry-label">UGV Heading</span>
+                        <span id="tel-heading" class="telemetry-val">0.0°</span>
+                    </div>
+                    <div class="telemetry-item">
+                        <span class="telemetry-label">GPS Satellites</span>
+                        <span id="tel-gps-sats" class="telemetry-val">12</span>
+                    </div>
+                    <div class="telemetry-item" style="grid-column: span 2;">
+                        <span class="telemetry-label">GPS Location</span>
+                        <span id="tel-gps" class="telemetry-val" style="font-size:0.8rem">15.371200 N, 75.123400 E</span>
+                    </div>
+                    <div class="telemetry-item" style="grid-column: span 2;">
+                        <span class="telemetry-label">Goal Coordinates</span>
+                        <span id="tel-goal" class="telemetry-val">Not Set</span>
+                    </div>
+                    <div class="telemetry-item" style="grid-column: span 2;">
+                        <span class="telemetry-label">Obstacle Alert (Depth D4)</span>
+                        <span id="tel-depth" class="telemetry-val alert-val">SAFE (2.50m)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Goal Panel -->
+            <div class="panel">
+                <div class="panel-title">Waypoint Settings</div>
+                <div class="telemetry-grid">
+                    <div class="form-group">
+                        <label for="goal-x">Target X (m)</label>
+                        <input type="number" id="goal-x" step="0.5" value="4.0">
+                    </div>
+                    <div class="form-group">
+                        <label for="goal-y">Target Y (m)</label>
+                        <input type="number" id="goal-y" step="0.5" value="3.0">
+                    </div>
+                </div>
+                <button id="set-goal-btn" class="btn">Send Nav Goal</button>
+                <button id="stop-btn" class="btn btn-danger">Emergency Stop</button>
+            </div>
+
+            <!-- Keyboard manual drive controller representation -->
+            <div class="panel">
+                <div class="panel-title">Manual Steering</div>
+                <div class="control-pad">
+                    <div></div>
+                    <div class="control-key" id="key-up">▲</div>
+                    <div></div>
+                    <div class="control-key" id="key-left">◀</div>
+                    <div class="control-key" id="key-stop">■</div>
+                    <div class="control-key" id="key-right">▶</div>
+                    <div></div>
+                    <div class="control-key" id="key-down">▼</div>
+                    <div></div>
+                </div>
+                <div class="instruction-banner">
+                    Drive with <strong>W, A, S, D</strong> or arrow keys on your keyboard. Click stop key to break.
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Visualizers -->
+        <div class="main-dashboard">
+            <div class="grid-visualizers">
+                <!-- LiDAR polar radar visualizer -->
+                <div class="panel visualizer-card">
+                    <div class="panel-title">LiDAR Scan (RPLidar A1)</div>
+                    <div class="canvas-container">
+                        <canvas id="lidar-canvas"></canvas>
+                    </div>
+                    <div class="instruction-banner">
+                        Raw 360° LiDAR scanning distances representation.
+                    </div>
+                </div>
+
+                <!-- 2D Occupancy Grid Mapping and path following visualizer -->
+                <div class="panel visualizer-card">
+                    <div class="panel-title">Local Mapping & Path</div>
+                    <div class="canvas-container" style="cursor: crosshair;">
+                        <canvas id="map-canvas"></canvas>
+                    </div>
+                    <div class="instruction-banner">
+                        Double-click grid to set Goal Point. Drag/scroll not supported.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video feeds: RGB Camera and Depth Camera -->
+            <div class="camera-grid">
+                <!-- RGB Camera -->
+                <div class="panel camera-feed-card">
+                    <div class="panel-title">RGB Camera View</div>
+                    <div class="camera-wrapper">
+                        <canvas id="rgb-canvas"></canvas>
+                        <div class="feed-overlay">
+                            <span class="rec-dot"></span>
+                            <span>RGB FEED • RealSense D4</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Depth camera visualizer -->
+                <div class="panel camera-feed-card">
+                    <div class="panel-title">Depth Camera Heatmap</div>
+                    <div class="camera-wrapper">
+                        <canvas id="depth-canvas"></canvas>
+                        <div class="feed-overlay">
+                            <span class="rec-dot" style="background-color: var(--accent-cyan)"></span>
+                            <span>DEPTH MAPPED • RealSense D4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JS control script -->
+    <script>
+        // DOM Elements
+        const modeSelect = document.getElementById('mode-select');
+        const wsUrlGroup = document.getElementById('ws-url-group');
+        const wsUrlInput = document.getElementById('ws-url');
+        const connectBtn = document.getElementById('connect-btn');
+        const connPill = document.getElementById('conn-pill');
+        
+        const telX = document.getElementById('tel-x');
+        const telY = document.getElementById('tel-y');
+        const telHeading = document.getElementById('tel-heading');
+        const telGps = document.getElementById('tel-gps');
+        const telGpsSats = document.getElementById('tel-gps-sats');
+        const telGoal = document.getElementById('tel-goal');
+        const telDepth = document.getElementById('tel-depth');
+
+        const goalXInput = document.getElementById('goal-x');
+        const goalYInput = document.getElementById('goal-y');
+        const setGoalBtn = document.getElementById('set-goal-btn');
+        const stopBtn = document.getElementById('stop-btn');
+
+        // Canvases
+        const lidarCanvas = document.getElementById('lidar-canvas');
+        const mapCanvas = document.getElementById('map-canvas');
+        const rgbCanvas = document.getElementById('rgb-canvas');
+        const depthCanvas = document.getElementById('depth-canvas');
+
+        const lidarCtx = lidarCanvas.getContext('2d');
+        const mapCtx = mapCanvas.getContext('2d');
+        const rgbCtx = rgbCanvas.getContext('2d');
+        const depthCtx = depthCanvas.getContext('2d');
+
+        // State variables
+        let controlMode = 'sim'; // 'sim' or 'hardware'
+        let ws = null;
+        let isConnected = false;
+        
+        // Robot State (Simulation)
+        let robotState = {
+            x: 0.0,
+            y: 0.0,
+            yaw: 0.0, // Radians
+            goal: null, // {x, y}
+            path: [], // Array of [x,y] points
+            gpsBase: { lat: 15.3712, lon: 75.1234 },
+            gpsSats: 11,
+            lidarRanges: [], // Array of ranges for 360 degrees
+            obstacleDist: 3.5, // Min distance to front obstacle
+            obstacleAngle: 0
+        };
+
+        // Static Obstacles in simulation map
+        const simObstacles = [
+            { x: 2.0, y: 1.5, r: 0.6 },
+            { x: -3.0, y: -2.0, r: 0.8 },
+            { x: 1.0, y: -3.0, r: 0.7 },
+            { x: -1.5, y: 3.5, r: 0.5 },
+            { x: 4.0, y: -1.0, r: 0.6 },
+            { x: -2.0, y: 1.0, r: 0.5 }
+        ];
+
+        // Resize handler for canvases
+        function resizeCanvases() {
+            const containers = document.querySelectorAll('.canvas-container');
+            containers.forEach(container => {
+                const canvas = container.querySelector('canvas');
+                if(canvas) {
+                    canvas.width = container.clientWidth;
+                    canvas.height = container.clientHeight;
+                }
+            });
+            const wrapRGB = rgbCanvas.parentElement;
+            rgbCanvas.width = wrapRGB.clientWidth;
+            rgbCanvas.height = wrapRGB.clientHeight;
+            
+            const wrapDepth = depthCanvas.parentElement;
+            depthCanvas.width = wrapDepth.clientWidth;
+            depthCanvas.height = wrapDepth.clientHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvases);
+        setTimeout(resizeCanvases, 100);
+
+        // MODE SWITCHING
+        modeSelect.addEventListener('change', (e) => {
+            controlMode = e.target.value;
+            if (controlMode === 'sim') {
+                wsUrlGroup.style.display = 'none';
+                connectBtn.style.display = 'none';
+                if(ws) {
+                    ws.close();
+                }
+                updateConnectionStatus('simulated');
+            } else {
+                wsUrlGroup.style.display = 'flex';
+                connectBtn.style.display = 'block';
+                updateConnectionStatus('disconnected');
+            }
+        });
+
+        function updateConnectionStatus(status) {
+            connPill.className = 'status-badge';
+            if (status === 'simulated') {
+                connPill.classList.add('simulated');
+                connPill.innerText = 'Simulated Mode';
+                isConnected = false;
+                connectBtn.innerText = 'Connect to Hardware';
+                connectBtn.className = 'btn btn-secondary';
+            } else if (status === 'connected') {
+                connPill.classList.add('connected');
+                connPill.innerText = 'Connected';
+                isConnected = true;
+                connectBtn.innerText = 'Disconnect';
+                connectBtn.className = 'btn btn-danger';
+            } else {
+                connPill.classList.add('disconnected');
+                connPill.innerText = 'Disconnected';
+                isConnected = false;
+                connectBtn.innerText = 'Connect to Hardware';
+                connectBtn.className = 'btn';
+            }
+        }
+
+        // WEBSOCKET CONNECTION
+        connectBtn.addEventListener('click', () => {
+            if (isConnected) {
+                // Disconnect
+                if (ws) ws.close();
+                updateConnectionStatus('disconnected');
+            } else {
+                const url = wsUrlInput.value.trim();
+                connectBtn.innerText = 'Connecting...';
+                
+                try {
+                    ws = new WebSocket(url);
+                    
+                    ws.onopen = () => {
+                        updateConnectionStatus('connected');
+                        console.log('Connected to robot websocket server');
+                    };
+                    
+                    ws.onmessage = (event) => {
+                        try {
+                            const message = JSON.parse(event.data);
+                            handleRobotMessage(message);
+                        } catch (err) {
+                            console.error('Failed to parse WebSocket message', err);
+                        }
+                    };
+                    
+                    ws.onclose = () => {
+                        updateConnectionStatus('disconnected');
+                        console.log('Robot websocket connection closed');
+                    };
+                    
+                    ws.onerror = (err) => {
+                        console.error('WebSocket Error', err);
+                        updateConnectionStatus('disconnected');
+                        alert('Could not establish websocket connection. Make sure the backend server is running and Ngrok is active.');
+                    };
+                } catch(e) {
+                    alert('Invalid WebSocket URL format.');
+                    updateConnectionStatus('disconnected');
+                }
+            }
+        });
+
+        // HANDLE PACKETS FROM ACTUAL HARDWARE BACKEND
+        function handleRobotMessage(msg) {
+            if (msg.type === 'telemetry') {
+                const t = msg.data;
+                // Update text indicators
+                telX.innerText = t.robot_x.toFixed(2) + ' m';
+                telY.innerText = t.robot_y.toFixed(2) + ' m';
+                telHeading.innerText = t.heading.toFixed(1) + '°';
+                
+                if (t.gps) {
+                    telGps.innerText = `${t.gps.lat.toFixed(6)} N, ${t.gps.lon.toFixed(6)} E`;
+                    telGpsSats.innerText = t.gps.satellites;
+                }
+
+                if (t.goal) {
+                    telGoal.innerText = `X: ${t.goal[0].toFixed(1)}, Y: ${t.goal[1].toFixed(1)}`;
+                } else {
+                    telGoal.innerText = 'Not Set';
+                }
+
+                // Depth alarm
+                if (t.depth_status) {
+                    const dist = t.depth_status.distance;
+                    if (t.depth_status.status === 'NEAR') {
+                        telDepth.innerText = `ALERT: NEAR (${dist.toFixed(2)}m)`;
+                        telDepth.className = 'telemetry-val alert-val near';
+                    } else {
+                        telDepth.innerText = `SAFE (${dist.toFixed(2)}m)`;
+                        telDepth.className = 'telemetry-val alert-val';
+                    }
+                }
+
+                // Update rendering state
+                robotState.x = t.robot_x;
+                robotState.y = t.robot_y;
+                robotState.yaw = t.heading * (Math.PI / 180.0);
+                robotState.goal = t.goal ? { x: t.goal[0], y: t.goal[1] } : null;
+                robotState.path = t.path || [];
+                robotState.lidarRanges = t.lidar_ranges || [];
+                
+                // Draw base64 image if present
+                if (msg.images) {
+                    if (msg.images.rgb) {
+                        renderRGBBase64(msg.images.rgb);
+                    }
+                    if (msg.images.depth) {
+                        renderDepthBase64(msg.images.depth);
+                    }
+                }
+            }
+        }
+
+        // Draw custom frames if sent via WebSocket base64
+        function renderRGBBase64(base64String) {
+            const img = new Image();
+            img.src = 'data:image/jpeg;base64,' + base64String;
+            img.onload = () => {
+                rgbCtx.drawImage(img, 0, 0, rgbCanvas.width, rgbCanvas.height);
+            };
+        }
+
+        function renderDepthBase64(base64String) {
+            const img = new Image();
+            img.src = 'data:image/jpeg;base64,' + base64String;
+            img.onload = () => {
+                depthCtx.drawImage(img, 0, 0, depthCanvas.width, depthCanvas.height);
+            };
+        }
+
+        // SEND WAYPOINT COMMAND
+        function sendGoal(x, y) {
+            if (controlMode === 'sim') {
+                robotState.goal = { x, y };
+                telGoal.innerText = `X: ${x.toFixed(1)}, Y: ${y.toFixed(1)}`;
+                goalXInput.value = x.toFixed(1);
+                goalYInput.value = y.toFixed(1);
+                generateSimPath();
+            } else {
+                if (isConnected && ws) {
+                    const payload = {
+                        action: 'set_goal',
+                        x: parseFloat(x),
+                        y: parseFloat(y)
+                    };
+                    ws.send(JSON.stringify(payload));
+                    telGoal.innerText = `X: ${x.toFixed(1)}, Y: ${y.toFixed(1)}`;
+                } else {
+                    alert('Dashboard not connected to hardware. Switch to Simulation mode or connect first.');
+                }
+            }
+        }
+
+        setGoalBtn.addEventListener('click', () => {
+            const gx = parseFloat(goalXInput.value);
+            const gy = parseFloat(goalYInput.value);
+            sendGoal(gx, gy);
+        });
+
+        stopBtn.addEventListener('click', () => {
+            if (controlMode === 'sim') {
+                robotState.goal = null;
+                robotState.path = [];
+                telGoal.innerText = 'STOPPED';
+            } else {
+                if (isConnected && ws) {
+                    ws.send(JSON.stringify({ action: 'stop' }));
+                    telGoal.innerText = 'STOPPED';
+                }
+            }
+        });
+
+        // Click on 2D map to set goal
+        mapCanvas.addEventListener('dblclick', (e) => {
+            const rect = mapCanvas.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const clickY = e.clientY - rect.top;
+            
+            // Map coordinates translate: Canvas center is (0,0)
+            const mapSize = 10; // -5 to +5 meters grid size
+            const scaleX = mapCanvas.width / mapSize;
+            const scaleY = mapCanvas.height / mapSize;
+            
+            const gx = (clickX - mapCanvas.width / 2) / scaleX;
+            const gy = -(clickY - mapCanvas.height / 2) / scaleY; // flip Y for standard cartesian
+            
+            sendGoal(gx, gy);
+        });
+
+        // KEYBOARD MANUAL STEERING CONTROLLER
+        let keysPressed = {};
+        window.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            if (['w', 's', 'a', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key)) {
+                keysPressed[key] = true;
+                highlightKey(key, true);
+                sendManualDriveCmd();
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            const key = e.key.toLowerCase();
+            if (['w', 's', 'a', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key)) {
+                keysPressed[key] = false;
+                highlightKey(key, false);
+                sendManualDriveCmd();
+            }
+        });
+
+        function highlightKey(key, active) {
+            let elId = '';
+            if (key === 'w' || key === 'arrowup') elId = 'key-up';
+            else if (key === 's' || key === 'arrowdown') elId = 'key-down';
+            else if (key === 'a' || key === 'arrowleft') elId = 'key-left';
+            else if (key === 'd' || key === 'arrowright') elId = 'key-right';
+
+            if (elId) {
+                const el = document.getElementById(elId);
+                if (active) el.classList.add('active');
+                else el.classList.remove('active');
+            }
+        }
+
+        function sendManualDriveCmd() {
+            let linear = 0.0;
+            let angular = 0.0;
+
+            if (keysPressed['w'] || keysPressed['arrowup']) linear = 0.6;
+            if (keysPressed['s'] || keysPressed['arrowdown']) linear = -0.6;
+            if (keysPressed['a'] || keysPressed['arrowleft']) angular = 0.8;
+            if (keysPressed['d'] || keysPressed['arrowright']) angular = -0.8;
+
+            if (controlMode === 'sim') {
+                // Manually steer the simulated robot
+                robotState.goal = null; // override path goal
+                robotState.yaw += angular * 0.08;
+                robotState.x += Math.cos(robotState.yaw) * linear * 0.08;
+                robotState.y += Math.sin(robotState.yaw) * linear * 0.08;
+            } else {
+                if (isConnected && ws) {
+                    const payload = {
+                        action: 'drive',
+                        linear: linear,
+                        angular: angular
+                    };
+                    ws.send(JSON.stringify(payload));
+                }
+            }
+        }
+
+        document.getElementById('key-stop').addEventListener('click', () => {
+            keysPressed = {};
+            highlightKey('w', false);
+            highlightKey('s', false);
+            highlightKey('a', false);
+            highlightKey('d', false);
+            if (controlMode === 'sim') {
+                robotState.goal = null;
+                robotState.path = [];
+            } else {
+                if(isConnected && ws) {
+                    ws.send(JSON.stringify({ action: 'drive', linear: 0, angular: 0 }));
+                }
+            }
+        });
+
+
+        // ==========================================
+        //         SIMULATION ENGINE (VIRTUAL MODE)
+        // ==========================================
+
+        // Generate Path from Robot to Goal avoiding obstacles (Simulated A* style waypoints)
+        function generateSimPath() {
+            if (!robotState.goal) return;
+            
+            const start = { x: robotState.x, y: robotState.y };
+            const end = { x: robotState.goal.x, y: robotState.goal.y };
+            
+            const waypoints = [ [start.x, start.y] ];
+            
+            // Simple path-bending vector force field simulation
+            let cx = start.x;
+            let cy = start.y;
+            const steps = 40;
+            const stepSize = 0.25;
+
+            for(let i=0; i<steps; i++) {
+                const distToGoal = Math.hypot(end.x - cx, end.y - cy);
+                if (distToGoal < 0.2) {
+                    break;
+                }
+
+                // Attractor vector
+                let vx = (end.x - cx) / distToGoal;
+                let vy = (end.y - cy) / distToGoal;
+
+                // Repulsion vector from obstacles
+                simObstacles.forEach(obs => {
+                    const dx = cx - obs.x;
+                    const dy = cy - obs.y;
+                    const distToObs = Math.hypot(dx, dy);
+                    const minDist = obs.r + 0.4; // obstacle radius + safety padding
+                    if (distToObs < minDist + 1.2) {
+                        const repulsionForce = 0.8 / (distToObs * distToObs);
+                        vx += (dx / distToObs) * repulsionForce;
+                        vy += (dy / distToObs) * repulsionForce;
+                    }
+                });
+
+                // Normalize force vector
+                const forceMag = Math.hypot(vx, vy);
+                if(forceMag > 0) {
+                    vx = (vx / forceMag) * stepSize;
+                    vy = (vy / forceMag) * stepSize;
+                }
+
+                cx += vx;
+                cy += vy;
+                waypoints.push([cx, cy]);
+            }
+            
+            waypoints.push([end.x, end.y]);
+            robotState.path = waypoints;
+        }
+
+        // Simulation update loop
+        function updateSimulation() {
+            if (controlMode !== 'sim') return;
+
+            // 1. Move UGV towards goal along path
+            if (robotState.goal && robotState.path.length > 0) {
+                // Find next waypoint ahead
+                let nextWp = null;
+                for (let i = 0; i < robotState.path.length; i++) {
+                    const wp = robotState.path[i];
+                    const dist = Math.hypot(wp[0] - robotState.x, wp[1] - robotState.y);
+                    if (dist > 0.15) {
+                        nextWp = wp;
+                        break;
+                    }
+                }
+
+                if (nextWp) {
+                    // Turn and move toward waypoint
+                    const dx = nextWp[0] - robotState.x;
+                    const dy = nextWp[1] - robotState.y;
+                    const targetYaw = Math.atan2(dy, dx);
+                    
+                    // Smooth turn
+                    let yawDiff = targetYaw - robotState.yaw;
+                    // normalize to -PI to PI
+                    while (yawDiff < -Math.PI) yawDiff += Math.PI * 2;
+                    while (yawDiff > Math.PI) yawDiff -= Math.PI * 2;
+
+                    const maxTurn = 0.08;
+                    robotState.yaw += Math.min(Math.max(yawDiff, -maxTurn), maxTurn);
+
+                    // Move forward
+                    const speed = 0.05;
+                    robotState.x += Math.cos(robotState.yaw) * speed;
+                    robotState.y += Math.sin(robotState.yaw) * speed;
+                } else {
+                    // Reached goal
+                    robotState.goal = null;
+                    robotState.path = [];
+                    telGoal.innerText = 'REACHED';
+                }
+            }
+
+            // 2. Simulate LiDAR ranges (intersect rays with circular obstacles)
+            robotState.lidarRanges = [];
+            const lidarRes = 180; // angles sampled (e.g. every 2 degrees)
+            let minFrontObstacleDist = 99.0;
+
+            for(let i=0; i<360; i += (360/lidarRes)) {
+                const angleRad = (i * Math.PI) / 180.0;
+                const globalAngle = robotState.yaw + angleRad;
+                const rayX = Math.cos(globalAngle);
+                const rayY = Math.sin(globalAngle);
+                
+                let range = 4.5; // Max range RPLidar A1 is around 6-12m, cap display at 4.5m for clarity
+
+                // Intersection test
+                simObstacles.forEach(obs => {
+                    // Line sphere intersection
+                    const fX = robotState.x - obs.x;
+                    const fY = robotState.y - obs.y;
+                    
+                    const a = rayX * rayX + rayY * rayY;
+                    const b = 2 * (fX * rayX + fY * rayY);
+                    const c = (fX * fX + fY * fY) - obs.r * obs.r;
+                    
+                    const discriminant = b*b - 4*a*c;
+                    if(discriminant >= 0) {
+                        const t1 = (-b - Math.sqrt(discriminant)) / (2*a);
+                        if (t1 > 0 && t1 < range) {
+                            range = t1;
+                        }
+                    }
+                });
+
+                // Add small sensing noise
+                range += (Math.random() - 0.5) * 0.03;
+                robotState.lidarRanges.push([i, range]);
+
+                // Track minimum distance in camera's field of view (-25 to +25 degrees)
+                const relativeAngle = (i > 180) ? i - 360 : i;
+                if (Math.abs(relativeAngle) < 25) {
+                    if (range < minFrontObstacleDist) {
+                        minFrontObstacleDist = range;
+                    }
+                }
+            }
+
+            // 3. Update Depth Telemetry Alert
+            robotState.obstacleDist = minFrontObstacleDist;
+            if (minFrontObstacleDist < 1.0) {
+                telDepth.innerText = `ALERT: NEAR (${minFrontObstacleDist.toFixed(2)}m)`;
+                telDepth.className = 'telemetry-val alert-val near';
+            } else {
+                telDepth.innerText = `SAFE (${minFrontObstacleDist.toFixed(2)}m)`;
+                telDepth.className = 'telemetry-val alert-val';
+            }
+
+            // 4. Update GPS text coordinates
+            const baseLat = robotState.gpsBase.lat;
+            const baseLon = robotState.gpsBase.lon;
+            const curLat = baseLat + (robotState.y * 0.000009); // approximation
+            const curLon = baseLon + (robotState.x * 0.000009);
+            telGps.innerText = `${curLat.toFixed(6)} N, ${curLon.toFixed(6)} E`;
+
+            // 5. Update other text UI elements
+            telX.innerText = robotState.x.toFixed(2) + ' m';
+            telY.innerText = robotState.y.toFixed(2) + ' m';
+            telHeading.innerText = (robotState.yaw * (180.0 / Math.PI)).toFixed(1) + '°';
+            telGpsSats.innerText = robotState.gpsSats;
+        }
+
+        // ==========================================
+        //          CANVAS DRAWING METHODS
+        // ==========================================
+
+        // Draw circular radar sweep LiDAR view
+        let radarSweepAngle = 0;
+        function drawLidar() {
+            const w = lidarCanvas.width;
+            const h = lidarCanvas.height;
+            const center = { x: w/2, y: h/2 };
+            const maxR = Math.min(w, h) / 2 - 15;
+            const mapRangeMeters = 5.0; // display scale range
+
+            lidarCtx.fillStyle = '#060309';
+            lidarCtx.fillRect(0, 0, w, h);
+
+            // Draw radial gridlines
+            lidarCtx.strokeStyle = 'rgba(159, 144, 206, 0.1)';
+            lidarCtx.lineWidth = 1;
+            
+            // Circles
+            for(let r = 0.25; r <= 1.0; r += 0.25) {
+                lidarCtx.beginPath();
+                lidarCtx.arc(center.x, center.y, maxR * r, 0, Math.PI * 2);
+                lidarCtx.stroke();
+                
+                // distance label
+                lidarCtx.fillStyle = 'rgba(159, 144, 206, 0.4)';
+                lidarCtx.font = '8px ' + varProp('--font-tech');
+                lidarCtx.fillText((mapRangeMeters * r).toFixed(1) + 'm', center.x + 4, center.y - (maxR * r) + 10);
+            }
+
+            // Crosslines
+            const angles = [0, 45, 90, 135, 180, 225, 270, 315];
+            angles.forEach(ang => {
+                const rad = (ang * Math.PI) / 180.0;
+                lidarCtx.beginPath();
+                lidarCtx.moveTo(center.x, center.y);
+                lidarCtx.lineTo(center.x + Math.cos(rad) * maxR, center.y + Math.sin(rad) * maxR);
+                lidarCtx.stroke();
+            });
+
+            // Draw LiDAR scan points
+            if (robotState.lidarRanges && robotState.lidarRanges.length > 0) {
+                lidarCtx.fillStyle = '#22d3ee'; // Cyan glow
+                robotState.lidarRanges.forEach(entry => {
+                    const angleDeg = entry[0];
+                    const dist = entry[1];
+                    
+                    if (dist < mapRangeMeters) {
+                        const rad = (angleDeg * Math.PI) / 180.0;
+                        const distPx = (dist / mapRangeMeters) * maxR;
+                        const px = center.x + Math.cos(rad) * distPx;
+                        const py = center.y + Math.sin(rad) * distPx;
+                        
+                        // Render point
+                        lidarCtx.beginPath();
+                        lidarCtx.arc(px, py, 2.2, 0, Math.PI*2);
+                        lidarCtx.fill();
+                    }
+                });
+            }
+
+            // Sweeper line animation
+            radarSweepAngle = (radarSweepAngle + 0.05) % (Math.PI * 2);
+            lidarCtx.strokeStyle = 'rgba(168, 85, 247, 0.35)'; // purple sweep
+            lidarCtx.lineWidth = 2.5;
+            lidarCtx.beginPath();
+            lidarCtx.moveTo(center.x, center.y);
+            lidarCtx.lineTo(center.x + Math.cos(radarSweepAngle) * maxR, center.y + Math.sin(radarSweepAngle) * maxR);
+            lidarCtx.stroke();
+        }
+
+        // Draw 2D local occupancy grid map
+        function drawMap() {
+            const w = mapCanvas.width;
+            const h = mapCanvas.height;
+            const mapSize = 10.0; // Total width/height represented in meters (-5m to +5m)
+            const scaleX = w / mapSize;
+            const scaleY = h / mapSize;
+            
+            // Translate function to convert meter coordinates into screen pixels
+            const toPx = (mx, my) => {
+                return {
+                    x: w / 2 + mx * scaleX,
+                    y: h / 2 - my * scaleY // invert Y axis for standard cartesian
+                };
+            };
+
+            mapCtx.fillStyle = '#060309';
+            mapCtx.fillRect(0, 0, w, h);
+
+            // Draw grid cells (light purple grid lines)
+            mapCtx.strokeStyle = 'rgba(159, 144, 206, 0.08)';
+            mapCtx.lineWidth = 1;
+            for (let i = -5; i <= 5; i += 1) {
+                // Vertical lines
+                let p1 = toPx(i, -5);
+                let p2 = toPx(i, 5);
+                mapCtx.beginPath();
+                mapCtx.moveTo(p1.x, p1.y);
+                mapCtx.lineTo(p2.x, p2.y);
+                mapCtx.stroke();
+                
+                // Horizontal lines
+                p1 = toPx(-5, i);
+                p2 = toPx(5, i);
+                mapCtx.beginPath();
+                mapCtx.moveTo(p1.x, p1.y);
+                mapCtx.lineTo(p2.x, p2.y);
+                mapCtx.stroke();
+            }
+
+            // Draw Axes
+            mapCtx.strokeStyle = 'rgba(159, 144, 206, 0.2)';
+            mapCtx.beginPath();
+            mapCtx.moveTo(0, h/2); mapCtx.lineTo(w, h/2);
+            mapCtx.moveTo(w/2, 0); mapCtx.lineTo(w/2, h);
+            mapCtx.stroke();
+
+            // Draw Obstacles
+            simObstacles.forEach(obs => {
+                const px = toPx(obs.x, obs.y);
+                const rPx = obs.r * scaleX;
+                
+                // Fill obstacle shape
+                mapCtx.fillStyle = 'rgba(239, 68, 68, 0.25)'; // semi-transparent red
+                mapCtx.strokeStyle = 'rgba(239, 68, 68, 0.7)';
+                mapCtx.lineWidth = 1.5;
+                
+                mapCtx.beginPath();
+                mapCtx.arc(px.x, px.y, rPx, 0, Math.PI*2);
+                mapCtx.fill();
+                mapCtx.stroke();
+            });
+
+            // Draw Goal target point
+            if (robotState.goal) {
+                const gPx = toPx(robotState.goal.x, robotState.goal.y);
+                
+                // Draw pulsing ring
+                const pulse = 10 + 5 * Math.sin(Date.now() / 200);
+                mapCtx.strokeStyle = 'rgba(239, 68, 68, 0.8)';
+                mapCtx.lineWidth = 2;
+                mapCtx.beginPath();
+                mapCtx.arc(gPx.x, gPx.y, pulse, 0, Math.PI*2);
+                mapCtx.stroke();
+
+                // Draw center point target cross
+                mapCtx.fillStyle = '#EF4444';
+                mapCtx.beginPath();
+                mapCtx.arc(gPx.x, gPx.y, 4, 0, Math.PI*2);
+                mapCtx.fill();
+            }
+
+            // Draw planned Path line
+            if (robotState.path && robotState.path.length > 0) {
+                mapCtx.strokeStyle = '#06B6D4'; // Cyan path
+                mapCtx.lineWidth = 3;
+                mapCtx.setLineDash([5, 5]); // dashed path
+                mapCtx.beginPath();
+                
+                const start = toPx(robotState.path[0][0], robotState.path[0][1]);
+                mapCtx.moveTo(start.x, start.y);
+                
+                for(let i = 1; i < robotState.path.length; i++) {
+                    const pt = toPx(robotState.path[i][0], robotState.path[i][1]);
+                    mapCtx.lineTo(pt.x, pt.y);
+                }
+                mapCtx.stroke();
+                mapCtx.setLineDash([]); // restore
+            }
+
+            // Draw UGV representation
+            const rPx = toPx(robotState.x, robotState.y);
+            mapCtx.save();
+            mapCtx.translate(rPx.x, rPx.y);
+            mapCtx.rotate(-robotState.yaw); // Rotate drawing context (inverted because HTML canvas Y increases down)
+
+            // Draw robot chassis
+            mapCtx.fillStyle = '#9F90CE'; // Lavender UGV
+            mapCtx.strokeStyle = '#6B5B95';
+            mapCtx.lineWidth = 2;
+            
+            // Triangle/Chevron shape pointing right (heading direction)
+            mapCtx.beginPath();
+            mapCtx.moveTo(14, 0);
+            mapCtx.lineTo(-10, -10);
+            mapCtx.lineTo(-5, 0);
+            mapCtx.lineTo(-10, 10);
+            mapCtx.closePath();
+            mapCtx.fill();
+            mapCtx.stroke();
+
+            // Heading direction helper line
+            mapCtx.strokeStyle = 'rgba(232, 121, 249, 0.6)';
+            mapCtx.lineWidth = 1;
+            mapCtx.beginPath();
+            mapCtx.moveTo(14, 0);
+            mapCtx.lineTo(30, 0);
+            mapCtx.stroke();
+
+            mapCtx.restore();
+        }
+
+        // Draw a simulated RGB Camera scene (3D projected blocks moving as UGV drives)
+        function drawRGBFeed() {
+            if (controlMode !== 'sim') return; // Handled by WS packets in hardware mode
+
+            const w = rgbCanvas.width;
+            const h = rgbCanvas.height;
+            rgbCtx.fillStyle = '#0f0714';
+            rgbCtx.fillRect(0, 0, w, h);
+
+            // Ground floor
+            rgbCtx.fillStyle = '#171124';
+            rgbCtx.fillRect(0, h/2, w, h/2);
+
+            // Grid lines on ground
+            rgbCtx.strokeStyle = 'rgba(159, 144, 206, 0.08)';
+            rgbCtx.lineWidth = 1;
+            for(let i=-5; i<=5; i++) {
+                // perspective lines radiating from center horizon
+                rgbCtx.beginPath();
+                rgbCtx.moveTo(w/2, h/2);
+                rgbCtx.lineTo(w/2 + i * (w/8), h);
+                rgbCtx.stroke();
+            }
+
+            // Simple 3D projection of obstacles ahead
+            simObstacles.forEach(obs => {
+                // Calculate position relative to robot heading
+                const dx = obs.x - robotState.x;
+                const dy = obs.y - robotState.y;
+                
+                // Rotate to robot frame
+                const rx = dx * Math.cos(robotState.yaw) + dy * Math.sin(robotState.yaw); // distance forward
+                const ry = -dx * Math.sin(robotState.yaw) + dy * Math.cos(robotState.yaw); // distance lateral
+                
+                if (rx > 0.1) { // Only render if in front of camera
+                    // Perspective math
+                    const fovScale = 220; // focal factor
+                    const screenX = w/2 + (ry / rx) * fovScale;
+                    const screenY = h/2; // on horizon
+                    const size = (obs.r * 2 / rx) * fovScale;
+
+                    if (screenX > -100 && screenX < w + 100) {
+                        // Draw block
+                        rgbCtx.fillStyle = 'rgba(107, 91, 149, ' + Math.min(1.0, 1.5/rx) + ')';
+                        rgbCtx.strokeStyle = '#B8860B';
+                        rgbCtx.lineWidth = Math.max(1, 4/rx);
+                        
+                        // draw 3d cylindrical approximation (rectangle with curved top/bottom)
+                        rgbCtx.beginPath();
+                        rgbCtx.rect(screenX - size/2, screenY - size, size, size);
+                        rgbCtx.fill();
+                        rgbCtx.stroke();
+                    }
+                }
+            });
+
+            // Camera Crosshair Overlay
+            rgbCtx.strokeStyle = 'rgba(255,255,255,0.15)';
+            rgbCtx.lineWidth = 1;
+            rgbCtx.beginPath();
+            rgbCtx.moveTo(w/2 - 20, h/2); rgbCtx.lineTo(w/2 + 20, h/2);
+            rgbCtx.moveTo(w/2, h/2 - 20); rgbCtx.lineTo(w/2, h/2 + 20);
+            rgbCtx.stroke();
+        }
+
+        // Draw simulated Depth Camera visualizer
+        function drawDepthFeed() {
+            if (controlMode !== 'sim') return;
+
+            const w = depthCanvas.width;
+            const h = depthCanvas.height;
+            depthCtx.fillStyle = '#020005';
+            depthCtx.fillRect(0, 0, w, h);
+
+            // Render depth strips representing distances
+            // Divide screen into columns (vertical depth profile representation)
+            const cols = 40;
+            const colWidth = w / cols;
+            const maxRange = 5.0; // meters
+
+            for (let i = 0; i < cols; i++) {
+                // Map screen column index to FOV angles (-25° to +25°)
+                const angleDeg = -25 + (50 * i / cols);
+                const angleRad = (angleDeg * Math.PI) / 180.0;
+                
+                // Ray cast intersection
+                const globalAngle = robotState.yaw + angleRad;
+                const rayX = Math.cos(globalAngle);
+                const rayY = Math.sin(globalAngle);
+                
+                let distance = maxRange;
+                simObstacles.forEach(obs => {
+                    const fX = robotState.x - obs.x;
+                    const fY = robotState.y - obs.y;
+                    
+                    const a = rayX * rayX + rayY * rayY;
+                    const b = 2 * (fX * rayX + fY * rayY);
+                    const c = (fX * fX + fY * fY) - obs.r * obs.r;
+                    
+                    const discriminant = b*b - 4*a*c;
+                    if(discriminant >= 0) {
+                        const t1 = (-b - Math.sqrt(discriminant)) / (2*a);
+                        if (t1 > 0 && t1 < distance) {
+                            distance = t1;
+                        }
+                    }
+                });
+
+                // Compute color depth (closer = red/yellow, further = dark blue/purple)
+                const depthPct = Math.min(1.0, distance / maxRange);
+                let color = '';
+                if(depthPct < 0.2) {
+                    // red
+                    color = `rgba(239, 68, 68, ${1.0 - depthPct})`;
+                } else if(depthPct < 0.5) {
+                    // orange/yellow
+                    color = `rgba(245, 158, 11, ${1.0 - depthPct})`;
+                } else {
+                    // blue/purple
+                    color = `rgba(6, 182, 212, ${1.0 - depthPct})`;
+                }
+
+                // Draw column strip centered at height
+                const hPx = h * (1.0 - depthPct) * 0.8;
+                depthCtx.fillStyle = color;
+                depthCtx.fillRect(i * colWidth, (h - hPx)/2, colWidth - 1, hPx);
+            }
+
+            // Render numeric reading of minimum obstacle distance
+            depthCtx.fillStyle = '#fff';
+            depthCtx.font = '12px ' + varProp('--font-tech');
+            depthCtx.fillText('MIN RANGE: ' + robotState.obstacleDist.toFixed(2) + 'm', 15, h - 15);
+        }
+
+        // Helper to retrieve CSS variables for styling inside canvas
+        function varProp(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
+        // Main Animation & Update loop
+        function mainLoop() {
+            updateSimulation();
+            drawLidar();
+            drawMap();
+            drawRGBFeed();
+            drawDepthFeed();
+            requestAnimationFrame(mainLoop);
+        }
+
+        // Start Loop
+        requestAnimationFrame(mainLoop);
+
+    </script>
+</body>
+</html>
