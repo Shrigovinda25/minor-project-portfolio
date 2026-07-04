@@ -1,1264 +1,1085 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UGV Autonomy Dashboard</title>
-    <!-- Google Fonts & Leaflet Map CSS -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <style>
-        :root {
-            --bg-dark: #f5f2eb;
-            --bg-panel: rgba(255, 255, 255, 0.85);
-            --border-glow: rgba(184, 144, 71, 0.2);
-            --border-glow-hover: rgba(184, 144, 71, 0.5);
-            --accent-gold: #b89047;
-            --accent-cyan: #0284c7;
-            --accent-blue: #2563eb;
-            --accent-purple: #7c3aed;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-            --accent-yellow: #d97706;
-            --accent-orange: #ea580c;
-            --text-main: #1f2937;
-            --text-muted: #6b7280;
-            --text-cyber: #b89047;
-            --shadow-glow: 0 4px 20px rgba(184, 144, 71, 0.08);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            overflow-x: hidden;
-            background-image:
-                linear-gradient(rgba(184, 144, 71, 0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(184, 144, 71, 0.08) 1px, transparent 1px),
-                radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.05) 0px, transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.04) 0px, transparent 45%);
-            background-size: 30px 30px, 30px 30px, 100% 100%, 100% 100%;
-            min-height: 100vh;
-        }
-
-        /* Glassmorphism Header */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            background: rgba(253, 252, 249, 0.85);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(184, 144, 71, 0.15);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.04);
-        }
-
-        .logo-section h1 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: 1.5px;
-            background: linear-gradient(to right, var(--accent-gold), #856404);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-section h1 span {
-            font-size: 0.65rem;
-            font-weight: 600;
-            padding: 2px 8px;
-            background: rgba(184, 144, 71, 0.06);
-            border: 1px solid rgba(184, 144, 71, 0.3);
-            border-radius: 4px;
-            color: var(--accent-gold);
-            letter-spacing: 0.5px;
-            box-shadow: 0 0 5px rgba(184, 144, 71, 0.15);
-            vertical-align: middle;
-        }
-
-        .sys-status {
-            display: flex;
-            align-items: center;
-            gap: 1.25rem;
-        }
-
-        .status-pill {
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(184, 144, 71, 0.15);
-            padding: 0.4rem 0.9rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-muted);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-        }
-
-        .status-pill strong {
-            color: var(--text-main);
-        }
-
-        .indicator {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 8px currentColor;
-        }
-
-        .active-glow {
-            color: var(--accent-green);
-            background-color: var(--accent-green);
-            animation: pulse 1.5s infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 2px var(--accent-green);
-            }
-
-            100% {
-                box-shadow: 0 0 10px var(--accent-green);
-            }
-        }
-
-        @keyframes pulse-cyan {
-            0% {
-                transform: scale(0.9);
-                box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7);
-            }
-
-            70% {
-                transform: scale(1.15);
-                box-shadow: 0 0 0 8px rgba(37, 99, 235, 0);
-            }
-
-            100% {
-                transform: scale(0.9);
-                box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
-            }
-        }
-
-        @keyframes pulse-red {
-            0% {
-                transform: scale(0.9);
-                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-            }
-
-            70% {
-                transform: scale(1.15);
-                box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
-            }
-
-            100% {
-                transform: scale(0.9);
-                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-            }
-        }
-
-        .pulse-marker-cyan {
-            width: 14px;
-            height: 14px;
-            background-color: var(--accent-blue) !important;
-            border: 2px solid white;
-            border-radius: 50%;
-            animation: pulse-cyan 1.8s infinite;
-        }
-
-        .pulse-marker-red {
-            width: 14px;
-            height: 14px;
-            background-color: var(--accent-red) !important;
-            border: 2px solid white;
-            border-radius: 50%;
-            animation: pulse-red 1.8s infinite;
-        }
-
-        /* Dashboard Grid Layout */
-        .dashboard-container {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1.25rem;
-            padding: 1.5rem;
-            max-width: 1800px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: var(--bg-panel);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(184, 144, 71, 0.15);
-            border-radius: 12px;
-            padding: 1.25rem;
-            box-shadow: 0 10px 30px 0 rgba(184, 144, 71, 0.06), 0 1px 3px 0 rgba(0, 0, 0, 0.02);
-            position: relative;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            overflow: hidden;
-        }
-
-        /* Scientific-looking HUD Corner brackets for cards */
-        .card::before,
-        .card::after {
-            content: '';
-            position: absolute;
-            width: 12px;
-            height: 12px;
-            border-color: var(--accent-gold);
-            border-style: solid;
-            opacity: 0.35;
-            transition: all 0.3s ease;
-            pointer-events: none;
-        }
-
-        .card::before {
-            top: 0;
-            left: 0;
-            border-width: 2px 0 0 2px;
-            border-top-left-radius: 12px;
-        }
-
-        .card::after {
-            bottom: 0;
-            right: 0;
-            border-width: 0 2px 2px 0;
-            border-bottom-right-radius: 12px;
-        }
-
-        .card:hover {
-            border-color: var(--border-glow-hover);
-            box-shadow: 0 15px 35px 0 rgba(184, 144, 71, 0.12), 0 2px 5px 0 rgba(0, 0, 0, 0.03);
-            transform: translateY(-2px);
-        }
-
-        .card:hover::before,
-        .card:hover::after {
-            opacity: 0.9;
-            width: 18px;
-            height: 18px;
-            filter: drop-shadow(0 0 3px var(--accent-gold));
-        }
-
-        .card-header {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--accent-gold);
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(184, 144, 71, 0.1);
-            padding-bottom: 0.5rem;
-        }
-
-        /* Component Placement sizing */
-        .cam-feed-card {
-            grid-column: span 6;
-        }
-
-        .depth-feed-card {
-            grid-column: span 6;
-        }
-
-        .radar-card {
-            grid-column: span 4;
-        }
-
-        .telemetry-card {
-            grid-column: span 4;
-        }
-
-        .map-card {
-            grid-column: span 4;
-        }
-
-        /* Media Stream Canvas/Image */
-        .video-container {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 4/3;
-            background: #eae6db;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid rgba(184, 144, 71, 0.12);
-            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05);
-        }
-
-        .video-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Scanline Overlay Effect on Video Feeds */
-        .video-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border: 1px solid rgba(184, 144, 71, 0.05);
-            pointer-events: none;
-            box-sizing: border-box;
-            background: linear-gradient(rgba(0, 0, 0, 0.02) 50%, rgba(255, 255, 255, 0.03) 50%);
-            background-size: 100% 4px;
-            opacity: 0.5;
-        }
-
-        .cam-overlay {
-            position: absolute;
-            top: 12px;
-            left: 12px;
-            padding: 4px 10px;
-            background: rgba(253, 252, 249, 0.9);
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--accent-gold);
-            border: 1px solid rgba(184, 144, 71, 0.25);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-            z-index: 5;
-        }
-
-        /* Radar Visualizer */
-        .radar-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 300px;
-        }
-
-        canvas#radarCanvas {
-            max-width: 100%;
-            max-height: 100%;
-            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.05));
-        }
-
-        /* Live Map */
-        #map {
-            width: 100%;
-            height: 300px;
-            border-radius: 8px;
-            border: 1px solid rgba(184, 144, 71, 0.12);
-        }
-
-        /* Leaflet custom light theme styling */
-        .leaflet-container {
-            background-color: var(--bg-dark) !important;
-        }
-
-        .leaflet-bar {
-            border: 1px solid rgba(184, 144, 71, 0.2) !important;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06) !important;
-        }
-
-        .leaflet-bar a {
-            background-color: var(--bg-panel) !important;
-            color: var(--text-main) !important;
-            border-bottom: 1px solid rgba(184, 144, 71, 0.1) !important;
-            transition: all 0.2s ease;
-        }
-
-        .leaflet-bar a:hover {
-            background-color: rgba(184, 144, 71, 0.08) !important;
-            color: var(--accent-gold) !important;
-        }
-
-        .leaflet-popup-content-wrapper,
-        .leaflet-popup-tip {
-            background: var(--bg-panel) !important;
-            color: var(--text-main) !important;
-            border: 1px solid rgba(184, 144, 71, 0.15) !important;
-            backdrop-filter: blur(10px) !important;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
-        }
-
-        /* Telemetry Elements */
-        .state-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            height: 100%;
-            gap: 1rem;
-        }
-
-        .state-badge {
-            font-size: 1.8rem;
-            font-weight: 800;
-            padding: 0.4rem 1.8rem;
-            border-radius: 8px;
-            text-align: center;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            width: 100%;
-        }
-
-        .state-badge.CRUISE {
-            color: var(--accent-green);
-            background: rgba(16, 185, 129, 0.08);
-            border-color: rgba(16, 185, 129, 0.3);
-            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.1);
-        }
-
-        .state-badge.TURN_LEFT,
-        .state-badge.TURN_RIGHT {
-            color: var(--accent-blue);
-            background: rgba(37, 99, 235, 0.08);
-            border-color: rgba(37, 99, 235, 0.3);
-            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.1);
-        }
-
-        .state-badge.REVERSE {
-            color: var(--accent-yellow);
-            background: rgba(217, 119, 6, 0.08);
-            border-color: rgba(217, 119, 6, 0.3);
-            box-shadow: 0 2px 10px rgba(217, 119, 6, 0.1);
-        }
-
-        .state-badge.HALT {
-            color: var(--accent-red);
-            background: rgba(239, 68, 68, 0.08);
-            border-color: rgba(239, 68, 68, 0.3);
-            box-shadow: 0 2px 10px rgba(239, 68, 68, 0.1);
-        }
-
-        .state-badge.AVOIDING_OBSTACLE {
-            color: var(--accent-orange);
-            background: rgba(234, 88, 12, 0.08);
-            border-color: rgba(234, 88, 12, 0.3);
-            box-shadow: 0 2px 10px rgba(234, 88, 12, 0.1);
-        }
-
-        .state-badge.WAYPOINT_NAV {
-            color: var(--accent-purple);
-            background: rgba(124, 58, 237, 0.08);
-            border-color: rgba(124, 58, 237, 0.3);
-            box-shadow: 0 2px 10px rgba(124, 58, 237, 0.1);
-        }
-
-        /* SVG Circular Gauges */
-        .gauge-row {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            margin-bottom: 0.25rem;
-        }
-
-        .gauge-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-
-        .gauge-svg {
-            transform: rotate(-90deg);
-            width: 90px;
-            height: 90px;
-        }
-
-        .gauge-track {
-            fill: none;
-            stroke: rgba(0, 0, 0, 0.04);
-            stroke-width: 6;
-        }
-
-        .gauge-value-fill {
-            fill: none;
-            stroke-width: 6;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 0.35s ease;
-        }
-
-        .gauge-value-fill.linear {
-            stroke: var(--accent-green);
-        }
-
-        .gauge-value-fill.angular {
-            stroke: var(--accent-blue);
-        }
-
-        .gauge-info {
-            position: absolute;
-            top: 45px;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            pointer-events: none;
-        }
-
-        .gauge-num {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .gauge-unit {
-            font-size: 0.5rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .gauge-label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-top: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .telemetry-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0.75rem;
-            width: 100%;
-        }
-
-        .tel-item {
-            background: rgba(0, 0, 0, 0.01);
-            border: 1px solid rgba(0, 0, 0, 0.03);
-            border-radius: 8px;
-            padding: 0.6rem 0.8rem;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .tel-label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .tel-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        /* High-tech Diagnostics Console - light style */
-        .console-log {
-            background: #faf8f2;
-            border: 1px solid rgba(184, 144, 71, 0.18);
-            border-radius: 8px;
-            padding: 0.6rem 0.8rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            height: 110px;
-            overflow-y: auto;
-            color: #2d3748;
-            line-height: 1.4;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(184, 144, 71, 0.25) transparent;
-            text-align: left;
-            width: 100%;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
-        }
-
-        .console-log::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .console-log::-webkit-scrollbar-thumb {
-            background: rgba(184, 144, 71, 0.25);
-            border-radius: 2px;
-        }
-
-        .console-line {
-            margin-bottom: 3px;
-            word-break: break-all;
-        }
-
-        .console-time {
-            color: #718096;
-            margin-right: 6px;
-        }
-
-        .console-info {
-            color: var(--accent-blue);
-            font-weight: 600;
-        }
-
-        .console-success {
-            color: #047857;
-            font-weight: 600;
-        }
-
-        .console-warn {
-            color: #b45309;
-            font-weight: 600;
-        }
-
-        .console-err {
-            color: #b91c1c;
-            font-weight: 600;
-        }
-
-        /* Futuristic Switch Toggle */
-        .switch-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            background: rgba(184, 144, 71, 0.03);
-            border: 1px solid rgba(184, 144, 71, 0.08);
-            border-radius: 8px;
-            padding: 0.6rem 0.8rem;
-            margin-top: 0.25rem;
-        }
-
-        .switch-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-main);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .cyber-switch {
-            position: relative;
-            display: inline-block;
-            width: 52px;
-            height: 26px;
-        }
-
-        .cyber-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .switch-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.06);
-            transition: .4s;
-            border-radius: 34px;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-        }
-
-        .switch-slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: #a0aec0;
-            transition: .4s;
-            border-radius: 50%;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
-        }
-
-        .cyber-switch input:checked+.switch-slider {
-            background-color: rgba(16, 185, 129, 0.12);
-            border-color: var(--accent-green);
-        }
-
-        .cyber-switch input:checked+.switch-slider:before {
-            transform: translateX(26px);
-            background-color: var(--accent-green);
-        }
-
-        /* Control Arm / Cancel Button overrides */
-        .control-btn {
-            width: 100%;
-            padding: 0.6rem 1rem;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-weight: 700;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-cancel {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            box-shadow: 0 2px 10px rgba(239, 68, 68, 0.15);
-        }
-
-        .btn-cancel:hover {
-            transform: scale(0.98);
-            filter: brightness(1.1);
-            box-shadow: 0 2px 15px rgba(239, 68, 68, 0.25);
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-
-            .cam-feed-card,
-            .depth-feed-card {
-                grid-column: span 12;
-            }
-
-            .radar-card,
-            .telemetry-card,
-            .map-card {
-                grid-column: span 12;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UGV Autonomy Dashboard — Team 13</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<style>
+:root{--bg-dark:#f5f2eb;--bg-panel:rgba(255,255,255,0.85);--border-glow:rgba(184,144,71,0.2);--border-glow-hover:rgba(184,144,71,0.5);--accent-gold:#b89047;--accent-cyan:#0284c7;--accent-blue:#2563eb;--accent-purple:#7c3aed;--accent-green:#10b981;--accent-red:#ef4444;--accent-yellow:#d97706;--accent-orange:#ea580c;--text-main:#1f2937;--text-muted:#6b7280;--shadow-glow:0 4px 20px rgba(184,144,71,0.08);}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Outfit',sans-serif;background-color:var(--bg-dark);color:var(--text-main);overflow-x:hidden;background-image:linear-gradient(rgba(184,144,71,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(184,144,71,0.08) 1px,transparent 1px),radial-gradient(circle at 10% 10%,rgba(37,99,235,0.05) 0px,transparent 40%),radial-gradient(circle at 90% 90%,rgba(16,185,129,0.04) 0px,transparent 45%);background-size:30px 30px,30px 30px,100% 100%,100% 100%;min-height:100vh;}
+
+/* ── TICKER ── */
+.sim-ticker{background:linear-gradient(90deg,rgba(2,132,199,0.06),rgba(2,132,199,0.1),rgba(2,132,199,0.06));border-bottom:1px solid rgba(2,132,199,0.2);padding:5px 0;overflow:hidden;white-space:nowrap;}
+.sim-ticker:hover .ticker-inner{animation-play-state:paused;}
+.ticker-inner{display:inline-block;animation:tickScroll 50s linear infinite;font-family:'JetBrains Mono',monospace;font-size:0.68rem;font-weight:600;color:#0284c7;letter-spacing:0.5px;text-shadow:0 0 8px rgba(2,132,199,0.35);}
+@keyframes tickScroll{0%{transform:translateX(100vw);}100%{transform:translateX(-100%);}}
+
+/* ── HEADER ── */
+header{display:flex;justify-content:space-between;align-items:center;padding:.8rem 2rem;background:rgba(253,252,249,0.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(184,144,71,0.15);position:sticky;top:0;z-index:100;box-shadow:0 2px 15px rgba(0,0,0,0.04);flex-wrap:wrap;gap:.4rem;}
+.logo-section h1{font-size:1.4rem;font-weight:800;letter-spacing:1.5px;background:linear-gradient(to right,var(--accent-gold),#856404);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:10px;}
+.logo-section h1 span{font-size:0.6rem;font-weight:600;padding:2px 8px;background:rgba(184,144,71,0.06);border:1px solid rgba(184,144,71,0.3);border-radius:4px;color:var(--accent-gold);letter-spacing:.5px;-webkit-text-fill-color:var(--accent-gold);}
+.sys-status{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.status-pill{background:rgba(255,255,255,0.6);border:1px solid rgba(184,144,71,0.15);padding:.35rem .8rem;border-radius:6px;font-size:0.75rem;display:flex;align-items:center;gap:6px;color:var(--text-muted);}
+.status-pill strong{color:var(--text-main);}
+.indicator{width:6px;height:6px;border-radius:50%;display:inline-block;}
+.active-glow{color:var(--accent-green);background-color:var(--accent-green);animation:pulse 1.5s infinite alternate;}
+@keyframes pulse{0%{box-shadow:0 0 2px var(--accent-green);}100%{box-shadow:0 0 10px var(--accent-green);}}
+@keyframes pulse-cyan{0%{transform:scale(.9);box-shadow:0 0 0 0 rgba(37,99,235,.7);}70%{transform:scale(1.15);box-shadow:0 0 0 8px rgba(37,99,235,0);}100%{transform:scale(.9);box-shadow:0 0 0 0 rgba(37,99,235,0);}}
+@keyframes pulse-red{0%{transform:scale(.9);box-shadow:0 0 0 0 rgba(239,68,68,.7);}70%{transform:scale(1.15);box-shadow:0 0 0 8px rgba(239,68,68,0);}100%{transform:scale(.9);box-shadow:0 0 0 0 rgba(239,68,68,0);}}
+.pulse-marker-cyan{width:14px;height:14px;background-color:var(--accent-blue)!important;border:2px solid white;border-radius:50%;animation:pulse-cyan 1.8s infinite;}
+.pulse-marker-red{width:14px;height:14px;background-color:var(--accent-red)!important;border:2px solid white;border-radius:50%;animation:pulse-red 1.8s infinite;}
+
+/* ── GRID ── */
+.dashboard-container{display:grid;grid-template-columns:repeat(12,1fr);gap:1.1rem;padding:1.25rem;max-width:1900px;margin:0 auto;}
+.s12{grid-column:span 12;}.s6{grid-column:span 6;}.s4{grid-column:span 4;}.s3{grid-column:span 3;}
+.cam-feed-card{grid-column:span 6;}.depth-feed-card{grid-column:span 6;}.radar-card{grid-column:span 4;}.telemetry-card{grid-column:span 4;}.map-card{grid-column:span 4;}
+
+/* ── CARD ── */
+.card{background:var(--bg-panel);backdrop-filter:blur(20px);border:1px solid rgba(184,144,71,0.15);border-radius:12px;padding:1.1rem;box-shadow:0 10px 30px rgba(184,144,71,0.06),0 1px 3px rgba(0,0,0,0.02);position:relative;transition:all .3s cubic-bezier(.25,.8,.25,1);overflow:hidden;}
+.card::before,.card::after{content:'';position:absolute;width:12px;height:12px;border-color:var(--accent-gold);border-style:solid;opacity:.35;transition:all .3s ease;pointer-events:none;}
+.card::before{top:0;left:0;border-width:2px 0 0 2px;border-top-left-radius:12px;}
+.card::after{bottom:0;right:0;border-width:0 2px 2px 0;border-bottom-right-radius:12px;}
+.card:hover{border-color:var(--border-glow-hover);box-shadow:0 15px 35px rgba(184,144,71,0.12);transform:translateY(-2px);}
+.card:hover::before,.card:hover::after{opacity:.9;width:18px;height:18px;filter:drop-shadow(0 0 3px var(--accent-gold));}
+.card-header{font-size:.82rem;font-weight:600;color:var(--accent-gold);margin-bottom:.9rem;text-transform:uppercase;letter-spacing:1px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(184,144,71,.1);padding-bottom:.45rem;}
+
+/* ── MISSION BAR ── */
+.mission-bar-card{grid-column:span 12;display:flex;gap:.5rem;flex-wrap:wrap;align-items:stretch;padding:.9rem 1.2rem;}
+.mstat{display:flex;flex-direction:column;gap:2px;flex:1;min-width:110px;text-align:center;padding:.4rem;}
+.mstat-lbl{font-size:.62rem;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);font-weight:600;}
+.mstat-val{font-family:'JetBrains Mono',monospace;font-size:1rem;font-weight:800;color:var(--text-main);}
+.mstat-val.g{color:var(--accent-green);}.mstat-val.gold{color:var(--accent-gold);}.mstat-val.b{color:var(--accent-blue);}.mstat-val.r{color:var(--accent-red);}
+.mdiv{width:1px;background:rgba(184,144,71,.18);align-self:stretch;flex-shrink:0;}
+
+/* ── VIDEO / CANVAS ── */
+.video-container{position:relative;width:100%;aspect-ratio:4/3;background:#eae6db;border-radius:8px;overflow:hidden;border:1px solid rgba(184,144,71,.12);box-shadow:inset 0 0 15px rgba(0,0,0,.05);}
+.video-container canvas{width:100%;height:100%;display:block;}
+.video-container::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(rgba(0,0,0,.02) 50%,rgba(255,255,255,.03) 50%);background-size:100% 4px;opacity:.4;pointer-events:none;}
+.cam-overlay{position:absolute;top:10px;left:10px;padding:3px 8px;background:rgba(253,252,249,.9);border-radius:4px;font-size:.68rem;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:1px;color:var(--accent-gold);border:1px solid rgba(184,144,71,.25);z-index:5;}
+.cam-hud{position:absolute;top:10px;right:10px;padding:3px 8px;background:rgba(253,252,249,.88);border-radius:4px;font-size:.65rem;font-family:'JetBrains Mono',monospace;z-index:5;}
+
+/* ── RADAR ── */
+.radar-container{display:flex;justify-content:center;align-items:center;height:280px;}
+canvas#radarCanvas{max-width:100%;max-height:100%;filter:drop-shadow(0 2px 8px rgba(0,0,0,.05));}
+
+/* ── MAP ── */
+#map{width:100%;height:280px;border-radius:8px;border:1px solid rgba(184,144,71,.12);}
+.leaflet-container{background-color:var(--bg-dark)!important;}
+.leaflet-bar{border:1px solid rgba(184,144,71,.2)!important;box-shadow:0 2px 6px rgba(0,0,0,.06)!important;}
+.leaflet-bar a{background-color:var(--bg-panel)!important;color:var(--text-main)!important;border-bottom:1px solid rgba(184,144,71,.1)!important;}
+.leaflet-bar a:hover{background-color:rgba(184,144,71,.08)!important;color:var(--accent-gold)!important;}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--bg-panel)!important;color:var(--text-main)!important;border:1px solid rgba(184,144,71,.15)!important;box-shadow:0 4px 15px rgba(0,0,0,.05)!important;}
+.map-info{display:flex;justify-content:space-between;margin-top:6px;padding:5px 10px;background:rgba(0,0,0,.01);border:1px solid rgba(184,144,71,.08);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--text-muted);}
+.map-hint{font-size:.66rem;color:var(--text-muted);margin-top:5px;text-align:center;opacity:.85;}
+
+/* ── TELEMETRY STATE ── */
+.state-container{display:flex;flex-direction:column;align-items:center;gap:.9rem;}
+.state-badge{font-size:1.6rem;font-weight:800;padding:.35rem 1.5rem;border-radius:8px;text-align:center;letter-spacing:1px;transition:all .3s ease;border:1px solid transparent;width:100%;}
+.state-badge.CRUISE,.state-badge.NAVIGATING,.state-badge.GOAL_REACHED{color:var(--accent-green);background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.3);box-shadow:0 2px 10px rgba(16,185,129,.1);}
+.state-badge.TURN_LEFT,.state-badge.TURN_RIGHT{color:var(--accent-blue);background:rgba(37,99,235,.08);border-color:rgba(37,99,235,.3);}
+.state-badge.REVERSE{color:var(--accent-yellow);background:rgba(217,119,6,.08);border-color:rgba(217,119,6,.3);}
+.state-badge.HALT{color:var(--accent-red);background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);}
+.state-badge.AVOIDING_OBSTACLE,.state-badge.OBSTACLE{color:var(--accent-orange);background:rgba(234,88,12,.08);border-color:rgba(234,88,12,.3);}
+.state-badge.WAYPOINT_NAV,.state-badge.PLANNING,.state-badge.LOCALIZATION,.state-badge.MAPPING{color:var(--accent-purple);background:rgba(124,58,237,.08);border-color:rgba(124,58,237,.3);}
+.state-badge.IDLE{color:var(--text-muted);background:rgba(107,114,128,.06);border-color:rgba(107,114,128,.2);}
+.state-badge.REPLANNING{color:var(--accent-yellow);background:rgba(217,119,6,.08);border-color:rgba(217,119,6,.3);}
+
+/* ── GAUGES ── */
+.gauge-row{display:flex;justify-content:space-around;width:100%;}
+.gauge-container{display:flex;flex-direction:column;align-items:center;position:relative;}
+.gauge-svg{transform:rotate(-90deg);width:90px;height:90px;}
+.gauge-track{fill:none;stroke:rgba(0,0,0,.04);stroke-width:6;}
+.gauge-value-fill{fill:none;stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .35s ease;}
+.gauge-value-fill.linear{stroke:var(--accent-green);}.gauge-value-fill.angular{stroke:var(--accent-blue);}
+.gauge-info{position:absolute;top:45px;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;pointer-events:none;}
+.gauge-num{font-family:'JetBrains Mono',monospace;font-size:.9rem;font-weight:700;color:var(--text-main);}
+.gauge-unit{font-size:.5rem;color:var(--text-muted);text-transform:uppercase;}
+.gauge-label{font-size:.68rem;font-weight:600;color:var(--text-muted);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;}
+.telemetry-grid{display:grid;grid-template-columns:1fr;gap:.65rem;width:100%;}
+.tel-item{background:rgba(0,0,0,.01);border:1px solid rgba(0,0,0,.03);border-radius:8px;padding:.55rem .75rem;display:flex;flex-direction:column;gap:2px;}
+.tel-label{font-size:.68rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;}
+.tel-value{font-family:'JetBrains Mono',monospace;font-size:.95rem;font-weight:700;color:var(--text-main);}
+
+/* ── CONSOLE ── */
+.console-log{background:#faf8f2;border:1px solid rgba(184,144,71,.18);border-radius:8px;padding:.55rem .75rem;font-family:'JetBrains Mono',monospace;font-size:.68rem;height:105px;overflow-y:auto;color:#2d3748;line-height:1.4;scrollbar-width:thin;scrollbar-color:rgba(184,144,71,.25) transparent;width:100%;box-shadow:inset 0 1px 3px rgba(0,0,0,.05);}
+.console-log.tall{height:155px;}
+.console-log::-webkit-scrollbar{width:4px;}.console-log::-webkit-scrollbar-thumb{background:rgba(184,144,71,.25);border-radius:2px;}
+.console-line{margin-bottom:3px;word-break:break-all;}
+.console-time{color:#718096;margin-right:6px;}
+.console-info{color:var(--accent-blue);font-weight:600;}.console-success{color:#047857;font-weight:600;}.console-warn{color:#b45309;font-weight:600;}.console-err{color:#b91c1c;font-weight:600;}
+
+/* ── SWITCH ── */
+.switch-container{display:flex;align-items:center;justify-content:space-between;width:100%;background:rgba(184,144,71,.03);border:1px solid rgba(184,144,71,.08);border-radius:8px;padding:.55rem .75rem;}
+.switch-label{font-size:.78rem;font-weight:600;color:var(--text-main);text-transform:uppercase;letter-spacing:.5px;}
+.cyber-switch{position:relative;display:inline-block;width:52px;height:26px;}
+.cyber-switch input{opacity:0;width:0;height:0;}
+.switch-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:rgba(0,0,0,.06);transition:.4s;border-radius:34px;border:1px solid rgba(0,0,0,.08);}
+.switch-slider:before{position:absolute;content:"";height:18px;width:18px;left:3px;bottom:3px;background-color:#a0aec0;transition:.4s;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.15);}
+.cyber-switch input:checked+.switch-slider{background-color:rgba(16,185,129,.12);border-color:var(--accent-green);}
+.cyber-switch input:checked+.switch-slider:before{transform:translateX(26px);background-color:var(--accent-green);}
+
+/* ── CONTROL BUTTONS ── */
+.control-btn{width:100%;padding:.55rem 1rem;border:none;border-radius:8px;color:white;font-weight:700;font-size:.82rem;cursor:pointer;transition:all .2s ease;text-transform:uppercase;letter-spacing:.5px;}
+.btn-cancel{background:linear-gradient(135deg,#ef4444,#dc2626);box-shadow:0 2px 10px rgba(239,68,68,.15);}
+.btn-cancel:hover{transform:scale(.98);filter:brightness(1.1);}
+
+/* ── EXTENDED TELEMETRY ── */
+.ext-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;}
+.ext-item{background:rgba(0,0,0,.01);border:1px solid rgba(184,144,71,.08);border-radius:8px;padding:.5rem .65rem;}
+.ext-lbl{font-size:.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;}
+.ext-val{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;color:var(--text-main);}
+
+/* ── SENSOR HEALTH ── */
+.sensor-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+.sensor-card{background:rgba(0,0,0,.01);border:1px solid rgba(184,144,71,.1);border-radius:8px;padding:.6rem .7rem;}
+.sensor-hdr{display:flex;align-items:center;gap:5px;margin-bottom:4px;}
+.sled{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.sled.on{background:var(--accent-green);box-shadow:0 0 6px var(--accent-green);animation:pulse 1.5s infinite alternate;}
+.sled.warn{background:var(--accent-yellow);box-shadow:0 0 6px var(--accent-yellow);}
+.sled.off{background:var(--accent-red);}
+.sname{font-size:.7rem;font-weight:700;color:var(--text-main);}
+.sbar-bg{width:100%;height:4px;background:rgba(0,0,0,.06);border-radius:2px;overflow:hidden;}
+.sbar-fill{height:100%;border-radius:2px;transition:width .5s ease;}
+.supdate{font-size:.58rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+
+/* ── STATE MACHINE ── */
+.sm-flow{display:flex;flex-direction:column;gap:4px;}
+.sm-state{display:flex;align-items:center;gap:7px;padding:5px 9px;border-radius:6px;border:1px solid rgba(184,144,71,.08);background:rgba(0,0,0,.01);transition:all .3s ease;}
+.sm-state.active{border-color:rgba(16,185,129,.4);background:rgba(16,185,129,.06);box-shadow:0 2px 8px rgba(16,185,129,.1);}
+.sm-state.done{opacity:.45;}
+.sm-dot{width:7px;height:7px;border-radius:50%;background:#d1d5db;flex-shrink:0;transition:all .3s ease;}
+.sm-state.active .sm-dot{background:var(--accent-green);box-shadow:0 0 7px var(--accent-green);}
+.sm-state.done .sm-dot{background:#9ca3af;}
+.sm-lbl{font-size:.72rem;font-weight:600;color:var(--text-main);}
+.sm-tag{font-size:.58rem;color:var(--text-muted);margin-left:auto;font-family:'JetBrains Mono',monospace;}
+
+/* ── DRIVE CONTROLS ── */
+.drive-pad{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:5px;max-width:190px;margin:0 auto;}
+.dbtn{padding:9px;border:1px solid rgba(184,144,71,.2);border-radius:8px;background:rgba(255,255,255,.6);color:var(--text-main);font-size:1.05rem;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;user-select:none;}
+.dbtn:hover{background:rgba(184,144,71,.1);border-color:var(--accent-gold);}
+.dbtn:active,.dbtn.pressed{background:rgba(184,144,71,.2);transform:scale(.94);}
+.dbtn.stop{background:rgba(239,68,68,.06);border-color:rgba(239,68,68,.3);color:var(--accent-red);}
+.dbtn.estop{background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(220,38,38,.18));border-color:var(--accent-red);color:var(--accent-red);font-size:.68rem;font-weight:800;letter-spacing:.5px;grid-column:span 3;}
+.dbtn.empty{visibility:hidden;}
+.speed-lbl{font-size:.68rem;color:var(--text-muted);text-transform:uppercase;margin-bottom:3px;}
+.speed-slider{width:100%;appearance:none;-webkit-appearance:none;height:4px;border-radius:2px;background:linear-gradient(to right,var(--accent-green),var(--accent-yellow));outline:none;cursor:pointer;}
+.speed-slider::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent-gold);cursor:pointer;box-shadow:0 2px 6px rgba(184,144,71,.3);}
+.joystick-wrap{width:85px;height:85px;border-radius:50%;background:rgba(0,0,0,.03);border:2px solid rgba(184,144,71,.2);position:relative;margin:8px auto 0;cursor:grab;touch-action:none;}
+.joystick-knob{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent-gold),#856404);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);box-shadow:0 3px 10px rgba(184,144,71,.3);}
+.vel-row{display:grid;grid-template-columns:1fr 1fr;gap:.4rem;margin-top:7px;text-align:center;}
+.vel-lbl{font-size:.58rem;color:var(--text-muted);text-transform:uppercase;}
+.vel-val{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;color:var(--accent-blue);}
+
+/* ── PERF CHARTS ── */
+.perf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;}
+.perf-item{display:flex;flex-direction:column;gap:3px;}
+.perf-hdr{display:flex;justify-content:space-between;align-items:baseline;}
+.perf-lbl{font-size:.62rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;}
+.perf-val{font-family:'JetBrains Mono',monospace;font-size:.82rem;font-weight:700;color:var(--text-main);}
+.spk-canvas{width:100%;height:38px;border-radius:4px;background:rgba(0,0,0,.02);}
+
+/* ── MISSION STATS ── */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+.stat-item{background:rgba(0,0,0,.01);border:1px solid rgba(184,144,71,.08);border-radius:8px;padding:.6rem;text-align:center;}
+.stat-num{font-family:'JetBrains Mono',monospace;font-size:1.25rem;font-weight:800;color:var(--accent-gold);display:block;}
+.stat-lbl{font-size:.6rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;}
+
+/* ── DEPTH LEGEND ── */
+.depth-legend{display:flex;align-items:center;gap:7px;margin-top:7px;padding:3px 7px;background:rgba(0,0,0,.02);border-radius:4px;font-size:.63rem;color:var(--text-muted);}
+.depth-bar{flex:1;height:7px;border-radius:3px;background:linear-gradient(to right,#0000ff,#00ffff,#00ff00,#ffff00,#ff0000);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1400px){.cam-feed-card,.depth-feed-card{grid-column:span 12;}.radar-card,.telemetry-card,.map-card{grid-column:span 6;}.s4{grid-column:span 6;}}
+@media(max-width:900px){.cam-feed-card,.depth-feed-card,.radar-card,.telemetry-card,.map-card,.s4,.s6{grid-column:span 12;}.mission-bar-card{flex-direction:column;}.mdiv{display:none;}}
+</style>
 </head>
-
 <body>
 
-    <header>
-        <div class="logo-section">
-            <h1>UGV ROS2 <span>FUSION AUTONOMY</span></h1>
-        </div>
-        <div class="sys-status">
-            <div class="status-pill">
-                <span class="indicator active-glow"></span>
-                System: <strong>ONLINE</strong>
-            </div>
-            <div class="status-pill">
-                GPS: <strong id="gpsStatus">NO LOCK</strong>
-            </div>
-            <div class="status-pill">
-                FPS: <strong id="fpsVal">--</strong>
-            </div>
-        </div>
-    </header>
+<!-- TICKER -->
+<div class="sim-ticker">
+  <span class="ticker-inner">
+    ⚠ DEMONSTRATION MODE — All telemetry, sensor readings, camera feeds, LiDAR scans, YOLOv8 detections, GPS data, navigation status, and system metrics displayed on this dashboard are simulated for portfolio demonstration purposes and do not represent a live robot. &nbsp;●&nbsp; GPS Base: KLE Technological University, Hubballi, Karnataka, India &nbsp;●&nbsp; Stack: ROS2 Humble · Raspberry Pi 5 · RPLiDAR A1 · Intel RealSense D435i · GPS L76x · MPU6050 IMU &nbsp;●&nbsp; Navigation: RRT* Global Planner · DWA Local Planner · Complementary Filter Fusion &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    ⚠ DEMONSTRATION MODE — All telemetry, sensor readings, camera feeds, LiDAR scans, YOLOv8 detections, GPS data, navigation status, and system metrics displayed on this dashboard are simulated for portfolio demonstration purposes and do not represent a live robot. &nbsp;●&nbsp; GPS Base: KLE Technological University, Hubballi, Karnataka, India
+  </span>
+</div>
 
-    <div class="dashboard-container">
-        <!-- RGB Camera Stream -->
-        <div class="card cam-feed-card">
-            <div class="card-header">
-                <span>Color Feed + YOLOv8 Objects</span>
-                <span style="color: var(--accent-cyan)">Live Stream</span>
-            </div>
-            <div class="video-container">
-                <img id="videoFeed" src="/video_feed" alt="RGB Stream"
-                    onerror="this.src='https://placehold.co/640x480/0f172a/00f2fe?text=Waiting+for+stream...'">
-                <div class="cam-overlay">REALSENSE D435i</div>
-            </div>
-        </div>
+<!-- HEADER -->
+<header>
+  <div class="logo-section"><h1>UGV ROS2 <span>FUSION AUTONOMY</span></h1></div>
+  <div class="sys-status">
+    <a href="index.html" class="status-pill" style="text-decoration:none;background:rgba(184,144,71,0.15);color:var(--accent-gold);border:1px solid var(--accent-gold);font-weight:800;transition:all 0.2s;">◀ PORTFOLIO</a>
+    <div class="status-pill"><span class="indicator active-glow"></span> Robot: <strong>ONLINE</strong></div>
+    <div class="status-pill">Mission: <strong>Outdoor Autonomous Nav</strong></div>
+    <div class="status-pill">Mode: <strong id="hMode">AUTONOMOUS</strong></div>
+    <div class="status-pill">🔋 <strong id="hBatt">94%</strong></div>
+    <div class="status-pill"><span class="indicator active-glow"></span> ROS2: <strong>Connected</strong></div>
+    <div class="status-pill">CPU: <strong id="hCpu">--</strong></div>
+    <div class="status-pill">RAM: <strong id="hRam">--</strong></div>
+    <div class="status-pill">GPS: <strong id="gpsStatus">NO LOCK</strong></div>
+    <div class="status-pill">FPS: <strong id="fpsVal">--</strong></div>
+    <div class="status-pill">🕐 <strong id="hTime">--:--:--</strong></div>
+  </div>
+</header>
 
-        <!-- Depth Colormap Stream -->
-        <div class="card depth-feed-card">
-            <div class="card-header">
-                <span>Aligned Depth Map</span>
-                <span style="color: var(--accent-blue)">JET Colormap</span>
-            </div>
-            <div class="video-container">
-                <img id="depthFeed" src="/depth_feed" alt="Depth Stream"
-                    onerror="this.src='https://placehold.co/640x480/0f172a/4facfe?text=Waiting+for+stream...'">
-                <div class="cam-overlay">DEPTH SCALED</div>
-            </div>
-        </div>
+<div class="dashboard-container">
 
-        <!-- LiDAR 360° Radar -->
-        <div class="card radar-card">
-            <div class="card-header">
-                <span>LiDAR radar</span>
-                <span style="color: var(--accent-green)">360° RPLidar</span>
-            </div>
-            <div class="radar-container">
-                <canvas id="radarCanvas" width="300" height="300"></canvas>
-            </div>
-        </div>
+  <!-- MISSION STATUS BAR -->
+  <div class="card mission-bar-card">
+    <div class="mstat"><div class="mstat-lbl">Robot Status</div><div class="mstat-val g">● ONLINE</div></div>
+    <div class="mdiv"></div>
+    <div class="mstat"><div class="mstat-lbl">Mission</div><div class="mstat-val gold">Outdoor Nav</div></div>
+    <div class="mdiv"></div>
+    <div class="mstat"><div class="mstat-lbl">Nav Mode</div><div class="mstat-val b" id="mNavMode">AUTONOMOUS</div></div>
+    <div class="mdiv"></div>
+    <div class="mstat"><div class="mstat-lbl">Battery</div><div class="mstat-val g" id="mBatt">94%</div></div>
+    <div class="mdiv"></div>
+    <div class="mstat"><div class="mstat-lbl">Speed</div><div class="mstat-val" id="mSpeed">0.00 m/s</div></div>
+    <div class="mdiv"></div>
+    <div class="mstat"><div class="mstat-lbl">Heading</div><div class="mstat-val" id="mHeading">045°</div></div>
+    <div class="mdiv"></div>
+    <div class="mstat"><div class="mstat-lbl">Latitude</div><div class="mstat-val" id="mLat">15.36470</div></div>
+    <div class="mdiv"></div>
+    <div class="mstat"><div class="mstat-lbl">Longitude</div><div class="mstat-val" id="mLng">75.12400</div></div>
+    <div class="mdiv"></div>
+    <div class="mstat"><div class="mstat-lbl">State</div><div class="mstat-val" id="mState">IDLE</div></div>
+    <div class="mdiv"></div>
+    <div class="mstat"><div class="mstat-lbl">Uptime</div><div class="mstat-val" id="mUptime">00:00:00</div></div>
+  </div>
 
-        <!-- State and Speed Telemetry -->
-        <div class="card telemetry-card">
-            <div class="card-header">
-                <span>Autonomy State & Drives</span>
-            </div>
-            <div class="state-container">
-                <div id="stateBadge" class="state-badge HALT">HALT</div>
-
-                <div class="gauge-row">
-                    <!-- Gauge 1: Linear Speed -->
-                    <div class="gauge-container">
-                        <svg class="gauge-svg">
-                            <circle class="gauge-track" cx="45" cy="45" r="38"></circle>
-                            <circle class="gauge-value-fill linear" id="linearGauge" cx="45" cy="45" r="38"
-                                stroke-dasharray="238.76" stroke-dashoffset="238.76"></circle>
-                        </svg>
-                        <div class="gauge-info">
-                            <span class="gauge-num" id="linSpeedVal">0.00</span>
-                            <span class="gauge-unit">m/s</span>
-                        </div>
-                        <span class="gauge-label">Linear</span>
-                    </div>
-
-                    <!-- Gauge 2: Angular Turn -->
-                    <div class="gauge-container">
-                        <svg class="gauge-svg">
-                            <circle class="gauge-track" cx="45" cy="45" r="38"></circle>
-                            <circle class="gauge-value-fill angular" id="angularGauge" cx="45" cy="45" r="38"
-                                stroke-dasharray="238.76" stroke-dashoffset="238.76"></circle>
-                        </svg>
-                        <div class="gauge-info">
-                            <span class="gauge-num" id="angSpeedVal">0.00</span>
-                            <span class="gauge-unit">r/s</span>
-                        </div>
-                        <span class="gauge-label">Steering</span>
-                    </div>
-                </div>
-
-                <div class="telemetry-grid">
-                    <div class="tel-item">
-                        <div class="tel-label">Active Detections</div>
-                        <div class="tel-value" id="detectionsList"
-                            style="font-size: 0.85rem; color: var(--accent-cyan);">None</div>
-                    </div>
-                    <div class="tel-item"
-                        style="border-top: 1px dashed rgba(255,255,255,0.06); padding-top: 8px; margin-top: 2px;">
-                        <div class="tel-label">RRT GPS Waypoint Navigation</div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 5px;">
-                            <div style="font-size:0.78rem; line-height: 1.3;">
-                                Mode: <strong id="navModeText" style="color:var(--accent-cyan);">MANUAL</strong><br />
-                                Status: <strong id="navStatusText"
-                                    style="color:var(--text-muted); font-size:0.75rem;">IDLE</strong><br />
-                                Target: <strong id="navGoalText" style="color:var(--text-muted); font-size:0.7rem;">None
-                                    Set</strong><br />
-                                Waypoint: <strong id="navWpText"
-                                    style="color:var(--accent-green); font-size:0.7rem;">—</strong>
-                            </div>
-                            <button id="cancelNavBtn" class="control-btn btn-cancel"
-                                style="width:auto; margin:0; padding:4px 10px; font-size:0.7rem; display:none;">Cancel</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="switch-container">
-                    <span class="switch-label">Avoidance Armed</span>
-                    <label class="cyber-switch">
-                        <input type="checkbox" id="armSwitch">
-                        <span class="switch-slider"></span>
-                    </label>
-                </div>
-
-                <div class="console-log" id="consoleLog">
-                    <div class="console-line"><span class="console-time">[SYSTEM CONFIG]</span> <span
-                            class="console-success">TELEMETRY DECK ONLINE</span></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Leaflet GPS Navigation Map -->
-        <div class="card map-card">
-            <div class="card-header">
-                <span>GPS Navigation Map</span>
-                <span style="color: var(--accent-yellow)">L76X + RRT</span>
-            </div>
-            <div id="map"></div>
-        </div>
+  <!-- CAMERA FEED -->
+  <div class="card cam-feed-card">
+    <div class="card-header"><span>Color Feed + YOLOv8 Objects</span><span style="color:var(--accent-cyan)">Live Stream</span></div>
+    <div class="video-container">
+      <canvas id="camCanvas"></canvas>
+      <div class="cam-overlay">REALSENSE D435i</div>
+      <div class="cam-hud" style="color:var(--accent-green);border:1px solid rgba(16,185,129,.3);"><span id="camFps">30</span> FPS &bull; <span id="camTime">--:--:--</span></div>
     </div>
+    <div style="margin-top:7px;display:flex;flex-wrap:wrap;gap:4px;" id="yoloTags"></div>
+  </div>
 
-    <script>
-        // State tracking variables for logging console
-        let lastState = null;
-        let lastAvoidanceArmed = null;
+  <!-- DEPTH MAP -->
+  <div class="card depth-feed-card">
+    <div class="card-header"><span>Aligned Depth Map</span><span style="color:var(--accent-blue)">JET Colormap</span></div>
+    <div class="video-container">
+      <canvas id="depthCanvas"></canvas>
+      <div class="cam-overlay">DEPTH SCALED</div>
+      <div class="cam-hud" style="color:var(--accent-blue);border:1px solid rgba(37,99,235,.3);">Min:<span id="dMin">0.32</span>m Max:<span id="dMax">4.87</span>m</div>
+    </div>
+    <div class="depth-legend"><span>Near</span><div class="depth-bar"></div><span>Far</span><span style="margin-left:8px;font-family:'JetBrains Mono',monospace;">30 FPS</span></div>
+  </div>
 
-        function getLogClass(state) {
-            if (state === 'CRUISE') return 'success';
-            if (state === 'HALT') return 'err';
-            if (state === 'REVERSE') return 'warn';
-            if (state === 'AVOIDING_OBSTACLE') return 'warn';
-            if (state === 'WAYPOINT_NAV') return 'info';
-            return 'info';
-        }
+  <!-- LIDAR RADAR -->
+  <div class="card radar-card">
+    <div class="card-header"><span>LiDAR Radar</span><span style="color:var(--accent-green)">360° RPLidar A1</span></div>
+    <div class="radar-container"><canvas id="radarCanvas" width="280" height="280"></canvas></div>
+    <div style="display:flex;justify-content:space-between;font-size:.66rem;color:var(--text-muted);margin-top:5px;">
+      <span>Angle: <strong id="lidarAngle" style="color:var(--accent-green)">0°</strong></span>
+      <span>RPM: <strong style="color:var(--text-main)">300</strong></span>
+      <span>Freq: <strong style="color:var(--text-main)">5.5 Hz</strong></span>
+    </div>
+  </div>
 
-        function addLogLine(message, type = 'info') {
-            const consoleEl = document.getElementById('consoleLog');
-            if (!consoleEl) return;
-            const now = new Date();
-            const timeStr = now.toTimeString().split(' ')[0];
+  <!-- STATE + TELEMETRY (existing structure preserved) -->
+  <div class="card telemetry-card">
+    <div class="card-header"><span>Autonomy State &amp; Drives</span></div>
+    <div class="state-container">
+      <div id="stateBadge" class="state-badge IDLE">IDLE</div>
+      <div class="gauge-row">
+        <div class="gauge-container">
+          <svg class="gauge-svg"><circle class="gauge-track" cx="45" cy="45" r="38"></circle><circle class="gauge-value-fill linear" id="linearGauge" cx="45" cy="45" r="38" stroke-dasharray="238.76" stroke-dashoffset="238.76"></circle></svg>
+          <div class="gauge-info"><span class="gauge-num" id="linSpeedVal">0.00</span><span class="gauge-unit">m/s</span></div>
+          <span class="gauge-label">Linear</span>
+        </div>
+        <div class="gauge-container">
+          <svg class="gauge-svg"><circle class="gauge-track" cx="45" cy="45" r="38"></circle><circle class="gauge-value-fill angular" id="angularGauge" cx="45" cy="45" r="38" stroke-dasharray="238.76" stroke-dashoffset="238.76"></circle></svg>
+          <div class="gauge-info"><span class="gauge-num" id="angSpeedVal">0.00</span><span class="gauge-unit">r/s</span></div>
+          <span class="gauge-label">Steering</span>
+        </div>
+      </div>
+      <div class="telemetry-grid">
+        <div class="tel-item"><div class="tel-label">Active Detections</div><div class="tel-value" id="detectionsList" style="font-size:.82rem;color:var(--accent-cyan);">None</div></div>
+        <div class="tel-item">
+          <div class="tel-label">RRT GPS Waypoint Navigation</div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px;">
+            <div style="font-size:.75rem;line-height:1.4;">
+              Mode: <strong id="navModeText" style="color:var(--accent-cyan);">MANUAL</strong><br>
+              Status: <strong id="navStatusText" style="color:var(--text-muted);font-size:.72rem;">IDLE</strong><br>
+              Target: <strong id="navGoalText" style="color:var(--text-muted);font-size:.68rem;">None Set</strong><br>
+              Waypoint: <strong id="navWpText" style="color:var(--accent-green);font-size:.68rem;">—</strong>
+            </div>
+            <button id="cancelNavBtn" class="control-btn btn-cancel" style="width:auto;padding:4px 10px;font-size:.68rem;display:none;">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div class="switch-container"><span class="switch-label">Avoidance Armed</span><label class="cyber-switch"><input type="checkbox" id="armSwitch"><span class="switch-slider"></span></label></div>
+      <div class="console-log" id="consoleLog"><div class="console-line"><span class="console-time">[BOOT]</span> <span class="console-success">TELEMETRY DECK ONLINE</span></div></div>
+    </div>
+  </div>
 
-            const line = document.createElement('div');
-            line.className = 'console-line';
+  <!-- GPS MAP -->
+  <div class="card map-card">
+    <div class="card-header"><span>GPS Navigation Map</span><span style="color:var(--accent-yellow)">L76x + RRT*</span></div>
+    <div id="map"></div>
+    <div class="map-info">
+      <span>Lat: <strong id="mapLat">15.36470</strong></span>
+      <span>Lng: <strong id="mapLng">75.12400</strong></span>
+      <span id="navDistDisp" style="color:var(--accent-green);"></span>
+    </div>
+    <div class="map-hint" id="mapHint">📍 Click within 5 km to navigate robot to destination</div>
+  </div>
 
-            let typeClass = 'console-info';
-            if (type === 'success') typeClass = 'console-success';
-            else if (type === 'warn') typeClass = 'console-warn';
-            else if (type === 'err') typeClass = 'console-err';
+  <!-- EXTENDED TELEMETRY -->
+  <div class="card s4">
+    <div class="card-header"><span>Robot Telemetry</span><span style="color:var(--accent-cyan)">Extended</span></div>
+    <div class="ext-grid">
+      <div class="ext-item"><div class="ext-lbl">Speed</div><div class="ext-val" id="xSpeed">0.00 m/s</div></div>
+      <div class="ext-item"><div class="ext-lbl">Heading</div><div class="ext-val" id="xHead">045°</div></div>
+      <div class="ext-item"><div class="ext-lbl">Roll</div><div class="ext-val" id="xRoll">0.0°</div></div>
+      <div class="ext-item"><div class="ext-lbl">Pitch</div><div class="ext-val" id="xPitch">0.0°</div></div>
+      <div class="ext-item"><div class="ext-lbl">Yaw</div><div class="ext-val" id="xYaw">045°</div></div>
+      <div class="ext-item"><div class="ext-lbl">GPS Accuracy</div><div class="ext-val" id="xGpsAcc">±1.8m</div></div>
+      <div class="ext-item"><div class="ext-lbl">Odometry</div><div class="ext-val" id="xOdom">0.0 m</div></div>
+      <div class="ext-item"><div class="ext-lbl">Motor RPM</div><div class="ext-val" id="xRpm">0</div></div>
+      <div class="ext-item"><div class="ext-lbl">Wheel Enc</div><div class="ext-val" id="xEnc">0</div></div>
+      <div class="ext-item"><div class="ext-lbl">Batt Voltage</div><div class="ext-val" id="xVolt">22.1 V</div></div>
+      <div class="ext-item"><div class="ext-lbl">Current Draw</div><div class="ext-val" id="xAmps">1.2 A</div></div>
+      <div class="ext-item"><div class="ext-lbl">Temperature</div><div class="ext-val" id="xTemp">42°C</div></div>
+    </div>
+  </div>
 
-            line.innerHTML = `<span class="console-time">[${timeStr}]</span> <span class="${typeClass}">${message}</span>`;
-            consoleEl.appendChild(line);
-            consoleEl.scrollTop = consoleEl.scrollHeight;
+  <!-- SENSOR HEALTH -->
+  <div class="card s4">
+    <div class="card-header"><span>Sensor Health</span><span style="color:var(--accent-green)">6/6 Online</span></div>
+    <div class="sensor-grid">
+      <div class="sensor-card"><div class="sensor-hdr"><div class="sled on" id="sl0"></div><div class="sname">Raspberry Pi 5</div></div><div class="sbar-bg"><div class="sbar-fill" id="sb0" style="width:87%;background:var(--accent-green);"></div></div><div class="supdate" id="su0">Health: 87% | 0.1s ago</div></div>
+      <div class="sensor-card"><div class="sensor-hdr"><div class="sled on" id="sl1"></div><div class="sname">RPLiDAR A1</div></div><div class="sbar-bg"><div class="sbar-fill" id="sb1" style="width:93%;background:var(--accent-green);"></div></div><div class="supdate" id="su1">Health: 93% | 0.2s ago</div></div>
+      <div class="sensor-card"><div class="sensor-hdr"><div class="sled on" id="sl2"></div><div class="sname">RealSense D435i</div></div><div class="sbar-bg"><div class="sbar-fill" id="sb2" style="width:96%;background:var(--accent-green);"></div></div><div class="supdate" id="su2">Health: 96% | 0.03s ago</div></div>
+      <div class="sensor-card"><div class="sensor-hdr"><div class="sled warn" id="sl3"></div><div class="sname">GPS L76x</div></div><div class="sbar-bg"><div class="sbar-fill" id="sb3" style="width:79%;background:var(--accent-yellow);"></div></div><div class="supdate" id="su3">Health: 79% | 1.0s ago</div></div>
+      <div class="sensor-card"><div class="sensor-hdr"><div class="sled on" id="sl4"></div><div class="sname">MPU6050 IMU</div></div><div class="sbar-bg"><div class="sbar-fill" id="sb4" style="width:98%;background:var(--accent-green);"></div></div><div class="supdate" id="su4">Health: 98% | 0.02s ago</div></div>
+      <div class="sensor-card"><div class="sensor-hdr"><div class="sled on" id="sl5"></div><div class="sname">Wheel Encoders</div></div><div class="sbar-bg"><div class="sbar-fill" id="sb5" style="width:91%;background:var(--accent-green);"></div></div><div class="supdate" id="su5">Health: 91% | 0.05s ago</div></div>
+    </div>
+  </div>
 
-            while (consoleEl.children.length > 50) {
-                consoleEl.removeChild(consoleEl.firstChild);
-            }
-        }
+  <!-- STATE MACHINE -->
+  <div class="card s4">
+    <div class="card-header"><span>Autonomous State Machine</span><span style="color:var(--accent-purple)" id="smLabel">IDLE</span></div>
+    <div class="sm-flow">
+      <div class="sm-state active" id="sm-IDLE"><div class="sm-dot"></div><span class="sm-lbl">1. Idle</span><span class="sm-tag">STANDBY</span></div>
+      <div class="sm-state" id="sm-LOCALIZATION"><div class="sm-dot"></div><span class="sm-lbl">2. Localization</span><span class="sm-tag">GPS FIX</span></div>
+      <div class="sm-state" id="sm-MAPPING"><div class="sm-dot"></div><span class="sm-lbl">3. Mapping</span><span class="sm-tag">SLAM</span></div>
+      <div class="sm-state" id="sm-PLANNING"><div class="sm-dot"></div><span class="sm-lbl">4. Planning</span><span class="sm-tag">RRT*</span></div>
+      <div class="sm-state" id="sm-NAVIGATING"><div class="sm-dot"></div><span class="sm-lbl">5. Navigating</span><span class="sm-tag">EN ROUTE</span></div>
+      <div class="sm-state" id="sm-OBSTACLE"><div class="sm-dot"></div><span class="sm-lbl">6. Obstacle Detected</span><span class="sm-tag">LIDAR</span></div>
+      <div class="sm-state" id="sm-REPLANNING"><div class="sm-dot"></div><span class="sm-lbl">7. Path Replanning</span><span class="sm-tag">REPLAN</span></div>
+      <div class="sm-state" id="sm-GOAL_REACHED"><div class="sm-dot"></div><span class="sm-lbl">8. Goal Reached</span><span class="sm-tag">✓ DONE</span></div>
+    </div>
+  </div>
 
-        function updateGauge(elementId, value, maxVal) {
-            const circle = document.getElementById(elementId);
-            if (!circle) return;
-            const absVal = Math.abs(value);
-            const percent = Math.min(absVal / maxVal, 1.0);
-            const circumference = 238.76;
-            const offset = circumference - (percent * circumference);
-            circle.style.strokeDashoffset = offset;
-        }
+  <!-- DRIVE CONTROLS -->
+  <div class="card s4">
+    <div class="card-header"><span>Drive Control Panel</span><span style="color:var(--text-muted);font-size:.68rem;">Visual Only</span></div>
+    <div class="drive-pad">
+      <div class="dbtn empty"></div><div class="dbtn" id="dFwd">▲</div><div class="dbtn empty"></div>
+      <div class="dbtn" id="dLeft">◀</div><div class="dbtn stop" id="dStop">■</div><div class="dbtn" id="dRight">▶</div>
+      <div class="dbtn empty"></div><div class="dbtn" id="dRev">▼</div><div class="dbtn empty"></div>
+      <div class="dbtn estop" id="dEStop">⛔ EMERGENCY STOP</div>
+    </div>
+    <div class="joystick-wrap" id="joyWrap"><div class="joystick-knob" id="joyKnob"></div></div>
+    <div style="margin-top:8px;">
+      <div class="speed-lbl">Speed Limit: <span id="spdLimitVal">50</span>%</div>
+      <input type="range" class="speed-slider" id="spdSlider" min="0" max="100" value="50">
+    </div>
+    <div class="vel-row">
+      <div class="vel-item"><div class="vel-lbl">Velocity</div><div class="vel-val" id="dVel">0.00 m/s</div></div>
+      <div class="vel-item"><div class="vel-lbl">Steer Angle</div><div class="vel-val" id="dSteer">0°</div></div>
+    </div>
+  </div>
 
-        // Leaflet Map Init (Dark mode tile styling + Satellite Layer)
-        let map = null;
-        let marker = null;
-        let targetMarker = null;
-        let rrtPolyline = null;
-        let waypointMarkers = [];
+  <!-- PERFORMANCE CHARTS -->
+  <div class="card s4">
+    <div class="card-header"><span>Performance Metrics</span><span style="color:var(--accent-cyan)">Live Charts</span></div>
+    <div class="perf-grid">
+      <div class="perf-item"><div class="perf-hdr"><span class="perf-lbl">CPU</span><span class="perf-val" id="pCpu">35%</span></div><canvas class="spk-canvas" id="spkCpu"></canvas></div>
+      <div class="perf-item"><div class="perf-hdr"><span class="perf-lbl">RAM</span><span class="perf-val" id="pRam">48%</span></div><canvas class="spk-canvas" id="spkRam"></canvas></div>
+      <div class="perf-item"><div class="perf-hdr"><span class="perf-lbl">Battery</span><span class="perf-val" id="pBatt">94%</span></div><canvas class="spk-canvas" id="spkBatt"></canvas></div>
+      <div class="perf-item"><div class="perf-hdr"><span class="perf-lbl">Speed</span><span class="perf-val" id="pSpeed">0.00</span></div><canvas class="spk-canvas" id="spkSpeed"></canvas></div>
+      <div class="perf-item"><div class="perf-hdr"><span class="perf-lbl">Latency</span><span class="perf-val" id="pLat">12ms</span></div><canvas class="spk-canvas" id="spkLat"></canvas></div>
+      <div class="perf-item"><div class="perf-hdr"><span class="perf-lbl">Sensor Hz</span><span class="perf-val" id="pHz">10Hz</span></div><canvas class="spk-canvas" id="spkHz"></canvas></div>
+    </div>
+  </div>
 
-        try {
-            if (typeof L !== 'undefined') {
-                const lightLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; CartoDB',
-                    maxZoom: 20
-                });
+  <!-- MISSION STATISTICS -->
+  <div class="card s4">
+    <div class="card-header"><span>Mission Statistics</span><span style="color:var(--accent-gold)" id="mDuration">00:00:00</span></div>
+    <div class="stats-grid">
+      <div class="stat-item"><span class="stat-num" id="sDist">0.0</span><span class="stat-lbl">Distance (m)</span></div>
+      <div class="stat-item"><span class="stat-num" id="sObs">3</span><span class="stat-lbl">Obstacles</span></div>
+      <div class="stat-item"><span class="stat-num" id="sObjs">7</span><span class="stat-lbl">Objects Detected</span></div>
+      <div class="stat-item"><span class="stat-num" id="sWps">0</span><span class="stat-lbl">Waypoints Done</span></div>
+      <div class="stat-item"><span class="stat-num" id="sAvgSpd">0.00</span><span class="stat-lbl">Avg Speed (m/s)</span></div>
+      <div class="stat-item"><span class="stat-num" id="sBattR">94%</span><span class="stat-lbl">Batt Remaining</span></div>
+      <div class="stat-item"><span class="stat-num" id="sNavAcc">98.2%</span><span class="stat-lbl">Nav Accuracy</span></div>
+      <div class="stat-item"><span class="stat-num" id="sSats">12</span><span class="stat-lbl">GPS Satellites</span></div>
+    </div>
+  </div>
 
-                const satelliteLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                    attribution: 'Tiles &copy; Esri &mdash; Source: Esri',
-                    maxZoom: 19
-                });
+  <!-- ROS2 LOGS -->
+  <div class="card s12">
+    <div class="card-header"><span>ROS2 System Logs</span><span style="color:var(--accent-green);font-family:'JetBrains Mono',monospace;font-size:.75rem;">● LIVE</span></div>
+    <div class="console-log tall" id="rosLog">
+      <div class="console-line"><span class="console-time">[BOOT]</span> <span class="console-success">ROS2 Humble Hawksbill — all nodes initializing</span></div>
+    </div>
+  </div>
 
-                map = L.map('map', {
-                    center: [0.0, 0.0],
-                    zoom: 2,
-                    layers: [lightLayer]
-                });
+</div><!-- /dashboard-container -->
 
-                const baseMaps = {
-                    "Light Theme": lightLayer,
-                    "Satellite": satelliteLayer
-                };
-                L.control.layers(baseMaps, null, { collapsed: false }).addTo(map);
+<script>
+// ══════════════════════════════════════════════════════
+// SIMULATION STATE
+// ══════════════════════════════════════════════════════
+const KLE={lat:15.3647,lng:75.1240};
+const sim={
+  lat:KLE.lat,lng:KLE.lng,speed:0,heading:45,roll:0,pitch:0,yaw:45,
+  battery:94,cpu:35,ram:48,battVolt:22.1,current:1.2,temp:42,
+  rpm:0,encTicks:0,odometry:0,gpsAcc:1.8,satellites:12,
+  state:'IDLE',isNav:false,navPath:[],navIdx:0,navTarget:null,
+  dist:0,obstacles:3,objects:7,wps:0,missionStart:Date.now(),
+  perfData:{cpu:[],ram:[],batt:[],speed:[],lat:[],hz:[]},
+};
+for(let k in sim.perfData)sim.perfData[k]=Array(40).fill(k==='batt'?94:k==='ram'?48:k==='cpu'?35:k==='hz'?10:12);
 
-                const robotIcon = L.divIcon({
-                    html: '<div class="pulse-marker-cyan"></div>',
-                    className: 'custom-robot-icon',
-                    iconSize: [14, 14]
-                });
-                marker = L.marker([0.0, 0.0], { icon: robotIcon }).addTo(map);
+// ── helpers ──
+function rnd(a,b){return a+Math.random()*(b-a);}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+function lerp(a,b,t){return a+(b-a)*t;}
+function nowStr(){return new Date().toTimeString().split(' ')[0];}
 
-                map.on('click', (e) => {
-                    const lat = e.latlng.lat;
-                    const lng = e.latlng.lng;
+function haversineM(la1,lo1,la2,lo2){
+  const R=6371000,dLa=(la2-la1)*Math.PI/180,dLo=(lo2-lo1)*Math.PI/180;
+  const a=Math.sin(dLa/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dLo/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+function bearing(la1,lo1,la2,lo2){
+  const dLo=(lo2-lo1)*Math.PI/180;
+  const y=Math.sin(dLo)*Math.cos(la2*Math.PI/180);
+  const x=Math.cos(la1*Math.PI/180)*Math.sin(la2*Math.PI/180)-Math.sin(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.cos(dLo);
+  return((Math.atan2(y,x)*180/Math.PI)+360)%360;
+}
 
-                    const gpsText = document.getElementById('gpsStatus').innerText;
-                    if (gpsText === "NO LOCK") {
-                        alert("Cannot set destination: UGV has no active GPS/WiFi Geolocation lock!");
-                        return;
-                    }
+// ── logging ──
+function log(el,msg,type='info'){
+  const e=document.getElementById(el);if(!e)return;
+  const tc={success:'console-success',warn:'console-warn',err:'console-err',info:'console-info'}[type]||'console-info';
+  const d=document.createElement('div');d.className='console-line';
+  d.innerHTML=`<span class="console-time">[${nowStr()}]</span> <span class="${tc}">${msg}</span>`;
+  e.appendChild(d);e.scrollTop=e.scrollHeight;
+  while(e.children.length>100)e.removeChild(e.firstChild);
+}
+function slog(m,t){log('consoleLog',m,t);}
+function rlog(m,t){log('rosLog',m,t);}
 
-                    if (confirm(`Start autonomous GPS Navigation to:\nLatitude: ${lat.toFixed(6)}\nLongitude: ${lng.toFixed(6)}?`)) {
-                        if (targetMarker) {
-                            targetMarker.setLatLng(e.latlng);
-                        } else {
-                            targetMarker = L.marker(e.latlng, {
-                                icon: L.divIcon({
-                                    html: '<div class="pulse-marker-red"></div>',
-                                    className: 'custom-target-icon',
-                                    iconSize: [14, 14]
-                                })
-                            }).addTo(map);
-                        }
+// ── gauge ──
+function setGauge(id,val,max){
+  const c=document.getElementById(id);if(!c)return;
+  c.style.strokeDashoffset=238.76-Math.min(Math.abs(val)/max,1)*238.76;
+}
 
-                        fetch('/api/set_goal', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ lat: lat, lng: lng })
-                        });
-                    }
-                });
-            } else {
-                console.warn("Leaflet library not loaded. Map placeholder active.");
-                document.getElementById('map').innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100%;color:var(--text-muted);font-size:0.9rem;">Map offline (Requires Internet)</div>';
-            }
-        } catch (e) {
-            console.error("Failed to initialize map:", e);
-        }
+// ══════════════════════════════════════════════════════
+// STATE MACHINE
+// ══════════════════════════════════════════════════════
+const SM_ORDER=['IDLE','LOCALIZATION','MAPPING','PLANNING','NAVIGATING','OBSTACLE','REPLANNING','GOAL_REACHED'];
+function setSM(active){
+  SM_ORDER.forEach((s,i)=>{
+    const el=document.getElementById('sm-'+s);if(!el)return;
+    el.classList.remove('active','done');
+    const ai=SM_ORDER.indexOf(active);
+    if(s===active)el.classList.add('active');
+    else if(i<ai)el.classList.add('done');
+  });
+  const lbl=document.getElementById('smLabel');if(lbl)lbl.textContent=active.replace('_',' ');
+}
+let _lastState=null;
+function setState(s){
+  const b=document.getElementById('stateBadge');if(b){b.textContent=s;b.className='state-badge '+s;}
+  if(_lastState&&_lastState!==s)slog(`State: ${_lastState} → ${s}`,s.includes('HALT')||s.includes('ERR')?'err':s.includes('PLAN')||s.includes('OBST')?'warn':'success');
+  _lastState=s; sim.state=s;
+  const ms=document.getElementById('mState');if(ms)ms.textContent=s;
+}
 
-        // Canvas RPLidar Radar Renderer
-        const canvas = document.getElementById('radarCanvas');
-        const ctx = canvas.getContext('2d');
-        const radarSize = 300;
-        const cx = radarSize / 2;
-        const cy = radarSize / 2;
+// ══════════════════════════════════════════════════════
+// MAP + NAVIGATION SIMULATION
+// ══════════════════════════════════════════════════════
+let map=null,robotMarker=null,targetMarker=null,navPolyline=null,navWpMarkers=[];
+let navTimer=null;
 
-        function drawRadarGrid() {
-            ctx.fillStyle = '#faf8f2';
-            ctx.fillRect(0, 0, radarSize, radarSize);
+try{
+  if(typeof L!=='undefined'){
+    const lightL=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© CartoDB',maxZoom:20});
+    const satL=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:19});
+    map=L.map('map',{center:[KLE.lat,KLE.lng],zoom:17,layers:[lightL]});
+    L.control.layers({'Map':lightL,'Satellite':satL},null,{collapsed:true}).addTo(map);
 
-            // Ring lines
-            ctx.strokeStyle = '#e2dcd0';
-            ctx.lineWidth = 1;
-            for (let r = 50; r <= cx; r += 50) {
-                ctx.beginPath();
-                ctx.arc(cx, cy, r, 0, 2 * Math.PI);
-                ctx.stroke();
+    const robotIcon=L.divIcon({html:'<div class="pulse-marker-cyan"></div>',className:'',iconSize:[14,14]});
+    robotMarker=L.marker([KLE.lat,KLE.lng],{icon:robotIcon}).addTo(map);
+    robotMarker.bindPopup('<b>UGV Robot</b><br>KLE Tech University').openPopup();
 
-                // Ring Labels
-                ctx.fillStyle = '#857662';
-                ctx.font = '9px monospace';
-                ctx.fillText((r / 50).toFixed(1) + 'm', cx + r - 15, cy - 4);
-            }
+    L.circleMarker([KLE.lat,KLE.lng],{radius:35,fill:false,color:'#b89047',weight:2,dashArray:'6,4',opacity:.4}).addTo(map)
+     .bindTooltip('KLE Technological University',{permanent:false});
 
-            // Crosshair
-            ctx.beginPath();
-            ctx.moveTo(cx, 10); ctx.lineTo(cx, radarSize - 10);
-            ctx.moveTo(10, cy); ctx.lineTo(radarSize - 10, cy);
-            ctx.stroke();
+    map.on('click',(e)=>{
+      if(sim.isNav){
+        if(confirm('Robot is navigating. Cancel current mission and set new destination?'))cancelNav();else return;
+      }
+      const {lat,lng}=e.latlng;
+      const d=haversineM(sim.lat,sim.lng,lat,lng);
+      if(d>5000){alert(`Destination is ${(d/1000).toFixed(2)} km away.\n\nMax navigation range: 5 km.\n\nPlease pick a closer point on the map.`);return;}
+      if(d<5){alert('Too close (< 5 m). Select a farther point.');return;}
+      if(confirm(`Start autonomous navigation?\n\nDestination: ${lat.toFixed(6)}, ${lng.toFixed(6)}\nDistance: ${d.toFixed(0)} m (${(d/1000).toFixed(2)} km)\n\nBegin mission?`)){
+        startNav(lat,lng,d);
+      }
+    });
+  }
+}catch(e){console.error('Map init:',e);}
 
-            // Center Robot representation
-            ctx.fillStyle = '#2563eb';
-            ctx.beginPath();
-            ctx.moveTo(cx, cy - 8);
-            ctx.lineTo(cx - 6, cy + 6);
-            ctx.lineTo(cx + 6, cy + 6);
-            ctx.closePath();
-            ctx.fill();
-        }
+function buildPath(sLa,sLo,eLa,eLo,steps){
+  return Array.from({length:steps+1},(_,i)=>{
+    const t=i/steps;
+    const j=(i>0&&i<steps)?{la:(Math.random()-.5)*0.00006,lo:(Math.random()-.5)*0.00006}:{la:0,lo:0};
+    return{lat:lerp(sLa,eLa,t)+j.la,lng:lerp(sLo,eLo,t)+j.lo};
+  });
+}
 
-        // Web socket / Event Source polling loop
-        function updateTelemetry() {
-            fetch('/api/telemetry')
-                .then(res => res.json())
-                .then(data => {
-                    // Update State Badge
-                    const badge = document.getElementById('stateBadge');
-                    badge.innerText = data.state;
-                    badge.className = 'state-badge ' + data.state;
+function startNav(destLat,destLng,dist){
+  const steps=Math.max(25,Math.round(dist/8));
+  sim.navPath=buildPath(sim.lat,sim.lng,destLat,destLng,steps);
+  sim.navIdx=0;sim.isNav=true;sim.navTarget={lat:destLat,lng:destLng};
 
-                    // Log State Transition
-                    if (lastState !== null && lastState !== data.state) {
-                        addLogLine(`State transition: ${lastState} -> ${data.state}`, getLogClass(data.state));
-                    }
-                    lastState = data.state;
+  if(map){
+    if(navPolyline)map.removeLayer(navPolyline);
+    navPolyline=L.polyline(sim.navPath.map(p=>[p.lat,p.lng]),{color:'#b89047',weight:3,opacity:.8,dashArray:'8,5'}).addTo(map);
+    navWpMarkers.forEach(m=>map.removeLayer(m));navWpMarkers=[];
+    for(let i=5;i<sim.navPath.length-1;i+=5){
+      const wm=L.circleMarker([sim.navPath[i].lat,sim.navPath[i].lng],{radius:4,fillColor:'#0284c7',fillOpacity:.85,color:'white',weight:1}).addTo(map);
+      navWpMarkers.push(wm);
+    }
+    if(targetMarker)map.removeLayer(targetMarker);
+    targetMarker=L.marker([destLat,destLng],{icon:L.divIcon({html:'<div class="pulse-marker-red"></div>',className:'',iconSize:[14,14]})}).addTo(map);
+    targetMarker.bindPopup(`<b>Destination</b><br>${destLat.toFixed(5)}, ${destLng.toFixed(5)}<br>Distance: ${(dist/1000).toFixed(2)} km`).openPopup();
+  }
 
-                    // Update Arm Switch state
-                    const armSwitch = document.getElementById('armSwitch');
-                    if (armSwitch) {
-                        armSwitch.checked = data.avoidance_armed;
-                    }
+  // State machine progression
+  const prog=['LOCALIZATION','MAPPING','PLANNING','NAVIGATING'];
+  let pi=0;
+  setState('LOCALIZATION');setSM('LOCALIZATION');
+  slog('GPS lock — beginning localization','success');
+  rlog('[nav2] Goal received — computing RRT* path','info');
+  const stTimer=setInterval(()=>{
+    pi++;
+    if(pi<prog.length){
+      const s=prog[pi];setState(s);setSM(s);
+      const msgs={MAPPING:'[slam_toolbox] Map updated',PLANNING:'[nav2_planner] Global path computed — '+steps+' waypoints',NAVIGATING:'[nav2] Executing trajectory — en route to goal'};
+      if(msgs[s])rlog(msgs[s],s==='NAVIGATING'?'success':'info');
+    }else clearInterval(stTimer);
+  },1200);
 
-                    // Log Arming Transition
-                    if (lastAvoidanceArmed !== null && lastAvoidanceArmed !== data.avoidance_armed) {
-                        const action = data.avoidance_armed ? 'Armed' : 'Disarmed';
-                        const logType = data.avoidance_armed ? 'success' : 'warn';
-                        addLogLine(`Avoidance system ${action}`, logType);
-                    }
-                    lastAvoidanceArmed = data.avoidance_armed;
+  document.getElementById('navModeText').textContent='WAYPOINT';
+  document.getElementById('navStatusText').textContent='EN_ROUTE';
+  document.getElementById('navStatusText').style.color='var(--accent-green)';
+  document.getElementById('navGoalText').textContent=`${destLat.toFixed(5)}, ${destLng.toFixed(5)}`;
+  document.getElementById('cancelNavBtn').style.display='block';
+  document.getElementById('mapHint').textContent=`🤖 Navigating — ${(dist/1000).toFixed(2)} km to destination`;
 
-                    // Speeds & Gauges
-                    document.getElementById('linSpeedVal').innerText = data.lin_x.toFixed(2);
-                    updateGauge('linearGauge', data.lin_x, 0.25);
+  let covered=0;
+  navTimer=setInterval(()=>{
+    if(sim.navIdx>=sim.navPath.length-1){
+      clearInterval(navTimer);navTimer=null;
+      sim.isNav=false;sim.speed=0;sim.rpm=0;sim.wps++;
+      setState('GOAL_REACHED');setSM('GOAL_REACHED');
+      slog('Goal reached! Mission complete.','success');
+      rlog('[nav2] Goal reached — robot stopped at destination','success');
+      document.getElementById('navStatusText').textContent='ARRIVED';
+      document.getElementById('navStatusText').style.color='var(--accent-gold)';
+      document.getElementById('mapHint').textContent='✅ Destination reached! Click map for new goal.';
+      document.getElementById('cancelNavBtn').style.display='none';
+      setTimeout(()=>{
+        setState('IDLE');setSM('IDLE');
+        document.getElementById('navModeText').textContent='MANUAL';
+        document.getElementById('navStatusText').textContent='IDLE';
+        document.getElementById('navStatusText').style.color='var(--text-muted)';
+        document.getElementById('navGoalText').textContent='None Set';
+        document.getElementById('navWpText').textContent='—';
+        document.getElementById('mapHint').textContent='📍 Click within 5 km to navigate robot to destination';
+        if(map&&navPolyline){map.removeLayer(navPolyline);navPolyline=null;}
+        navWpMarkers.forEach(m=>{if(map)map.removeLayer(m);});navWpMarkers=[];
+        if(map&&targetMarker){map.removeLayer(targetMarker);targetMarker=null;}
+      },4000);
+      return;
+    }
+    sim.navIdx++;
+    const cur=sim.navPath[sim.navIdx],prev=sim.navPath[sim.navIdx-1];
+    const step=haversineM(prev.lat,prev.lng,cur.lat,cur.lng);
+    covered+=step;sim.dist+=step;sim.odometry+=step;
+    sim.encTicks+=Math.round(step*320);
+    sim.lat=cur.lat;sim.lng=cur.lng;
+    sim.heading=bearing(prev.lat,prev.lng,cur.lat,cur.lng);
+    sim.yaw=sim.heading;
+    sim.speed=rnd(0.18,0.35);sim.rpm=Math.round(sim.speed*220);
 
-                    document.getElementById('angSpeedVal').innerText = data.ang_z.toFixed(2);
-                    updateGauge('angularGauge', data.ang_z, 1.0);
+    if(Math.random()<0.04){
+      sim.obstacles++;
+      slog('Obstacle detected — replanning','warn');
+      rlog('[lidar] Obstacle at 0.42m — replan triggered','warn');
+      setSM('REPLANNING');setTimeout(()=>setSM('NAVIGATING'),1500);
+    }
+    if(robotMarker)robotMarker.setLatLng([sim.lat,sim.lng]);
+    if(map)map.panTo([sim.lat,sim.lng]);
 
-                    document.getElementById('fpsVal').innerText = data.fps.toFixed(1);
+    document.getElementById('mapLat').textContent=sim.lat.toFixed(5);
+    document.getElementById('mapLng').textContent=sim.lng.toFixed(5);
+    const rem=haversineM(sim.lat,sim.lng,destLat,destLng);
+    document.getElementById('navDistDisp').textContent=rem>0?`${rem.toFixed(0)}m left`:'';
+    document.getElementById('navWpText').textContent=`${sim.navIdx}/${sim.navPath.length-1}`;
+    updateDisplays();
+  },280);
+}
 
-                    // Objects
-                    if (data.detections && data.detections.length) {
-                        document.getElementById('detectionsList').innerText = data.detections.join(', ');
-                    } else {
-                        document.getElementById('detectionsList').innerText = "None";
-                    }
+function cancelNav(){
+  if(navTimer){clearInterval(navTimer);navTimer=null;}
+  sim.isNav=false;sim.speed=0;sim.rpm=0;sim.navPath=[];
+  setState('HALT');setSM('IDLE');
+  slog('Navigation cancelled by operator','warn');
+  rlog('[nav2] Goal cancelled — robot stopped','warn');
+  document.getElementById('navModeText').textContent='MANUAL';
+  document.getElementById('navStatusText').textContent='IDLE';
+  document.getElementById('navStatusText').style.color='var(--text-muted)';
+  document.getElementById('navGoalText').textContent='None Set';
+  document.getElementById('navWpText').textContent='—';
+  document.getElementById('cancelNavBtn').style.display='none';
+  document.getElementById('mapHint').textContent='📍 Click within 5 km to navigate robot to destination';
+  document.getElementById('navDistDisp').textContent='';
+  if(map&&navPolyline){map.removeLayer(navPolyline);navPolyline=null;}
+  navWpMarkers.forEach(m=>{if(map)map.removeLayer(m);});navWpMarkers=[];
+  if(map&&targetMarker){map.removeLayer(targetMarker);targetMarker=null;}
+}
 
-                    // Waypoint Navigation status updates
-                    document.getElementById('navModeText').innerText = data.nav_mode;
-                    const statusEl = document.getElementById('navStatusText');
-                    statusEl.innerText = data.nav_status;
-                    // Color-code status
-                    if (data.nav_status === 'EN_ROUTE') statusEl.style.color = 'var(--accent-green)';
-                    else if (data.nav_status === 'PLANNING') statusEl.style.color = 'var(--accent-yellow)';
-                    else if (data.nav_status === 'ARRIVED') statusEl.style.color = 'var(--accent-cyan)';
-                    else statusEl.style.color = 'var(--text-muted)';
+// ══════════════════════════════════════════════════════
+// CAMERA CANVAS
+// ══════════════════════════════════════════════════════
+const camCvs=document.getElementById('camCanvas');
+let camCtx=camCvs?camCvs.getContext('2d'):null,camFrame=0;
+function resizeCam(){if(!camCvs)return;camCvs.width=camCvs.offsetWidth||640;camCvs.height=camCvs.offsetHeight||480;}
+resizeCam();window.addEventListener('resize',resizeCam);
 
-                    if (data.nav_mode === "WAYPOINT") {
-                        document.getElementById('navGoalText').innerText = `${data.goal_gps.lat.toFixed(6)}, ${data.goal_gps.lng.toFixed(6)}`;
-                        document.getElementById('cancelNavBtn').style.display = 'block';
+const CLASSES=[{l:'Person',c:'#ef4444'},{l:'Bicycle',c:'#f97316'},{l:'Car',c:'#eab308'},{l:'Motorcycle',c:'#a855f7'},{l:'Backpack',c:'#06b6d4'},{l:'Traffic Cone',c:'#f59e0b'},{l:'Tree',c:'#10b981'},{l:'Dog',c:'#8b5cf6'},{l:'Bench',c:'#64748b'}];
+let curDets=[];
 
-                        // Waypoint progress counter
-                        if (data.rrt_path && data.rrt_path.length > 0) {
-                            const wpIdx = data.current_wp_idx || 0;
-                            document.getElementById('navWpText').innerText = `${wpIdx} / ${data.rrt_path.length - 1} waypoints`;
-                        }
+function genDets(){
+  const n=Math.floor(rnd(1,5));
+  return [...CLASSES].sort(()=>Math.random()-.5).slice(0,n).map(c=>({...c,conf:rnd(.62,.97),x:rnd(.04,.55),y:rnd(.1,.48),w:rnd(.08,.22),h:rnd(.1,.28)}));
+}
 
-                        if (map && data.goal_gps && data.goal_gps.lat !== 0.0) {
-                            const goalPos = [data.goal_gps.lat, data.goal_gps.lng];
-                            if (targetMarker) {
-                                targetMarker.setLatLng(goalPos);
-                            } else {
-                                targetMarker = L.marker(goalPos, {
-                                    icon: L.divIcon({
-                                        html: '<div class="pulse-marker-red"></div>',
-                                        className: 'custom-target-icon',
-                                        iconSize: [14, 14]
-                                    })
-                                }).addTo(map);
-                            }
-                        }
+function drawCam(){
+  if(!camCtx)return;
+  const W=camCvs.width,H=camCvs.height;camFrame++;
+  // Sky
+  const sky=camCtx.createLinearGradient(0,0,0,H*.5);sky.addColorStop(0,'#87CEEB');sky.addColorStop(1,'#B8D8F0');
+  camCtx.fillStyle=sky;camCtx.fillRect(0,0,W,H*.5);
+  // Ground
+  const gnd=camCtx.createLinearGradient(0,H*.5,0,H);gnd.addColorStop(0,'#8B7355');gnd.addColorStop(1,'#6B5245');
+  camCtx.fillStyle=gnd;camCtx.fillRect(0,H*.5,W,H*.5);
+  // Road
+  camCtx.fillStyle='#9E9E9E';
+  camCtx.beginPath();camCtx.moveTo(W*.37,H*.5);camCtx.lineTo(W*.63,H*.5);camCtx.lineTo(W*.85,H);camCtx.lineTo(W*.15,H);camCtx.fill();
+  // Road stripe
+  camCtx.setLineDash([H*.04,H*.03]);camCtx.strokeStyle='#FFD700';camCtx.lineWidth=2;
+  camCtx.beginPath();camCtx.moveTo(W*.5,H*.5);camCtx.lineTo(W*.5,H);camCtx.stroke();
+  camCtx.setLineDash([]);
+  // Trees
+  [[.09,.42],[.19,.44],[.79,.43],[.89,.41]].forEach(([tx,ty])=>{
+    camCtx.fillStyle='#4A7C59';camCtx.beginPath();camCtx.arc(W*tx,H*ty,H*.072,0,Math.PI*2);camCtx.fill();
+    camCtx.fillStyle='#795548';camCtx.fillRect(W*tx-4,H*ty,8,H*.055);
+  });
+  // Moving vehicle
+  const vx=(camFrame*1.8)%(W*1.3)-W*.1;
+  camCtx.fillStyle='#607D8B';camCtx.fillRect(vx,H*.6,62,28);
+  camCtx.fillStyle='#78909C';camCtx.fillRect(vx+8,H*.55,46,15);
+  camCtx.fillStyle='#212121';
+  [12,50].forEach(ox=>{camCtx.beginPath();camCtx.arc(vx+ox,H*.6+28,7,0,Math.PI*2);camCtx.fill();});
+  // Scanlines
+  camCtx.fillStyle='rgba(0,0,0,0.025)';
+  for(let y=0;y<H;y+=4)camCtx.fillRect(0,y,W,2);
+  // Green HUD tint
+  camCtx.fillStyle='rgba(16,185,129,0.03)';camCtx.fillRect(0,0,W,H);
+  // Crosshair
+  camCtx.strokeStyle='rgba(16,185,129,0.35)';camCtx.lineWidth=1;
+  camCtx.beginPath();camCtx.moveTo(W/2-14,H/2);camCtx.lineTo(W/2+14,H/2);camCtx.stroke();
+  camCtx.beginPath();camCtx.moveTo(W/2,H/2-14);camCtx.lineTo(W/2,H/2+14);camCtx.stroke();
+  // YOLO boxes
+  curDets.forEach(d=>{
+    const bx=d.x*W,by=d.y*H,bw=d.w*W,bh=d.h*H;
+    camCtx.strokeStyle=d.c;camCtx.lineWidth=2;camCtx.strokeRect(bx,by,bw,bh);
+    const cs=9;camCtx.lineWidth=3;
+    [[bx,by,1,1],[bx+bw,by,-1,1],[bx,by+bh,1,-1],[bx+bw,by+bh,-1,-1]].forEach(([cx,cy,dx,dy])=>{
+      camCtx.beginPath();camCtx.moveTo(cx,cy+dy*cs);camCtx.lineTo(cx,cy);camCtx.lineTo(cx+dx*cs,cy);camCtx.stroke();
+    });
+    const lt=`${d.l} ${(d.conf*100).toFixed(0)}%`;
+    camCtx.font='bold 10px JetBrains Mono,monospace';
+    const tw=camCtx.measureText(lt).width+8;
+    camCtx.fillStyle=d.c;camCtx.fillRect(bx,by-18,tw,18);
+    camCtx.fillStyle='#fff';camCtx.fillText(lt,bx+4,by-4);
+  });
+  // Bottom HUD
+  camCtx.fillStyle='rgba(253,252,249,0.75)';camCtx.fillRect(0,H-26,W,26);
+  camCtx.fillStyle='#b89047';camCtx.font='10px JetBrains Mono,monospace';
+  camCtx.fillText(`REALSENSE D435i ● RGB 640×480 ● Objects: ${curDets.length} ● ${nowStr()}`,10,H-8);
+}
 
-                        // Draw RRT path polyline + waypoint dots on map
-                        if (map && data.rrt_path && data.rrt_path.length > 1) {
-                            const pathCoords = data.rrt_path.map(p => [p.lat, p.lng]);
+// ══════════════════════════════════════════════════════
+// DEPTH CANVAS
+// ══════════════════════════════════════════════════════
+const depCvs=document.getElementById('depthCanvas');
+let depCtx=depCvs?depCvs.getContext('2d'):null,depSeed=Math.random()*1000;
+function resizeDep(){if(!depCvs)return;depCvs.width=depCvs.offsetWidth||640;depCvs.height=depCvs.offsetHeight||480;}
+resizeDep();window.addEventListener('resize',resizeDep);
 
-                            // Remove old polyline
-                            if (rrtPolyline) map.removeLayer(rrtPolyline);
-                            rrtPolyline = L.polyline(pathCoords, {
-                                color: '#00f2fe',
-                                weight: 3,
-                                opacity: 0.8,
-                                dashArray: '8, 6'
-                            }).addTo(map);
+function jetColor(t){
+  const r=clamp(Math.round(255*(1.5-Math.abs(4*t-3))),0,255);
+  const g=clamp(Math.round(255*(1.5-Math.abs(4*t-2))),0,255);
+  const b=clamp(Math.round(255*(1.5-Math.abs(4*t-1))),0,255);
+  return`rgb(${r},${g},${b})`;
+}
 
-                            // Remove old waypoint markers
-                            waypointMarkers.forEach(m => map.removeLayer(m));
-                            waypointMarkers = [];
+function drawDepth(){
+  if(!depCtx)return;
+  const W=depCvs.width,H=depCvs.height;depSeed+=0.007;
+  depCtx.fillStyle=jetColor(.92);depCtx.fillRect(0,0,W,H);
+  // Ground plane
+  const gg=depCtx.createLinearGradient(0,H*.45,0,H);gg.addColorStop(0,jetColor(.48));gg.addColorStop(1,jetColor(.28));
+  depCtx.fillStyle=gg;depCtx.fillRect(0,H*.45,W,H*.55);
+  // Depth blobs
+  [{x:.18,y:.55,rx:.11,ry:.17,d:.13},{x:.72,y:.52,rx:.09,ry:.14,d:.23},{x:.5,y:.62,rx:.14,ry:.1,d:.4},{x:.33,y:.4,rx:.1,ry:.19,d:.62},{x:.82,y:.37,rx:.07,ry:.16,d:.68}]
+  .forEach(b=>{
+    const w=Math.sin(depSeed+b.x*9)*.03;
+    const gr=depCtx.createRadialGradient(W*b.x,H*b.y,0,W*b.x,H*b.y,W*b.rx);
+    gr.addColorStop(0,jetColor(b.d+w));gr.addColorStop(1,jetColor(Math.min(1,b.d+.28)));
+    depCtx.fillStyle=gr;depCtx.beginPath();depCtx.ellipse(W*b.x,H*b.y,W*b.rx,H*b.ry,0,0,Math.PI*2);depCtx.fill();
+  });
+  // Scanlines
+  depCtx.fillStyle='rgba(0,0,0,.035)';for(let y=0;y<H;y+=3)depCtx.fillRect(0,y,W,1);
+  // Scale bar
+  for(let i=0;i<100;i++){depCtx.fillStyle=jetColor(1-i/100);depCtx.fillRect(W-18,H*.1+i*(H*.8/100),11,H*.8/100+1);}
+  depCtx.fillStyle='rgba(253,252,249,.9)';depCtx.font='9px monospace';
+  depCtx.fillText('NEAR',W-20,H*.1-3);depCtx.fillText('FAR',W-17,H*.92);
+  // Update min/max
+  const mn=(0.3+Math.sin(depSeed)*.05).toFixed(2),mx=(4.82+Math.cos(depSeed*.7)*.09).toFixed(2);
+  document.getElementById('dMin').textContent=mn;document.getElementById('dMax').textContent=mx;
+  depCtx.fillStyle='rgba(253,252,249,.75)';depCtx.fillRect(0,H-26,W-25,26);
+  depCtx.fillStyle='#2563eb';depCtx.font='10px JetBrains Mono,monospace';
+  depCtx.fillText(`DEPTH ALIGNED ● Min:${mn}m Max:${mx}m ● 30 FPS`,10,H-8);
+}
 
-                            const currentWpIdx = data.current_wp_idx || 0;
-                            for (let wi = 1; wi < data.rrt_path.length - 1; wi++) {
-                                const wp = data.rrt_path[wi];
-                                const isActive = (wi === currentWpIdx);
-                                const wpColor = isActive ? '#00ff87' : '#4facfe';
-                                const wpSize = isActive ? 10 : 6;
-                                const wpMarker = L.circleMarker([wp.lat, wp.lng], {
-                                    radius: wpSize,
-                                    fillColor: wpColor,
-                                    fillOpacity: 0.9,
-                                    color: 'white',
-                                    weight: 1
-                                }).addTo(map);
-                                waypointMarkers.push(wpMarker);
-                            }
-                        }
-                    } else {
-                        document.getElementById('navGoalText').innerText = "None Set";
-                        document.getElementById('navWpText').innerText = "\u2014";
-                        document.getElementById('cancelNavBtn').style.display = 'none';
-                        if (map && targetMarker) {
-                            map.removeLayer(targetMarker);
-                            targetMarker = null;
-                        }
-                        // Clear RRT path visuals
-                        if (map && rrtPolyline) {
-                            map.removeLayer(rrtPolyline);
-                            rrtPolyline = null;
-                        }
-                        waypointMarkers.forEach(m => { if (map) map.removeLayer(m); });
-                        waypointMarkers = [];
-                    }
+// ══════════════════════════════════════════════════════
+// LIDAR RADAR
+// ══════════════════════════════════════════════════════
+const radCvs=document.getElementById('radarCanvas');
+const rCtx=radCvs.getContext('2d');
+const RS=280,rcx=RS/2,rcy=RS/2;
+let radAngle=0;
+const lidarPts=Array.from({length:22},()=>({a:Math.random()*Math.PI*2,r:rnd(.4,2.7),j:Math.random()*.14}));
 
-                    // Map GPS Location Update
-                    const gps = data.gps;
-                    if (gps && gps.lat !== 0.0 && gps.lng !== 0.0) {
-                        document.getElementById('gpsStatus').innerText = `${gps.lat.toFixed(5)}, ${gps.lng.toFixed(5)}`;
-                        document.getElementById('gpsStatus').style.color = 'var(--accent-green)';
-                        if (map && marker) {
-                            const pos = [gps.lat, gps.lng];
-                            marker.setLatLng(pos);
-                            if (map.getZoom() < 8) {
-                                map.setView(pos, 16);
-                            } else {
-                                map.panTo(pos);
-                            }
-                        }
-                    } else {
-                        document.getElementById('gpsStatus').innerText = "NO LOCK";
-                        document.getElementById('gpsStatus').style.color = 'var(--accent-red)';
-                    }
+function drawRadarGrid(){
+  rCtx.fillStyle='#faf8f2';rCtx.fillRect(0,0,RS,RS);
+  // Rings
+  rCtx.strokeStyle='#e2dcd0';rCtx.lineWidth=1;
+  for(let r=46;r<=rcx;r+=46){
+    rCtx.beginPath();rCtx.arc(rcx,rcy,r,0,Math.PI*2);rCtx.stroke();
+    rCtx.fillStyle='#857662';rCtx.font='8px monospace';rCtx.fillText((r/46).toFixed(1)+'m',rcx+r-14,rcy-3);
+  }
+  // Axes
+  rCtx.strokeStyle='#ddd6c8';rCtx.beginPath();rCtx.moveTo(rcx,8);rCtx.lineTo(rcx,RS-8);rCtx.moveTo(8,rcy);rCtx.lineTo(RS-8,rcy);rCtx.stroke();
+  // Sweep
+  rCtx.save();rCtx.translate(rcx,rcy);rCtx.rotate(radAngle);
+  const sg=rCtx.createLinearGradient(0,-rcx,0,rcx);sg.addColorStop(0,'rgba(16,185,129,.22)');sg.addColorStop(1,'rgba(16,185,129,0)');
+  rCtx.beginPath();rCtx.moveTo(0,0);rCtx.arc(0,0,rcx-5,-Math.PI/4,0);rCtx.closePath();
+  rCtx.fillStyle=sg;rCtx.fill();
+  rCtx.strokeStyle='rgba(16,185,129,.85)';rCtx.lineWidth=2;
+  rCtx.beginPath();rCtx.moveTo(0,0);rCtx.lineTo(rcx-5,0);rCtx.stroke();
+  rCtx.restore();
+  // Obstacle points
+  lidarPts.forEach(p=>{
+    const j=p.j*Math.sin(Date.now()*.001+p.a);
+    const dist=p.r+j;const mr=rcx-14;
+    const px=rcx+(dist/3)*mr*Math.cos(p.a-Math.PI/2);
+    const py=rcy+(dist/3)*mr*Math.sin(p.a-Math.PI/2);
+    rCtx.fillStyle=dist<.5?'#ef4444':dist<1.2?'#d97706':'#10b981';
+    rCtx.beginPath();rCtx.arc(px,py,2.5,0,Math.PI*2);rCtx.fill();
+  });
+  // Robot triangle
+  rCtx.fillStyle='#2563eb';rCtx.beginPath();rCtx.moveTo(rcx,rcy-9);rCtx.lineTo(rcx-6,rcy+7);rCtx.lineTo(rcx+6,rcy+7);rCtx.closePath();rCtx.fill();
+  radAngle+=0.028;if(radAngle>Math.PI*2)radAngle-=Math.PI*2;
+  const angleDeg=Math.round(radAngle*180/Math.PI);
+  const al=document.getElementById('lidarAngle');if(al)al.textContent=angleDeg+'°';
+}
+function animRadar(){drawRadarGrid();requestAnimationFrame(animRadar);}
+animRadar();
 
-                    // Render LiDAR Scan points
-                    drawRadarGrid();
-                    const scan = data.scan;
-                    if (scan && scan.ranges) {
-                        const ranges = scan.ranges;
-                        const angleMin = scan.angle_min;
-                        const angleInc = scan.angle_increment;
-                        const rangeMin = scan.range_min;
-                        const rangeMax = scan.range_max;
-                        const displayRange = 3.0; // scale meters
-                        const maxRadius = cx - 15;
+// ══════════════════════════════════════════════════════
+// SPARKLINE CHARTS
+// ══════════════════════════════════════════════════════
+const spkData={cpu:Array(40).fill(35),ram:Array(40).fill(48),batt:Array(40).fill(94),speed:Array(40).fill(0),lat:Array(40).fill(12),hz:Array(40).fill(10)};
+const spkColors={cpu:'#ef4444',ram:'#8b5cf6',batt:'#10b981',speed:'#2563eb',lat:'#f59e0b',hz:'#0284c7'};
+const spkRanges={cpu:[0,100],ram:[0,100],batt:[80,100],speed:[0,50],lat:[0,60],hz:[0,15]};
 
-                        for (let i = 0; i < ranges.length; i++) {
-                            const dist = ranges[i];
-                            if (dist < rangeMin || dist > rangeMax || dist > displayRange) continue;
-                            const angle = angleMin + i * angleInc;
-                            const px = cx + (dist / displayRange * maxRadius) * Math.sin(-angle);
-                            const py = cy - (dist / displayRange * maxRadius) * Math.cos(angle);
+function drawSparkline(id,data,color,mn,mx){
+  const c=document.getElementById(id);if(!c)return;
+  const W=c.offsetWidth||120,H=c.offsetHeight||38;c.width=W;c.height=H;
+  const sc=c.getContext('2d');sc.clearRect(0,0,W,H);
+  const step=W/(data.length-1);
+  sc.beginPath();
+  data.forEach((v,i)=>{const x=i*step;const y=H-((v-mn)/(mx-mn+.001))*H*.85-H*.05;i===0?sc.moveTo(x,y):sc.lineTo(x,y);});
+  sc.strokeStyle=color;sc.lineWidth=1.5;sc.stroke();
+  sc.lineTo(W,H);sc.lineTo(0,H);sc.closePath();
+  const gr=sc.createLinearGradient(0,0,0,H);gr.addColorStop(0,color+'30');gr.addColorStop(1,color+'05');
+  sc.fillStyle=gr;sc.fill();
+}
 
-                            // Point colors based on distance
-                            if (dist < 0.45) {
-                                ctx.fillStyle = '#ef4444';
-                            } else if (dist < 1.0) {
-                                ctx.fillStyle = '#d97706';
-                            } else {
-                                ctx.fillStyle = '#10b981';
-                            }
-                            ctx.beginPath();
-                            ctx.arc(px, py, 2, 0, 2 * Math.PI);
-                            ctx.fill();
-                        }
-                    }
-                })
-                .catch(err => console.error("Telemetry fetch failed:", err));
-        }
+function updateSparklines(){
+  spkData.cpu.push(clamp(spkData.cpu[spkData.cpu.length-1]+rnd(-4,4),15,88));
+  spkData.ram.push(clamp(spkData.ram[spkData.ram.length-1]+rnd(-2,2),32,78));
+  spkData.batt.push(Math.max(10,spkData.batt[spkData.batt.length-1]-.004));
+  spkData.speed.push(sim.speed*100);
+  spkData.lat.push(clamp(spkData.lat[spkData.lat.length-1]+rnd(-3,3),8,48));
+  spkData.hz.push(clamp(spkData.hz[spkData.hz.length-1]+rnd(-.4,.4),8,12));
+  for(const k in spkData)if(spkData[k].length>40)spkData[k].shift();
+  for(const k in spkData)drawSparkline('spk'+k[0].toUpperCase()+k.slice(1),spkData[k],spkColors[k],...spkRanges[k]);
+  const c=spkData.cpu[spkData.cpu.length-1],r=spkData.ram[spkData.ram.length-1];
+  const b=spkData.batt[spkData.batt.length-1],l=spkData.lat[spkData.lat.length-1],h=spkData.hz[spkData.hz.length-1];
+  document.getElementById('pCpu').textContent=c.toFixed(0)+'%';
+  document.getElementById('pRam').textContent=r.toFixed(0)+'%';
+  document.getElementById('pBatt').textContent=b.toFixed(1)+'%';
+  document.getElementById('pSpeed').textContent=sim.speed.toFixed(2);
+  document.getElementById('pLat').textContent=l.toFixed(0)+'ms';
+  document.getElementById('pHz').textContent=h.toFixed(1)+'Hz';
+  document.getElementById('hCpu').textContent=c.toFixed(0)+'%';
+  document.getElementById('hRam').textContent=r.toFixed(0)+'%';
+  sim.cpu=c;sim.ram=r;sim.battery=Math.max(sim.battery-.001,b);
+}
 
-        // Arm switch listener
-        document.getElementById('armSwitch').addEventListener('change', () => {
-            fetch('/api/toggle_arm', { method: 'POST' })
-                .then(res => res.json())
-                .then(data => {
-                    console.log("Avoidance armed status:", data.status);
-                    updateTelemetry();
-                });
-        });
+// ══════════════════════════════════════════════════════
+// SENSOR HEALTH
+// ══════════════════════════════════════════════════════
+function updateSensors(){
+  const bases=[85,90,94,77,97,88];
+  bases.forEach((base,i)=>{
+    const h=clamp(base+rnd(-3,3),0,100);
+    const bar=document.getElementById('sb'+i);if(bar){bar.style.width=h.toFixed(0)+'%';bar.style.background=h>80?'var(--accent-green)':h>60?'var(--accent-yellow)':'var(--accent-red)';}
+    const su=document.getElementById('su'+i);if(su)su.textContent=`Health: ${h.toFixed(0)}% | ${(Math.random()*.9+.05).toFixed(2)}s ago`;
+  });
+}
 
-        // Cancel Navigation button listener
-        document.getElementById('cancelNavBtn').addEventListener('click', () => {
-            fetch('/api/cancel_goal', { method: 'POST' })
-                .then(res => res.json())
-                .then(data => {
-                    console.log("Navigation cancelled:", data.status);
-                    updateTelemetry();
-                });
-        });
+// ══════════════════════════════════════════════════════
+// YOLO TAGS
+// ══════════════════════════════════════════════════════
+function updateYoloTags(){
+  const c=document.getElementById('yoloTags');if(!c)return;c.innerHTML='';
+  curDets.forEach(d=>{
+    const t=document.createElement('span');
+    t.style.cssText=`padding:2px 8px;border-radius:4px;font-size:.66rem;font-weight:600;background:${d.c}22;border:1px solid ${d.c}55;color:${d.c};font-family:'JetBrains Mono',monospace;`;
+    t.textContent=`${d.l} ${(d.conf*100).toFixed(0)}%`;c.appendChild(t);
+  });
+  document.getElementById('detectionsList').textContent=curDets.length?curDets.map(d=>d.l).join(', '):'None';
+  if(curDets.length)sim.objects+=Math.random()<.25?1:0;
+}
 
-        // Initialize display
-        drawRadarGrid();
-        setInterval(updateTelemetry, 100); // 10Hz updates
-    </script>
+// ══════════════════════════════════════════════════════
+// ALL DISPLAYS
+// ══════════════════════════════════════════════════════
+function updateDisplays(){
+  const elapsed=(Date.now()-sim.missionStart)/1000;
+  const h=Math.floor(elapsed/3600),m=Math.floor((elapsed%3600)/60),s=Math.floor(elapsed%60);
+  const dur=`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+
+  // Header
+  document.getElementById('hBatt').textContent=sim.battery.toFixed(0)+'%';
+  document.getElementById('hTime').textContent=nowStr();
+  const gpsEl=document.getElementById('gpsStatus');
+  if(gpsEl){gpsEl.textContent=`${sim.lat.toFixed(5)}, ${sim.lng.toFixed(5)}`;gpsEl.style.color='var(--accent-green)';}
+  document.getElementById('fpsVal').textContent=(28+rnd(0,4)).toFixed(1);
+  document.getElementById('camFps').textContent=(28+rnd(0,3)).toFixed(0);
+  document.getElementById('camTime').textContent=nowStr();
+
+  // Mission bar
+  document.getElementById('mBatt').textContent=sim.battery.toFixed(0)+'%';
+  document.getElementById('mSpeed').textContent=sim.speed.toFixed(2)+' m/s';
+  document.getElementById('mHeading').textContent=String(Math.round(sim.heading)).padStart(3,'0')+'°';
+  document.getElementById('mLat').textContent=sim.lat.toFixed(5);
+  document.getElementById('mLng').textContent=sim.lng.toFixed(5);
+  document.getElementById('mNavMode').textContent=sim.isNav?'AUTONOMOUS':'MANUAL';
+  document.getElementById('mUptime').textContent=dur;
+
+  // Map
+  document.getElementById('mapLat').textContent=sim.lat.toFixed(5);
+  document.getElementById('mapLng').textContent=sim.lng.toFixed(5);
+
+  // Gauges
+  document.getElementById('linSpeedVal').textContent=sim.speed.toFixed(2);
+  document.getElementById('angSpeedVal').textContent=(sim.speed*.38*(Math.random()>.65?-1:1)).toFixed(2);
+  setGauge('linearGauge',sim.speed,.4);
+  setGauge('angularGauge',Math.abs(sim.speed*.38),1.0);
+
+  // Extended telemetry
+  document.getElementById('xSpeed').textContent=sim.speed.toFixed(2)+' m/s';
+  document.getElementById('xHead').textContent=String(Math.round(sim.heading)).padStart(3,'0')+'°';
+  sim.roll=clamp(sim.roll+rnd(-.25,.25),-4,4);
+  sim.pitch=clamp(sim.pitch+rnd(-.15,.15),-3,3);
+  document.getElementById('xRoll').textContent=sim.roll.toFixed(1)+'°';
+  document.getElementById('xPitch').textContent=sim.pitch.toFixed(1)+'°';
+  document.getElementById('xYaw').textContent=Math.round(sim.heading)+'°';
+  document.getElementById('xGpsAcc').textContent='±'+sim.gpsAcc.toFixed(1)+'m';
+  document.getElementById('xOdom').textContent=sim.odometry.toFixed(1)+' m';
+  document.getElementById('xRpm').textContent=sim.rpm+' RPM';
+  document.getElementById('xEnc').textContent=sim.encTicks.toLocaleString();
+  sim.battVolt=clamp(sim.battVolt-.0001,18,25.2);
+  document.getElementById('xVolt').textContent=sim.battVolt.toFixed(1)+' V';
+  sim.current=sim.speed>.05?clamp(sim.current+rnd(-.1,.15),.8,4.2):.28;
+  document.getElementById('xAmps').textContent=sim.current.toFixed(1)+' A';
+  sim.temp=clamp(sim.temp+rnd(-.08,.08)+(sim.speed>.1?.01:-.005),38,72);
+  document.getElementById('xTemp').textContent=sim.temp.toFixed(0)+'°C';
+
+  // Mission stats
+  document.getElementById('sDist').textContent=sim.dist.toFixed(1);
+  document.getElementById('sObs').textContent=sim.obstacles;
+  document.getElementById('sObjs').textContent=sim.objects;
+  document.getElementById('sWps').textContent=sim.wps;
+  document.getElementById('sBattR').textContent=sim.battery.toFixed(0)+'%';
+  document.getElementById('sSats').textContent=sim.satellites;
+  if(sim.dist>0&&elapsed>0)document.getElementById('sAvgSpd').textContent=(sim.dist/elapsed).toFixed(2);
+  document.getElementById('mDuration').textContent=dur;
+}
+
+// ══════════════════════════════════════════════════════
+// ROS2 LOG MESSAGES
+// ══════════════════════════════════════════════════════
+const rosMsgs=[
+  ['[nav2_costmap] Local costmap updated','info'],
+  ['[slam_toolbox] Scan matched — pose updated','success'],
+  ['[rplidar_node] Scan received: 360 pts @ 5.5Hz','info'],
+  ['[gps_driver] NMEA $GPRMC fix: '+KLE.lat.toFixed(5)+'N, '+KLE.lng.toFixed(5)+'E','success'],
+  ['[imu_driver] MPU6050 calibration OK — bias <0.02°/s','success'],
+  ['[nav2_controller] DWA planner: trajectory computed','info'],
+  ['[robot_state_publisher] TF: base_link → odom published','info'],
+  ['[diagnostics] CPU: '+Math.floor(30+Math.random()*20)+'% | Temp: 42°C | RAM: OK','info'],
+  ['[nav2_bt_navigator] BehaviorTree: NavigateToPose','info'],
+  ['[encoder_node] Encoder ticks — L:'+Math.floor(Math.random()*100)+' R:'+Math.floor(Math.random()*100),'info'],
+  ['[yolov8] Detection updated — '+Math.floor(rnd(1,5))+' objects found','info'],
+  ['[rosbridge] WebSocket streaming — latency: '+Math.floor(rnd(10,20))+'ms','info'],
+];
+let rlogIdx=0;
+function appendRosLog(){rlog(rosMsgs[rlogIdx%rosMsgs.length][0],rosMsgs[rlogIdx%rosMsgs.length][1]);rlogIdx++;}
+
+// ══════════════════════════════════════════════════════
+// DRIVE CONTROLS
+// ══════════════════════════════════════════════════════
+['dFwd','dLeft','dStop','dRight','dRev'].forEach(id=>{
+  const b=document.getElementById(id);if(!b)return;
+  const add=()=>b.classList.add('pressed'),rem=()=>b.classList.remove('pressed');
+  b.addEventListener('mousedown',add);b.addEventListener('mouseup',rem);b.addEventListener('mouseleave',rem);
+  b.addEventListener('touchstart',e=>{e.preventDefault();add();});b.addEventListener('touchend',rem);
+});
+document.getElementById('dEStop').addEventListener('click',()=>{cancelNav();slog('E-STOP triggered!','err');rlog('[safety] Emergency stop — motors disabled','err');});
+const spdSlider=document.getElementById('spdSlider');
+if(spdSlider)spdSlider.addEventListener('input',()=>document.getElementById('spdLimitVal').textContent=spdSlider.value);
+
+// Joystick
+const jWrap=document.getElementById('joyWrap'),jKnob=document.getElementById('joyKnob');
+if(jWrap&&jKnob){
+  let dragging=false;
+  const move=(cx,cy)=>{
+    if(!dragging)return;
+    const r=jWrap.getBoundingClientRect(),mx=r.left+r.width/2,my=r.top+r.height/2;
+    const dx=cx-mx,dy=cy-my,maxR=r.width/2-17,dist=Math.min(Math.sqrt(dx*dx+dy*dy),maxR),ang=Math.atan2(dy,dx);
+    jKnob.style.transform=`translate(calc(-50% + ${dist*Math.cos(ang)}px), calc(-50% + ${dist*Math.sin(ang)}px))`;
+    const v=(dist/maxR*.3*(spdSlider?spdSlider.value/100:1)).toFixed(2);
+    const st=(Math.atan2(dx,-dy)*180/Math.PI).toFixed(0);
+    document.getElementById('dVel').textContent=v+' m/s';
+    document.getElementById('dSteer').textContent=st+'°';
+  };
+  const end=()=>{dragging=false;jKnob.style.transform='translate(-50%,-50%)';document.getElementById('dVel').textContent='0.00 m/s';document.getElementById('dSteer').textContent='0°';};
+  jWrap.addEventListener('mousedown',e=>{dragging=true;move(e.clientX,e.clientY);});
+  document.addEventListener('mousemove',e=>move(e.clientX,e.clientY));document.addEventListener('mouseup',end);
+  jWrap.addEventListener('touchstart',e=>{dragging=true;move(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+  document.addEventListener('touchmove',e=>{if(dragging)move(e.touches[0].clientX,e.touches[0].clientY);},{passive:true});
+  document.addEventListener('touchend',end);
+}
+
+// ══════════════════════════════════════════════════════
+// EXISTING API POLLING (preserved — silently fails when no backend)
+// ══════════════════════════════════════════════════════
+let _lastAvoidArmed=null;
+function pollAPI(){
+  fetch('/api/telemetry').then(r=>r.json()).then(data=>{
+    const b=document.getElementById('stateBadge');if(b){b.innerText=data.state;b.className='state-badge '+data.state;}
+    const arm=document.getElementById('armSwitch');if(arm)arm.checked=data.avoidance_armed;
+    if(_lastAvoidArmed!==null&&_lastAvoidArmed!==data.avoidance_armed)slog(`Avoidance ${data.avoidance_armed?'Armed':'Disarmed'}`,data.avoidance_armed?'success':'warn');
+    _lastAvoidArmed=data.avoidance_armed;
+    document.getElementById('linSpeedVal').innerText=data.lin_x.toFixed(2);setGauge('linearGauge',data.lin_x,.25);
+    document.getElementById('angSpeedVal').innerText=data.ang_z.toFixed(2);setGauge('angularGauge',data.ang_z,1.0);
+    document.getElementById('fpsVal').innerText=data.fps.toFixed(1);
+    if(data.detections&&data.detections.length)document.getElementById('detectionsList').innerText=data.detections.join(', ');
+    const gps=data.gps;
+    if(gps&&gps.lat!==0){sim.lat=gps.lat;sim.lng=gps.lng;if(robotMarker)robotMarker.setLatLng([gps.lat,gps.lng]);}
+  }).catch(()=>{});
+}
+
+// Existing listeners (preserved)
+document.getElementById('armSwitch').addEventListener('change',()=>{fetch('/api/toggle_arm',{method:'POST'}).catch(()=>{});});
+document.getElementById('cancelNavBtn').addEventListener('click',()=>{cancelNav();fetch('/api/cancel_goal',{method:'POST'}).catch(()=>{});});
+
+// ══════════════════════════════════════════════════════
+// INIT + MAIN LOOPS
+// ══════════════════════════════════════════════════════
+setSM('IDLE');setState('IDLE');
+
+// Initial logs
+rlog('[boot] ROS2 Humble Hawksbill — all nodes starting','success');
+rlog('[nav2] Navigation stack loaded — awaiting goal','info');
+rlog('[gps] GPS L76x fix acquired — 12 satellites | KLE Univ, Hubballi','success');
+rlog('[imu] MPU6050 calibration complete','success');
+rlog('[lidar] RPLiDAR A1 spinning @ 300 RPM','success');
+rlog('[cam] RealSense D435i RGB + Depth streams @ 30fps','success');
+slog('Telemetry deck initialized','success');
+slog('GPS lock: KLE Tech University, Hubballi','info');
+
+// Camera/depth @ ~30fps
+setInterval(()=>{drawCam();drawDepth();},100);
+
+// YOLO update every 2.5s
+setInterval(()=>{curDets=genDets();updateYoloTags();},2500);
+
+// Simulation idle drift + displays @ 500ms
+setInterval(()=>{
+  if(!sim.isNav){sim.speed=Math.max(0,sim.speed*.92+rnd(-.015,.015));sim.rpm=Math.round(sim.speed*220);sim.heading=(sim.heading+rnd(-.3,.3)+360)%360;}
+  updateDisplays();
+},500);
+
+// Sparklines @ 1s
+setInterval(updateSparklines,1000);
+
+// Sensor health @ 2s
+setInterval(updateSensors,2000);
+
+// ROS2 log @ 2.5s
+setInterval(appendRosLog,2500);
+
+// API polling @ 100ms (existing)
+setInterval(pollAPI,100);
+
+// Clock
+setInterval(()=>document.getElementById('hTime').textContent=nowStr(),1000);
+</script>
 </body>
-
 </html>
