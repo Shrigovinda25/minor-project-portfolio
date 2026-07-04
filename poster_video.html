@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Architecture Design - UGV Portfolio</title>
+    <title>Poster & Video - UGV Portfolio</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         :root {
@@ -94,17 +94,64 @@
         .tab-panel.active { display: block; animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .section-card { background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 28px; padding: 40px; box-shadow: var(--shadow-soft); text-align: center; transition: box-shadow 0.3s ease; }
+        .section-card { background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 28px; padding: 45px; box-shadow: var(--shadow-soft); text-align: center; transition: box-shadow 0.3s ease; }
         .section-card:hover { box-shadow: var(--shadow-vibrant); }
         .section-title { font-size: 2rem; font-weight: 800; color: var(--accent-1); margin-bottom: 30px; }
-        .section-card img { max-width: 100%; height: auto; border-radius: 15px; border: 2px solid var(--border-glass); box-shadow: var(--shadow-soft); transition: transform 0.3s ease; }
-        .section-card img:hover { transform: scale(1.02); }
+        
+        /* PDF and Video Embed Container */
+        .media-container {
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid var(--border-glass);
+            box-shadow: var(--shadow-soft);
+            background: #fff;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .video-container {
+            background: #000;
+            max-width: 1000px;
+            margin: 0 auto;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid var(--border-glass);
+            box-shadow: var(--shadow-soft);
+        }
+
+        video {
+            display: block;
+            width: 100%;
+            max-height: 600px;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 36px;
+            background: var(--gradient-vibrant);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(107, 91, 149, 0.3);
+            transition: all 0.3s ease;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(184, 134, 11, 0.4);
+            color: #fff;
+        }
 
         @media (max-width: 900px) {
             .nav-bar {
-                width: 90%;
-                padding: 10px 15px;
-                gap: 15px;
+                width: 95%;
+                padding: 10px 12px;
+                gap: 10px;
                 border-radius: 25px;
                 flex-wrap: wrap;
                 justify-content: center;
@@ -131,32 +178,55 @@
     <a href="title.html" class="nav-link">Title</a>
     <a href="problem_identification.html" class="nav-link">Problem Identification</a>
     <a href="engineering_design.html" class="nav-link">Engineering Design</a>
-    <a href="system_architecture.html" class="nav-link active">System Architecture</a>
+    <a href="system_architecture.html" class="nav-link">System Architecture</a>
     <a href="detailed_design.html" class="nav-link">Detailed Design</a>
-    <a href="poster_video.html" class="nav-link">Poster & Video</a>
+    <a href="poster_video.html" class="nav-link active">Poster & Video</a>
 </nav>
 
 <header>
-    <h1>System Architecture Design</h1>
+    <h1>Project Poster & Video</h1>
 </header>
 
 <div class="container">
     <div class="tab-nav">
-        <button class="tab-btn active" onclick="showTab('logical', this)">Logical Architecture</button>
-        <button class="tab-btn" onclick="showTab('physical', this)">Physical Architecture</button>
+        <button class="tab-btn active" onclick="showTab('poster', this)">Project Poster</button>
+        <button class="tab-btn" onclick="showTab('video', this)">Project Video</button>
     </div>
 
-    <div id="logical" class="tab-panel active">
+    <!-- Poster Tab Panel -->
+    <div id="poster" class="tab-panel active">
         <div class="section-card">
-            <h2 class="section-title">Logical Architecture</h2>
-            <img src="Logical Architecture.jpeg" alt="Logical Architecture diagram showing software modules and flow">
+            <h2 class="section-title">Team 13 Project Poster</h2>
+            <div class="media-container">
+                <object data="Team 13 Poster.pdf" type="application/pdf" width="100%" height="800px">
+                    <iframe src="Team 13 Poster.pdf" width="100%" height="800px" style="border: none;">
+                        <p>Your browser does not support inline PDF viewing. You can download the PDF file below.</p>
+                    </iframe>
+                </object>
+            </div>
+            <div style="margin-top: 30px;">
+                <a href="Team 13 Poster.pdf" download class="action-btn">
+                    <span>📥 Download Poster PDF</span>
+                </a>
+            </div>
         </div>
     </div>
 
-    <div id="physical" class="tab-panel">
+    <!-- Video Tab Panel -->
+    <div id="video" class="tab-panel">
         <div class="section-card">
-            <h2 class="section-title">Physical Architecture</h2>
-            <img src="Physical Architecture.jpeg" alt="Physical Architecture diagram showing hardware connections">
+            <h2 class="section-title">Project Video Demonstration</h2>
+            <div class="video-container">
+                <video controls preload="metadata">
+                    <source src="Team 13 video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            <div style="margin-top: 30px;">
+                <a href="Team 13 video.mp4" download class="action-btn">
+                    <span>📥 Download Project Video</span>
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -167,6 +237,12 @@ function showTab(name, btn) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(name).classList.add('active');
     btn.classList.add('active');
+    
+    // Pause video when switching away from video tab
+    if (name !== 'video') {
+        const video = document.querySelector('video');
+        if (video) video.pause();
+    }
 }
 </script>
 

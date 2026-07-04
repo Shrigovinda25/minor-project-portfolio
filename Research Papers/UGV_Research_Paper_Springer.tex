@@ -1,14 +1,13 @@
 % ============================================================
-%  IEEE Conference Paper – Proper IEEE Format
+%  Springer LNCS Format Paper
 %  Title: Development and Performance Validation of an Outdoor
 %         Autonomous Navigation Framework for Unmanned Ground Vehicles
 %  Authors: Team 13, KLE Technological University
 % ============================================================
 
-\documentclass[conference]{IEEEtran}
+\documentclass[runningheads]{llncs}
 
 % ===== PACKAGES =====
-\usepackage{cite}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
@@ -38,15 +37,22 @@
 
 % ===== TITLE =====
 \title{Development and Performance Validation of an Outdoor Autonomous Navigation Framework for Unmanned Ground Vehicles}
+\titlerunning{Outdoor Autonomous Navigation Framework for UGVs}
 
 % ===== AUTHORS =====
-\author{
-    \IEEEauthorblockN{Shrigovinda T. Kulkarni$^1$, Tanmay Hiremath$^2$, Nisar Ahmed$^3$, Bhoomika Hotagi$^4$, Rakesh P Tapaskar$^5$,\\Shreyansh Hajare$^6$,Manikant Binkadakatti$^7$}
-    
-    \IEEEauthorblockA{Department of Automation and Robotics Engineering ,CARR LAB, KLE Technological University\\
-    Hubballi 580031, Karnataka, India\\
-    Email: \{shrigovindak, tanmayhiremath, p.nisar6154, bhoomikahotagi061\}@gmail.com, rptapaskar@kletech.ac.in,\\shreyanshhajare@gmail.com,manikantbinkadakatti@gmail.com}
-}
+\author{Shrigovinda T. Kulkarni\inst{1} \and
+Tanmay Hiremath\inst{1} \and
+Nisar Ahmed\inst{1} \and
+Bhoomika Hotagi\inst{1} \and
+Rakesh P Tapaskar\inst{1} \and
+Shreyansh Hajare\inst{1} \and
+Manikant Binkadakatti\inst{1}}
+
+\authorrunning{S.T. Kulkarni et al.}
+
+\institute{Department of Automation and Robotics Engineering, CARR LAB, KLE Technological University,
+Hubballi 580031, Karnataka, India\\
+\email{\{shrigovindak, tanmayhiremath, p.nisar6154, bhoomikahotagi061\}@gmail.com, rptapaskar@kletech.ac.in, shreyanshhajare@gmail.com, manikantbinkadakatti@gmail.com}}
 
 \maketitle
 
@@ -59,12 +65,9 @@ This paper is about the design and development of an Unmanned Ground Vehicle or 
 The system we made has four parts: sensing, perception, planning and control. We tested the UGV on outdoor surfaces, like grass and gravel. The results showed that the UGV can navigate on its own between set points detect obstacles and work stably. The UGV can move at speeds from 0.5 meters per second to 1.5 meters per second. Can work for over 30 minutes on one charge.
 
 The Unmanned Ground Vehicle we developed is a cost scalable solution for outdoor autonomous navigation and surveillance tasks. In the future we plan to make the UGV even better, by adding Simultaneous Localization and Mapping techniques and reinforcement learning-based path planning to improve how it navigates and adapts to environments. The Unmanned Ground Vehicle will be able to navigate better and work well in many different situations.
-\end{abstract}
 
-% ===== KEYWORDS =====
-\begin{IEEEkeywords}
-Autonomous Navigation, BLDC Hub Motor, GPS--IMU Sensor Fusion, LiDAR, Obstacle Avoidance, Path Planning, Raspberry Pi, Remote Monitoring, Unmanned Ground Vehicle
-\end{IEEEkeywords}
+\keywords{Autonomous Navigation \and BLDC Hub Motor \and GPS--IMU Sensor Fusion \and LiDAR \and Obstacle Avoidance \and Path Planning \and Raspberry Pi \and Remote Monitoring \and Unmanned Ground Vehicle}
+\end{abstract}
 
 % ================================================================
 %                      I. INTRODUCTION
@@ -127,7 +130,7 @@ The UGV design is created to provide a low-cost, strong, and modular system plat
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\columnwidth]{Block Diagram.png}
+\includegraphics[width=0.7\columnwidth]{Block Diagram.png}
 \caption{Block diagram of the proposed UGV system architecture showing sensor, processing, actuation, and communication subsystems.}
 \label{fig:block_diagram}
 \end{figure}
@@ -152,22 +155,22 @@ The architecture of UGV hardware platform consists of a combination of mechanica
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\columnwidth]{UGV Framework.png}
+\includegraphics[width=0.7\columnwidth]{UGV Framework.png}
 \caption{System framework design of the proposed UGV autonomous navigation platform.}
 \label{fig:system_arch}
 \end{figure}
 
-\subsubsection{Mechanical Subsystem}
+\subsubsection{Mechanical Subsystem.}
 
 The chassis is made from steel. It is 400 mm x 600 mm x 20 mm in size. This gives the chassis strength for use on terrain. The acrylic sheet is 400 mm x 600 mm x 5 mm, in size. It is used to hold the electronics in place. The assembly uses M12 x 50 mm fasteners to keep the components in place. The M12 x 50 mm fasteners are used for mounting the components to the chassis and the acrylic sheet.
 
  
 
-\subsubsection{Drive System}
+\subsubsection{Drive System.}
 
 The locomotion  assembly unit has 4 BLDC hub motors of 350\,W capacity for all-wheel drive. Each motor operates using an independent RKI~9206 motor controller that works within 31--36\,V power input range, able to supply up to 16\,A per motor during maximum load. The two wheel differential drive design (rear wheels active and front wheels passive) was chosen due to its simplicity.
 
-\subsubsection{Power Subsystem}
+\subsubsection{Power Subsystem.}
 
 A TATTU 30000\textbackslash{},mAh Li-ion battery is the power source. It provides 24\textbackslash{},V voltage.
 
@@ -182,11 +185,11 @@ Buck Converter: This is a DC-DC 5\textbackslash{},V 5\textbackslash{},A regulato
  
 
 
-\subsubsection{Sensor Suite}
+\subsubsection{Sensor Suite.}
 
 The multi-sensor perception system is made up of these things:
 
-1. RP LiDAR: This is a 360 degree 2D laser scanner. The "RP LiDAR" can detect things that're between 0.2 and 10 meters away. We use the "RP LiDAR" for finding obstacles and making a map of the environment.
+1. RP LiDAR: This is a 360 degree 2D laser scanner. The ``RP LiDAR'' can detect things that're between 0.2 and 10 meters away. We use the ``RP LiDAR'' for finding obstacles and making a map of the environment.
 
 2. GPS L76X: The  GPS L76X  is a GPS module. It tells us where we are on the earth. The GPS L76X is usually right within 2 meters.
 
@@ -196,7 +199,7 @@ The multi-sensor perception system is made up of these things:
 
  
 
-\subsubsection{Computing and Communication}
+\subsubsection{Computing and Communication.}
 
 The Raspberry Pi~5 (16\,GB RAM) is used for central computation purposes, including the navigation algorithm, sensor drivers, and telemetry server. The wireless connection is achieved using Wi-Fi that ensures the telemetry transfer in real-time with a delay of less than 5 seconds.
 
@@ -205,7 +208,7 @@ The Raspberry Pi~5 (16\,GB RAM) is used for central computation purposes, includ
 The design of the software architecture is based on a modular four-layer pipeline which uses the Robot Operating System 2 (ROS2) Humble Hawksbill framework on the Raspberry Pi~5 platform. The software architecture design features an extensible nature, clear separation of the nodes, and real-time performance with a control loop frequency of 10\,Hz.
 
 Modularity is achieved through compiling sensors drivers, perception, and planning models into different ROS2 nodes.Data transfer between these nodes relies on standard ROS2 publisher-subscriber communication channels. The primary ROS2 topics utilized in the system are:
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{0.2ex}\parskip0pt\parsep0pt
     \item \texttt{/scan} (\textit{sensor\_msgs/msg/LaserScan}): Range and angle data published by the RPLidar driver node at 10\,Hz.
     \item \texttt{/gps/fix} (\textit{sensor\_msgs/msg/NavSatFix}): Raw geolocation parameters (latitude, longitude, altitude) published by the GPS driver node at 1\,Hz.
     \item \texttt{/imu/data\_raw} (\textit{sensor\_msgs/msg/Imu}): Raw accelerometer and gyroscope measurements published by the IMU driver node at 50\,Hz.
@@ -217,16 +220,16 @@ Modularity is achieved through compiling sensors drivers, perception, and planni
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.85\columnwidth]{Flowchart.png}
+\includegraphics[width=0.42\columnwidth]{Flowchart.png}
 \caption{Operational flowchart and navigation decision pipeline of the UGV system.}
 \label{fig:flowchart}
 \end{figure}
 
-\subsubsection{Sensing Layer}
+\subsubsection{Sensing Layer.}
 
 The sensing layer interfaces with all hardware sensors through dedicated driver modules:
 
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{0.2ex}\parskip0pt\parsep0pt
     \item \textbf{RPLidar Driver}: Communicates with the RP~LiDAR via USB serial (\texttt{/dev/ttyUSB0}), collecting 360\textdegree\ scan data at 2\textdegree\ angular resolution, yielding 180 range measurements per scan.
     \item \textbf{GPS Driver}: Parses NMEA sentences (\texttt{\$GPRMC}, \texttt{\$GPGGA}) from the GPS module via serial interface at 9600~baud rate.
     \item \textbf{IMU Driver}: Reads orientation quaternions and acceleration vectors at 50\,Hz via I\textsuperscript{2}C interface.
@@ -235,28 +238,28 @@ The sensing layer interfaces with all hardware sensors through dedicated driver 
 
 All sensor modules implement graceful fallback to simulation mode when hardware is unavailable, enabling software development and testing without physical sensors.
 
-\subsubsection{Perception Layer}
+\subsubsection{Perception Layer.}
 
 The perception layer processes raw sensor data to extract meaningful environmental information. The minimum distance to obstacles is calculated within a 40-degree field of view centered on the front sector of the LiDAR, and an obstacle is flagged as ``NEAR'' when this distance falls below a threshold of 1.0\,m. LiDAR-based obstacle detection employs ray-circle intersection testing to calculate the distance and collision parameters between the robot and detected obstacles, facilitating dynamic hazard assessment.
 
-\subsubsection{Planning Layer}
+\subsubsection{Planning Layer.}
 
 The planning layer implements waypoint-based goal navigation with reactive obstacle avoidance, drawing insights from modern off-road path planners~\cite{jiang2024risk, mukherjee2025terrain}. Given a goal position and the current robot position, the target heading is computed using the arctangent of the relative coordinate offsets. Smooth heading control is achieved by calculating and clamping the angular correction to prevent rapid steering oscillations. Goal arrival is detected when the Euclidean distance to the target is less than 0.2\,m.
 
-\subsubsection{Control Layer}
+\subsubsection{Control Layer.}
 
 The control layer translates planned motion commands into motor driver signals. The system supports two control modes:
 
-\begin{enumerate}
+\begin{enumerate}\setlength{\itemsep}{0.2ex}\parskip0pt\parsep0pt
     \item \textbf{Autonomous Mode}: The planning layer generates linear velocity and angular corrections, which are mapped to differential wheel speeds for the BLDC hub motors through the RKI~9206 drivers.
     \item \textbf{Teleoperation Mode}: The operator sends drive commands (linear, angular) from the ground control station via WebSocket, directly controlling motor speeds.
 \end{enumerate}
 
-\subsubsection{Telemetry and Communication}
+\subsubsection{Telemetry and Communication.}
 
 A WebSocket server implements the real-time telemetry system, broadcasting sensor data and camera feeds at 10\,Hz to connected ground control clients. In accordance with robust telemetry protocols established for remote outdoor networks~\cite{fisher2025developing, memet2025adaptive},Telemetry includes:
 
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{0.2ex}\parskip0pt\parsep0pt
     \item Robot coordinates $(x, y)$ and heading $\psi$
     \item GPS coordinates ( latitude, longitude, satellites count)
     \item LiDAR range data (180 points)
@@ -306,7 +309,7 @@ BLDC Motor Drivers & Output Voltage Regulation & 31--36\,V & $\pm$5.0\% toleranc
 \subsection{Terrain Adaptability}
 
 In order to test the performance of the UGV, extensive experiments have been conducted in different outdoor environments. These experiments were carried out using the following major types of terrains:
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{0.2ex}\parskip0pt\parsep0pt
     \item \textbf{Flat ground and paved terrains}: This is the base terrain. Experiments conducted on flat ground and paved terrains such as concrete floor and tiled pathways revealed stable locomotion. Heading control was performed with no wheel slip, thus reaching the target speed of 0.5--1.5\,m/s. For flat ground terrains, the cross track error for waypoint tracking was less than $\pm$0.5\,m.
 \item \textbf{Grass and Gravel} : Tested to test off-road durability. The robot kept navigation steady with slight reduction in speed (0.8 m/s) due to greater rolling friction and slip of gravel, which is successfully controlled by the sensor fusion feedback system.
     \item \textbf{Sloping surface} : Tested for slopes up to 15\textdegree. The robot had sufficient traction and torque distribution without motor overheating and reverse drifting.
@@ -317,7 +320,7 @@ The BLDC hub motors (4 $\times$ 350\,W) provided sufficient torque for all teste
 \subsection{Communication and Telemetry}
 
 The WebSocket-based telemetry system achieved real-time data streaming with latency below 5 seconds between the UGV and ground control station over Wi-Fi. The system supported simultaneous streaming of:
-\begin{itemize}
+\begin{itemize}\setlength{\itemsep}{0.2ex}\parskip0pt\parsep0pt
     \item Telemetry data at 10\,Hz update rate
     \item RGB camera feed at 720p, 15\,FPS
     \item Depth camera visualization

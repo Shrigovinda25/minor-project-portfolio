@@ -1,0 +1,14 @@
+# Exclude LaTeX documents from git tracking
+Research Papers/UGV_Research_Paper.tex
+Research Papers/UGV_Review_Paper.tex
+Research Papers/refernce.tex
+
+# Node modules
+**/node_modules/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS generated files
+.DS_Store

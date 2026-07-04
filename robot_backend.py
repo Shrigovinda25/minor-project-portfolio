@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 UGV Telemetry & Control Server for Raspberry Pi 5
-Bridges hardware interfaces (RPLidar A1, RealSense D400, GPS Module) with the hosted Vercel/Netlify Dashboard.
+Bridges hardware interfaces (RPLidar A1, RealSense D400, GPS L76x Module) with the hosted Vercel/Netlify Dashboard.
 
 Author: Team 13 - Autonomous Vehicle Systems
 Requirements:
@@ -64,7 +64,7 @@ ugv_state = {
 # Config settings
 PORT = 8765
 LIDAR_PORT = '/dev/ttyUSB0'  # Typical RPLidar port on Raspberry Pi
-GPS_PORT = '/dev/ttyUSB1'    # Typical USB GPS module port on Raspberry Pi
+GPS_PORT = '/dev/ttyUSB1'    # Typical USB port for GPS L76x module on Raspberry Pi
 DEPTH_THRESHOLD_M = 1.0     # Obstacle distance limit for NEAR alert
 
 class UGVControllerServer:
