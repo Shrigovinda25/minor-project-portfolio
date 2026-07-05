@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardware Prototyping - UGV Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        :root {
+            --bg-page: #9F90CE;
+            --bg-card: rgba(245, 245, 220, 0.9);
+            --accent-1: #6B5B95;
+            --accent-2: #B8860B;
+            --text-main: #2D2241;
+            --text-muted: #5A4E6E;
+            --border-glass: rgba(107, 91, 149, 0.2);
+            --shadow-soft: 0 10px 40px rgba(107, 91, 149, 0.15);
+            --shadow-vibrant: 0 20px 60px rgba(159, 144, 206, 0.35);
+            --gradient-vibrant: linear-gradient(135deg, #6B5B95 0%, #B8860B 100%);
+        }
+        * { box-sizing:border-box; margin:0; padding:0; }
+        body {font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg-page);color:var(--text-main);min-height:100vh;overflow-x:hidden;}
+        body::before, body::after { content: ""; position: fixed; width: 800px; height: 800px; border-radius: 50%; filter: blur(150px); z-index: -1; opacity: 0.15; animation: floatBlob 20s infinite alternate ease-in-out; }
+        body::before { background: var(--accent-1); top: -200px; left: -200px; }
+        body::after { background: var(--accent-2); bottom: -200px; right: -200px; }
+        @keyframes floatBlob { 0% { transform: translateY(0px) scale(1); } 100% { transform: translateY(40px) scale(1.1); } }
+        
+        /* ===== NAVIGATION BAR ===== */
+        .nav-bar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(245, 245, 220, 0.8);
+            backdrop-filter: blur(15px);
+            padding: 18px 50px;
+            border-radius: 50px;
+            border: 1px solid var(--border-glass);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            gap: 25px;
+            transition: all 0.4s ease;
+        }
+
+        .nav-bar:hover {
+            box-shadow: var(--shadow-vibrant);
+            border-color: var(--accent-1);
+            background: rgba(245, 245, 220, 0.95);
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent-1);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent-1);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+        
+        header { padding: 140px 20px 60px; text-align: center; background: rgba(245, 245, 220, 0.92); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-glass); }
+        header h1 { font-size: clamp(2.2rem, 4vw, 3.2rem); margin: 0; background: var(--gradient-vibrant); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .container { max-width: 1300px; margin: 0 auto; padding: 60px 20px 100px; }
+        
+        .tab-nav { display: flex; gap: 16px; justify-content: center; margin-bottom: 40px; }
+        .tab-btn { padding: 12px 32px; border: 2px solid var(--accent-1); background: transparent; color: var(--accent-1); border-radius: 30px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active, .tab-btn:hover { background: var(--gradient-vibrant); color: #fff; border-color: transparent; box-shadow: 0 4px 20px rgba(107, 91, 149, 0.3); }
+        
+        .tab-panel { display: none; }
+        .tab-panel.active { display: block; animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* ===== SPRINTS TAB ===== */
+        .sprints-container { display: flex; flex-direction: column; gap: 40px; }
+        .sprint-card { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-glass); 
+            border-radius: 28px; 
+            padding: 40px; 
+            box-shadow: var(--shadow-soft); 
+            display: flex; 
+            gap: 40px; 
+            align-items: center; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .sprint-card:hover { box-shadow: var(--shadow-vibrant); transform: translateY(-3px); }
+        .sprint-card:nth-child(even) { flex-direction: row-reverse; }
+        
+        .sprint-content { flex: 1; }
+        .sprint-badge { 
+            display: inline-block; 
+            padding: 6px 14px; 
+            background: rgba(184, 134, 11, 0.12); 
+            color: var(--accent-2); 
+            border: 1px solid rgba(184, 134, 11, 0.25); 
+            border-radius: 20px; 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            margin-bottom: 12px; 
+            letter-spacing: 0.5px;
+        }
+        .sprint-title { font-size: 1.8rem; font-weight: 800; color: var(--accent-1); margin-bottom: 16px; }
+        .sprint-text { font-size: 1.1rem; line-height: 1.8; color: var(--text-muted); }
+        
+        .sprint-media { flex: 1.2; display: flex; justify-content: center; width: 100%; }
+        .sprint-media img { 
+            max-width: 100%; 
+            height: auto; 
+            border-radius: 18px; 
+            border: 2px solid var(--border-glass); 
+            box-shadow: var(--shadow-soft); 
+            transition: transform 0.3s ease; 
+        }
+        .sprint-media img:hover { transform: scale(1.02); }
+        
+        /* Sprint 2 Double Images */
+        .sprint-media.double-img { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .sprint-media.double-img img { width: 100%; height: 260px; object-fit: cover; }
+
+        /* ===== PROTOTYPE GALLERY TAB ===== */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 30px; }
+        .gallery-card { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-glass); 
+            border-radius: 28px; 
+            padding: 24px; 
+            box-shadow: var(--shadow-soft); 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            text-align: center; 
+        }
+        .gallery-card:hover { box-shadow: var(--shadow-vibrant); transform: translateY(-5px); }
+        .gallery-card img { 
+            width: 100%; 
+            height: 280px; 
+            object-fit: cover; 
+            border-radius: 18px; 
+            border: 2px solid var(--border-glass); 
+            margin-bottom: 20px; 
+        }
+        .gallery-caption { font-size: 1.2rem; font-weight: 800; color: var(--accent-1); }
+
+        /* ===== MOBILE RESPONSIVENESS ===== */
+        @media (max-width: 968px) {
+            .sprint-card, .sprint-card:nth-child(even) { flex-direction: column; padding: 30px; text-align: center; }
+            .sprint-media { margin-top: 10px; }
+            .sprint-media.double-img img { height: 200px; }
+        }
+
+        @media (max-width: 900px) {
+            .nav-bar {
+                width: 90%;
+                padding: 10px 15px;
+                gap: 15px;
+                border-radius: 25px;
+                flex-wrap: wrap;
+                justify-content: center;
+                top: 15px;
+            }
+            .nav-link { font-size: 0.75rem; }
+            header { padding: 180px 20px 40px; }
+        }
+
+        @media (max-width: 480px) {
+            .nav-bar { top: 10px; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .sprint-media.double-img { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="nav-bar">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="theme.html" class="nav-link">Theme</a>
+    <a href="title.html" class="nav-link">Title</a>
+    <a href="problem_identification.html" class="nav-link">Problem Identification</a>
+    <a href="engineering_design.html" class="nav-link">Engineering Design</a>
+    <a href="system_architecture.html" class="nav-link">System Architecture</a>
+    <a href="detailed_design.html" class="nav-link">Detailed Design</a>
+    <a href="hardware_prototyping.html" class="nav-link active">Hardware Prototyping</a>
+    <a href="poster_video.html" class="nav-link">Poster & Video</a>
+    <a href="dashboard.html" class="nav-link">Dashboard</a>
+</nav>
+
+<header>
+    <h1>Hardware Prototyping</h1>
+</header>
+
+<div class="container">
+    <div class="tab-nav">
+        <button class="tab-btn active" onclick="showTab('sprints', this)">Sprints</button>
+        <button class="tab-btn" onclick="showTab('gallery', this)">Prototype Images</button>
+    </div>
+
+    <!-- TAB 1: SPRINTS -->
+    <div id="sprints" class="tab-panel active">
+        <div class="sprints-container">
+            
+            <!-- Sprint 1 -->
+            <div class="sprint-card">
+                <div class="sprint-content">
+                    <span class="sprint-badge">Sprint 01</span>
+                    <h2 class="sprint-title">Electrical Circuit</h2>
+                    <p class="sprint-text">
+                        Sprint 01 focused on designing and assembling the core electrical subsystem. The electrical circuit is engineered to deliver stable and clean power distribution across high-power actuators and sensitive compute architectures. Power from the central onboard battery is safely routed through precise buck and boost converters to drive the DC gear motors via the BTS7960 motor driver, while supplying isolated, regulated power lines to the main processing units and spatial mapping sensors. Ground looping and signal noise are minimized through optoisolator components and strict common grounding rules.
+                    </p>
+                </div>
+                <div class="sprint-media">
+                    <img src="Imgs/Circuit Design.png" alt="Electrical Circuit Design Schematic">
+                </div>
+            </div>
+
+            <!-- Sprint 2 -->
+            <div class="sprint-card">
+                <div class="sprint-content">
+                    <span class="sprint-badge">Sprint 02</span>
+                    <h2 class="sprint-title">Autonomy Dashboard</h2>
+                    <p class="sprint-text">
+                        Sprint 02 was dedicated to the creation of the web-based autonomous navigation dashboard. The interface acts as the central control console, presenting real-time ROS2 telemetry feeds, physical motor speeds, and battery diagnostics. The dashboard incorporates Leaflet map tracking for GPS localization alongside canvas components rendering computer vision feeds (with YOLOv8 real-time target bounding boxes) and obstacle radar streams generated by the RPLiDAR mapping sweeps.
+                    </p>
+                </div>
+                <div class="sprint-media double-img">
+                    <img src="Imgs/dashboard img 1 .png" alt="Dashboard View 1 - System Status Panel">
+                    <img src="Imgs/dashboard img 2.png" alt="Dashboard View 2 - Autonomous Metrics Graph">
+                </div>
+            </div>
+
+            <!-- Sprint 3 -->
+            <div class="sprint-card">
+                <div class="sprint-content">
+                    <span class="sprint-badge">Sprint 03</span>
+                    <h2 class="sprint-title">Overall Integration</h2>
+                    <p class="sprint-text">
+                        Sprint 03 completed the physical chassis fabrication, device mounting, and full system integration. The mechanical components and structural sheets were integrated with the electrical power distribution loops and computer processing modules. Critical autonomous sensors—specifically the depth camera and RPLiDAR—were securely mounted to their geometric fixtures and calibrated to map coordinate frames between physical spatial orientations and the ROS2 navigation stack, realizing a fully operational UGV model.
+                    </p>
+                </div>
+                <div class="sprint-media">
+                    <img src="Imgs/ugv 2.jpeg" alt="UGV Overall Integration Frame">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- TAB 2: PROTOTYPE IMAGES -->
+    <div id="gallery" class="tab-panel">
+        <div class="gallery-grid">
+            
+            <div class="gallery-card">
+                <img src="Imgs/ugv 1.jpeg" alt="UGV Prototype View 1">
+                <div class="gallery-caption">UGV Prototype - Isometric View</div>
+            </div>
+
+            <div class="gallery-card">
+                <img src="Imgs/ugv 2.jpeg" alt="UGV Prototype View 2">
+                <div class="gallery-caption">UGV Prototype - Front Integrated View</div>
+            </div>
+
+            <div class="gallery-card">
+                <img src="Imgs/Team with ugv.png" alt="Team with UGV Prototype">
+                <div class="gallery-caption">Project Team with UGV Prototype</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+function showTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(name).classList.add('active');
+    btn.classList.add('active');
+}
+</script>
+
+</body>
+</html>

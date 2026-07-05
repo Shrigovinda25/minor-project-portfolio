@@ -19,7 +19,7 @@ body{font-family:'Outfit',sans-serif;background-color:var(--bg-dark);color:var(-
 @keyframes tickScroll{0%{transform:translateX(100vw);}100%{transform:translateX(-100%);}}
 
 /* ── HEADER ── */
-header{display:flex;justify-content:space-between;align-items:center;padding:.8rem 2rem;background:rgba(253,252,249,0.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(184,144,71,0.15);position:sticky;top:0;z-index:100;box-shadow:0 2px 15px rgba(0,0,0,0.04);flex-wrap:wrap;gap:.4rem;}
+header{display:flex;justify-content:space-between;align-items:center;padding:90px 2rem .8rem;background:rgba(253,252,249,0.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(184,144,71,0.15);position:sticky;top:0;z-index:100;box-shadow:0 2px 15px rgba(0,0,0,0.04);flex-wrap:wrap;gap:.4rem;}
 .logo-section h1{font-size:1.4rem;font-weight:800;letter-spacing:1.5px;background:linear-gradient(to right,var(--accent-gold),#856404);-webkit-background-clip:text;-webkit-text-fill-color:transparent;display:flex;align-items:center;gap:10px;}
 .logo-section h1 span{font-size:0.6rem;font-weight:600;padding:2px 8px;background:rgba(184,144,71,0.06);border:1px solid rgba(184,144,71,0.3);border-radius:4px;color:var(--accent-gold);letter-spacing:.5px;-webkit-text-fill-color:var(--accent-gold);}
 .sys-status{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
@@ -194,10 +194,102 @@ canvas#radarCanvas{max-width:100%;max-height:100%;filter:drop-shadow(0 2px 8px r
 
 /* ── RESPONSIVE ── */
 @media(max-width:1400px){.cam-feed-card,.depth-feed-card{grid-column:span 12;}.radar-card,.telemetry-card,.map-card{grid-column:span 6;}.s4{grid-column:span 6;}}
-@media(max-width:900px){.cam-feed-card,.depth-feed-card,.radar-card,.telemetry-card,.map-card,.s4,.s6{grid-column:span 12;}.mission-bar-card{flex-direction:column;}.mdiv{display:none;}}
+@media(max-width:900px){.cam-feed-card,.depth-feed-card,.radar-card,.telemetry-card,.map-card,.s4,.s6{grid-column:span 12;}.mission-bar-card{flex-direction:column;}.mdiv{display:none;}header{padding:140px 1rem .8rem;}}
+
+/* ===== NAVIGATION BAR ===== */
+.nav-bar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: rgba(245, 245, 220, 0.9);
+    backdrop-filter: blur(15px);
+    padding: 18px 50px;
+    border-radius: 50px;
+    border: 1px solid rgba(107, 91, 149, 0.2);
+    box-shadow: 0 10px 40px rgba(107, 91, 149, 0.15);
+    display: flex;
+    gap: 25px;
+    transition: all 0.4s ease;
+}
+
+.nav-bar:hover {
+    box-shadow: 0 20px 60px rgba(159, 144, 206, 0.35);
+    border-color: #6B5B95;
+    background: rgba(245, 245, 220, 0.98);
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #5A4E6E;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: #6B5B95;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: #6B5B95;
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+    .nav-bar {
+        width: 90%;
+        padding: 10px 15px;
+        gap: 15px;
+        border-radius: 25px;
+        flex-wrap: wrap;
+        justify-content: center;
+        top: 15px;
+    }
+    .nav-link {
+        font-size: 0.75rem;
+    }
+}
+@media (max-width: 480px) {
+    .nav-bar {
+        top: 10px;
+    }
+    header {
+        padding: 180px 1rem .8rem;
+    }
+}
 </style>
 </head>
 <body>
+
+<nav class="nav-bar">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="theme.html" class="nav-link">Theme</a>
+    <a href="title.html" class="nav-link">Title</a>
+    <a href="problem_identification.html" class="nav-link">Problem Identification</a>
+    <a href="engineering_design.html" class="nav-link">Engineering Design</a>
+    <a href="system_architecture.html" class="nav-link">System Architecture</a>
+    <a href="detailed_design.html" class="nav-link">Detailed Design</a>
+    <a href="hardware_prototyping.html" class="nav-link">Hardware Prototyping</a>
+    <a href="poster_video.html" class="nav-link">Poster & Video</a>
+    <a href="dashboard.html" class="nav-link active">Dashboard</a>
+</nav>
 
 <!-- TICKER -->
 <div class="sim-ticker">
@@ -211,7 +303,6 @@ canvas#radarCanvas{max-width:100%;max-height:100%;filter:drop-shadow(0 2px 8px r
 <header>
   <div class="logo-section"><h1>UGV ROS2 <span>FUSION AUTONOMY</span></h1></div>
   <div class="sys-status">
-    <a href="index.html" class="status-pill" style="text-decoration:none;background:rgba(184,144,71,0.15);color:var(--accent-gold);border:1px solid var(--accent-gold);font-weight:800;transition:all 0.2s;">◀ PORTFOLIO</a>
     <div class="status-pill"><span class="indicator active-glow"></span> Robot: <strong>ONLINE</strong></div>
     <div class="status-pill">Mission: <strong>Outdoor Autonomous Nav</strong></div>
     <div class="status-pill">Mode: <strong id="hMode">AUTONOMOUS</strong></div>
